@@ -1,0 +1,11 @@
+﻿@using ChangeLetters.Client.Components.Svgs
+<button class="btn btn-primary" @onclick="async () => await Clicked.InvokeAsync()">
+    <DeleteImage/>
+</button>
+
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public EventCallback Clicked { get; set; }
+}

@@ -1,0 +1,286 @@
+﻿@page "/folders"
+@using ChangeLetters.DTOs
+@using ChangeLetters.Client.Connectors
+@using ChangeLetters.Client.Components
+@using ChangeLetters.Client.Components.Grids
+@using ChangeLetters.Client.Components.Buttons
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+@implements IDisposable
+
+<PageTitle>Select folder</PageTitle>
+<div class="mb-2">
+    @_currentFolder
+</div>
+@if (_folderSelected && !_unknownEntries.Any())
+{
+    @if (_currentFolder != Root)
+    {
+        <div class="mb-2">
+            <ButtonUp CurrentFolder="_currentFolder" ButtonUpClicked="() => OpenFolderAsync(GetParent())" />
+        </div>
+    }
+    <div class="mb-2">
+        <button class="btn-secondary" @onclick="SelectFoldersAgainAsync">Select another folder</button>
+    </div>
+}
+@if (!_folderSelected)
+{
+    @if (_folders is null)
+    {
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading folders...</span>
+        </div>
+    }
+    else if (_folders.Length == 0)
+    {
+        <p>No folders found.</p>
+        <ButtonUp CurrentFolder="_currentFolder" ButtonUpClicked="() => OpenFolderAsync(GetParent())" />
+    }
+    else
+    {
+        <div class="modal show d-block" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content thick-border modal-back-color">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Select folder</h5>
+                    </div>
+                    <div class="modal-body">
+                        <ButtonUp CurrentFolder="_currentFolder" ButtonUpClicked="() => OpenFolderAsync(GetParent())" />
+                        <ButtonCancel Clicked="CancelFolderSelection" />
+                        <SelectFoldersGrid Items="CurrentFolders"
+                                           OpenFolderClicked="s => OpenFolderAsync(s)"
+                                           ReadUnknownWordsClicked="s => ReadUnknownWordsAsync(s)" />
+                    </div>
+                    @if (_currentlyReadFolder != string.Empty)
+                    {
+                        <div class="modal-footer">
+                            <ReadingFolderProgress ProgressValue="@_progressValue"
+                                                   ProgressMax="@_progressMax"
+                                                   CurrentlyReadFolder="@_currentlyReadFolder" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+@if (_unknownEntries.Any())
+{
+    if (_unknownEntries.Any(x => !x.Value.IsCorrected()))
+    {
+        <UnknownWordsGrid NewEntries="_unknownEntries" SubmitClicked="SaveVocabulary" AllowEdit="false" />
+    }
+    else
+    {
+        <div class="mb-2">
+            <button class="btn-success" @onclick="RenameItems" disabled="@_isRenaming">Rename items</button>
+            <button class="btn-secondary" @onclick="DoFolderSelection">Select another folder</button>
+        </div>
+        @if (_isRenaming)
+        {
+            <RenameItemsProgressBar ChangeValue="@_changeValue" ChangeMax="@_changeMax" />
+        }
+    }
+}
+
+@code {
+    private const string Root = "/";
+    private int _changeMax = 1;
+    private int _progressMax = 1;
+    private int _changeValue = 0;
+    private int _progressValue = 0;
+    private bool _isRenaming = false;
+    private string _currentFolder = Root;
+    private FileItem[]? _folders = null!;
+    private bool _folderSelected = false;
+    private string _currentlyReadFolder = string.Empty;
+    private CancellationTokenSource _cancellationTokenSource = new();
+    private Dictionary<string, VocabularyEntry> _unknownEntries = new();
+
+    [Inject] public IJSRuntime? Js { get; set; }
+    [Inject] public IFtpConnectorClient? FtpConnector { get; set; }
+    [Inject] public IVocabularyConnector? VocabularyConnector { get; set; }
+
+    protected override Task OnInitializedAsync()
+        => OpenFolderAsync(_currentFolder);
+
+    private IQueryable<FileItem> CurrentFolders
+        => _folders?.AsQueryable() ?? new EnumerableQuery<FileItem>([]);
+
+    private async Task OpenFolderAsync(string fullName)
+    {
+        if (FtpConnector != null)
+        {
+            var localCts = new CancellationTokenSource();
+            await _cancellationTokenSource.CancelAsync();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = localCts;
+            var token = localCts.Token;
+
+            _folders = await FtpConnector.ReadFoldersAsync(fullName, token);
+            _currentFolder = fullName;
+            StateHasChanged();
+            if (!localCts.IsCancellationRequested)
+                await CheckQuestionMarksAsync(localCts);
+        }
+    }
+
+    private async Task CheckQuestionMarksAsync(CancellationTokenSource localCts)
+    {
+        var folders = _folders;
+        var token = localCts.Token;
+        if (folders != null && FtpConnector != null)
+        {
+            if (_cancellationTokenSource != localCts)
+                return;
+
+            _progressValue = 0;
+            _progressMax = folders.Length;
+            Console.WriteLine($"read {folders.Length} items");
+            foreach (var fileItem in folders)
+            {
+                if (token.IsCancellationRequested || _cancellationTokenSource != localCts)
+                {
+                    if (_cancellationTokenSource == localCts)
+                        SetReadingFinished();
+                    return;
+                }
+                _currentlyReadFolder = fileItem.Name;
+                StateHasChanged();
+                if (fileItem.FolderStatus == FolderStatus.Undefined)
+                {
+                    await FtpConnector.CheckQuestionMarksAsync(fileItem, token);
+                    _progressValue++;
+                    if (fileItem.FolderStatus != FolderStatus.Undefined)
+                        StateHasChanged();
+                }
+
+                await Task.Yield();
+            }
+            if (_cancellationTokenSource == localCts)
+                SetReadingFinished();
+        }
+    }
+
+    private void SetReadingFinished()
+    {
+        _progressMax = 1;
+        _progressValue = 0;
+        _currentlyReadFolder = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task ReadUnknownWordsAsync(string fullName)
+    {
+        _unknownEntries.Clear();
+        await _cancellationTokenSource.CancelAsync();
+        var localCts = new CancellationTokenSource();
+        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource = localCts;
+        var token = localCts.Token;
+        SetReadingFinished();
+        if (FtpConnector != null)
+        {
+            _currentFolder = fullName;
+            _unknownEntries = await FtpConnector.ReadUnknownWordsAsync(fullName, token);
+            _folderSelected = true;
+            StateHasChanged();
+        }
+    }
+
+    private void SaveVocabulary()
+    {
+        VocabularyConnector?.UpsertEntriesAsync(_unknownEntries.Values);
+        _unknownEntries.Clear();
+    }
+
+    private async Task RenameItems()
+    {
+        if (FtpConnector != null && VocabularyConnector != null && Js != null)
+        {
+            var localCts = new CancellationTokenSource();
+            await _cancellationTokenSource.CancelAsync();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = localCts;
+            _isRenaming = true;
+            var token = localCts.Token;
+            var request = new RenameFileItemsRequest { Folder = _currentFolder, FileItemType = FileItemType.Folder };
+            var result = await FtpConnector.RenameItemsAsync(request, token);
+            if (!result.Succeeded)
+            {
+                if (!token.IsCancellationRequested)
+                    await Js.InvokeVoidAsync("alert", token, $"Could not rename {result.FailedFile}");
+                SetRenamingFinished();
+                return;
+            }
+            request.FileItemType = FileItemType.File;
+            result = await FtpConnector.RenameItemsAsync(request, token);
+            if (!result.Succeeded)
+            {
+                if (!token.IsCancellationRequested)
+                    await Js.InvokeVoidAsync("alert", token, $"Could not rename {result.FailedFile}");
+                SetRenamingFinished();
+                return;
+            }
+
+            DoFolderSelection();
+            SetCurrentFolderToOk();
+            await Js.InvokeVoidAsync("alert", token, $"renamed {_changeValue} items in {_currentFolder}");
+            SetRenamingFinished();
+            StateHasChanged();
+        }
+    }
+
+    private void SetRenamingFinished()
+    {
+        _changeMax = 1;
+        _changeValue = 0;
+        _isRenaming = false;
+    }
+
+    // TODO: to be updated by SignalR
+    private void SetChangeMax(int max)
+    {
+        _changeMax = max;
+        if (_changeMax < 1)
+            _changeMax = 1;
+    }
+
+    private async Task SelectFoldersAgainAsync()
+    {
+        _unknownEntries.Clear();
+        _folderSelected = false;
+        StateHasChanged();
+        await OpenFolderAsync(_currentFolder);
+    }
+
+    private void SetCurrentFolderToOk()
+    {
+        var item = _folders?.FirstOrDefault(f => f.FullName == _currentFolder);
+        if (item != null)
+            item.FolderStatus = FolderStatus.Ok;
+    }
+
+    private string GetParent()
+        => Path.GetDirectoryName(_currentFolder)?.Replace("\\", "/") ?? "/";
+
+    public void Dispose()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+    }
+
+    private void DoFolderSelection()
+    {
+        _folderSelected = false;
+        _unknownEntries.Clear();
+    }
+
+    private void CancelFolderSelection()
+    {
+        _folders = [];
+        _cancellationTokenSource.Cancel();
+    }
+
+}

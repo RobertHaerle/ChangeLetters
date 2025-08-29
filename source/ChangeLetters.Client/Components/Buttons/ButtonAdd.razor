@@ -1,0 +1,11 @@
+﻿@using ChangeLetters.Client.Components.Svgs
+
+<button class="btn btn-primary" @onclick="()=> Clicked.InvokeAsync()">
+    <AddImage/> Add New Entry
+</button>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public EventCallback Clicked { get; set; }
+}

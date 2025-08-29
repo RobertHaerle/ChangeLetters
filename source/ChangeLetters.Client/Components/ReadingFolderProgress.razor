@@ -1,0 +1,26 @@
+﻿<div class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-8">
+            <div class="progress my-2">
+                <div class="progress-bar" role="progressbar" style="width:@(ProgressValue * 100 / ProgressMax)%;"
+                     aria-valuenow="@ProgressValue" aria-valuemin="0" aria-valuemax="@ProgressMax">
+                    @ProgressValue / @ProgressMax
+                </div>
+            </div>
+        </div>
+        <div class="col-4 text-end">
+            Currently reading folder: @CurrentlyReadFolder
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int ProgressValue { get; set; }
+
+    [Parameter, EditorRequired]
+    public int ProgressMax { get; set; }
+
+    [Parameter, EditorRequired]
+    public string CurrentlyReadFolder { get; set; } = string.Empty;
+}

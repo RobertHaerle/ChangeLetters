@@ -1,0 +1,16 @@
+﻿.alt-row-1 {
+    background-color: #f9f9f9;
+}
+
+.alt-row-2 {
+    background-color: #e0e0e0;
+}
+
+.thick-border {
+    border: 4px solid #333; 
+    border-radius: 8px; 
+}
+
+.modal-content.modal-back-color {
+    background-color: whitesmoke !important;
+}
