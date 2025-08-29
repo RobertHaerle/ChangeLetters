@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using System.Text.Json;
 using ChangeLetters.DTOs;
 using ChangeLetters.Client.Connectors;
 using ChangeLetters.Tests.Client.ClientHelpers;
@@ -55,7 +56,7 @@ public class FtpConnectorClientTests
         fi.Name = "Folder1";
         fi.IsFolder = true;
         var folders = new[] { fi };
-        var json = System.Text.Json.JsonSerializer.Serialize(folders);
+        var json = JsonSerializer.Serialize(folders);
         var response = new HttpResponseMessage(HttpStatusCode.OK)
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
@@ -78,8 +79,11 @@ public class FtpConnectorClientTests
     [Test]
     public async Task CheckQuestionMarksAsync_SendsRequestToCorrectUri()
     {
-        var response = new HttpResponseMessage(HttpStatusCode.OK);
-        var handler = new FakeHttpMessageHandler(response);
+        var json = JsonSerializer.Serialize(FolderStatus.HasQuestionMarks);
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        }; var handler = new FakeHttpMessageHandler(response);
         var httpClient = new HttpClient(handler)
         {
             BaseAddress = new Uri("http://localhost")
@@ -97,7 +101,7 @@ public class FtpConnectorClientTests
     {
         // Arrange
         var expectedResult = new RenameFileItemsResult { Succeeded = true };
-        var json = System.Text.Json.JsonSerializer.Serialize(expectedResult);
+        var json = JsonSerializer.Serialize(expectedResult);
         var response = new HttpResponseMessage(HttpStatusCode.OK)
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
