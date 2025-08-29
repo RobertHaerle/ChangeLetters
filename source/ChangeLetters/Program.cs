@@ -1,0 +1,73 @@
+using DryIoc;
+using ChangeLetters.StartUp;
+using ChangeLetters.Database;
+using ChangeLetters.Components;
+using Microsoft.Extensions.Logging.Console;
+using Microsoft.FluentUI.AspNetCore.Components;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Host
+    .UseServiceProviderFactory(DryIocRegistration.GetDryIocFactory())
+    .ConfigureContainer<Container>(DryIocRegistration.Initialize);
+
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+    options.IncludeScopes = false;
+    options.UseUtcTimestamp = true;
+    options.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+    options.ColorBehavior = LoggerColorBehavior.Enabled;
+});
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveWebAssemblyComponents();
+
+builder.Services
+    .AddFluentUIComponents()
+    .AddFluentFtpComponents()
+    .AddDatabase(builder.Configuration)
+    .AddDataProtectionComponents(builder.Configuration);
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.Configure<CookiePolicyOptions>(options =>
+    {
+        options.MinimumSameSitePolicy = SameSiteMode.Lax;
+        options.Secure = CookieSecurePolicy.None;
+    });
+}
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseExceptionHandler("/Error", createScopeForErrors: true);
+// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+app.UseHsts();
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+app.UseAntiforgery();
+
+app.MapControllers();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(ChangeLetters.Client._Imports).Assembly);
+
+var context = app.Services.GetRequiredService<DatabaseContext>();
+context.Database.EnsureCreated();
+
+app.Run();

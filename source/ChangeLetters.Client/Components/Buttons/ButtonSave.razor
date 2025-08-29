@@ -1,0 +1,11 @@
+@using ChangeLetters.Client.Components.Svgs
+<button class="btn btn-success" @onclick="()=> Clicked.InvokeAsync()">
+    <SaveImage/>
+    <span class="ms-1">Save</span>
+</button>
+
+@code {
+    [Parameter] 
+    [EditorRequired]
+    public EventCallback Clicked { get; set; }
+}

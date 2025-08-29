@@ -1,0 +1,46 @@
+﻿.name-column {
+    width: 350px;
+    min-width: 100px;
+    max-width: 350px;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* FAST/Fluent DataGrid uses Shadow DOM. Expose parts are used above; here we also style custom row classes. */
+:deep(.zebra-even) ::part(cell) {
+    background-color: var(--neutral-layer-1, #e6f7ff);
+}
+
+:deep(.zebra-odd) ::part(cell) {
+    background-color: var(--neutral-layer-2, #ccefff);
+}
+
+/* Keep previous sizing rules via ::part(cell) */
+:deep(fluent-data-grid-row)::part(cell) {
+    height: auto !important;
+    min-height: 0 !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+:deep(.col-justify-start) {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+/* Limit column width by cell index */
+:deep(fluent-data-grid-row[row-type="default"])::part(cell)[col-index="3"] {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+::deep tr:nth-child(odd) > .alternate {
+    background: #e6f7ff !important; /* Light blue for odd rows */
+}
+
+::deep tr:nth-child(even) > .alternate {
+    background: #ccefff !important; /* Slightly darker blue for even rows */
+}

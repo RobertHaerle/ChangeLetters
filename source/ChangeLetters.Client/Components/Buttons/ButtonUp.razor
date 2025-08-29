@@ -1,0 +1,19 @@
+﻿@using ChangeLetters.Client.Components.Svgs
+
+@if (CurrentFolder.Length > 1)
+{
+    <button class="btn btn-primary" @onclick="() => ButtonUpClicked.InvokeAsync()">
+        <ArrowUpImage/>
+        Back
+    </button>
+}
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ButtonUpClicked { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public string CurrentFolder { get; set; } = "/";
+}

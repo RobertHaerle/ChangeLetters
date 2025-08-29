@@ -1,0 +1,102 @@
+﻿@page "/"
+@using ChangeLetters.DTOs
+@using ChangeLetters.Client.Connectors
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+<PageTitle>Home</PageTitle>
+
+<h1>Enter connection data</h1>
+<fieldset>
+    <div class="row mb-2">
+        <div class="col">
+            <label for="hostName">Host Name:</label>
+            <InputText class="form-control" id="hostName"
+                       @bind-Value="_config.HostName"
+                       @bind-Value:after="OnDataChanged"  />
+        </div>
+        <div class="col">
+            <label for="port">Port:</label>
+            <InputNumber class="form-control" id="port"
+                         @bind-Value="_config.Port"
+                         @bind-Value:after="OnDataChanged" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col">
+            <label for="userName">User Name:</label>
+            <InputText class="form-control col-6" id="userName"
+                       @bind-Value="_config.UserName"
+                       @bind-Value:after="OnDataChanged" />
+        </div>
+        <div class="col">
+            <label for="password">Password:</label>
+            <InputText class="form-control col-6" id="password" Type="password"
+                       @bind-Value="_config.Password"
+                       @bind-Value:after="OnDataChanged" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <button class="btn btn-primary" @onclick="SaveConfiguration">Connect</button>
+    </div>
+    @if (_connected)
+    {
+        <div class="row mb-2">
+            <div class="alert alert-success" role="alert">
+                <strong>Connected successfully!</strong>
+            </div>
+        </div>
+    }
+</fieldset>
+
+
+@code
+{
+    private bool _connected;
+    private bool _dataChanged;
+    private Configuration _config = new();
+
+    [Inject] 
+    public IJSRuntime? Js { get; set; }
+
+    [Inject]
+    public IFtpConnectorClient? FtpConnector { get; set; }
+
+    [Inject]
+    public IConfigurationConnector? ConfigConnector { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ConfigConnector != null)
+        {
+            _config = await ConfigConnector.GetConfigurationAsync() ?? new Configuration();
+        }
+    }
+
+    private async Task SaveConfiguration()
+    {
+        if (ConfigConnector != null && FtpConnector != null)
+        {
+            if (await FtpConnector.ConnectAsync(_config))
+            {
+                if (_dataChanged)
+                    await ConfigConnector.SaveConfigurationAsync(_config);
+                SetConnected(true);
+                _dataChanged = false;
+            }
+            else if (Js != null)
+            {
+                await Js.InvokeVoidAsync("alert", "Connection failed. Please check your data.");
+            }
+        }
+    }
+
+    private void SetConnected(bool newConnectionState)
+    {
+        _connected = newConnectionState;
+        _dataChanged = true;
+        StateHasChanged();
+    }
+
+    private void OnDataChanged()
+        => SetConnected(false);
+}

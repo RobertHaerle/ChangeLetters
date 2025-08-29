@@ -1,0 +1,16 @@
+
+<div class="progress mb-2" style="height: 24px;">
+    <div class="progress-bar progress-bar-striped progress-bar-animated"
+         role="progressbar"
+         style="width: @(ChangeMax > 0 ? (ChangeValue * 100 / ChangeMax) : 0)%"
+         aria-valuenow="@ChangeValue"
+         aria-valuemin="0"
+         aria-valuemax="@ChangeMax">
+        @ChangeValue / @ChangeMax
+    </div>
+</div>
+
+@code {
+    [Parameter][EditorRequired] public int ChangeMax { get; set; }
+    [Parameter][EditorRequired] public int ChangeValue { get; set; }
+}

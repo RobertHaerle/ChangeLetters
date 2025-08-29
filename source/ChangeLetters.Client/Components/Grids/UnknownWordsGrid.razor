@@ -1,0 +1,104 @@
+﻿@using ChangeLetters.DTOs
+@using ChangeLetters.Client.Components.Buttons
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@if (NewEntries == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <div style="max-height: 400px; overflow-y: auto; width: 100%; margin: 0; padding: 0;">
+        <QuickGrid Items="Entries" style="width: 100%;">
+            @if (AllowEdit)
+            {
+                <TemplateColumn class="col-action">
+                    <ChildContent>
+                        <ButtonDelete Clicked="() => NewEntries.Remove(context.UnknownWord)" />
+                    </ChildContent>
+                </TemplateColumn>
+            }
+            <PropertyColumn Property="@(i => i.UnknownWord)" IsDefaultSortColumn="true" class="col-unknown" />
+            <TemplateColumn class="col-corrected">
+                <ChildContent>
+                    <InputText @bind-Value="context.CorrectedWord"
+                               class="@(context.IsCorrected() ? "bg-success text-white" : "bg-danger text-white")"
+                               style="width: 100%;" />
+                </ChildContent>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+    <div class="row mb-2">
+        @GetSolutionProgress()
+    </div>
+    <div class="row mb-2">
+        @if (_addActive)
+        {
+            <AddWordDialog ClosedPressed="() => _addActive = false"
+                           NewEntryCreated="AddEntry" />
+        }
+        else if (AllowEdit)
+        {
+            <ButtonAdd Clicked="() => _addActive = true" />
+        }
+    </div>
+    @if ((!_isInitiallyValid || AllowEdit) && IsValid())
+    {
+        <ButtonSave Clicked="SubmitClicked"/>
+    }
+}
+
+@code {
+    private bool _addActive;
+    private bool _isInitiallyValid;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback SubmitClicked { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Dictionary<string, VocabularyEntry>? NewEntries { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public bool AllowEdit { get; set; }
+
+    [Inject] public IJSRuntime Js { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        _isInitiallyValid =
+            NewEntries == null
+            || NewEntries.Count == 0
+            || IsValid();
+    }
+
+    private string GetSolutionProgress()
+    => NewEntries == null
+        ? "0/0"
+        : $"{NewEntries.Count(e => e.Value.IsCorrected())}/{NewEntries.Count}";
+
+    private bool IsValid()
+    => NewEntries != null && NewEntries.Values.All(e => e.IsCorrected());
+
+    private IQueryable<VocabularyEntry> Entries
+        => NewEntries?.Values.AsQueryable() ?? new EnumerableQuery<VocabularyEntry>([]);
+
+    private async Task SaveData()
+        => await SubmitClicked.InvokeAsync();
+
+    private void AddEntry(VocabularyEntry newEntry)
+    {
+        if (NewEntries != null)
+        {
+            if (NewEntries.TryAdd(newEntry.UnknownWord, newEntry))
+            {
+                _addActive = false;
+                StateHasChanged();
+            }
+            else
+                Js.InvokeVoidAsync("alert", $"{newEntry.UnknownWord} already exists.");
+        }
+    }
+}

@@ -1,0 +1,26 @@
+﻿@page "/vocabulary"
+@using ChangeLetters.DTOs
+@using ChangeLetters.Client.Connectors
+@using ChangeLetters.Client.Components.Grids
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+<h3>Vocabulary</h3>
+<UnknownWordsGrid NewEntries="_vocabulary" SubmitClicked="SaveVocabularyAsync" AllowEdit="true"/>
+
+@code {
+    private Dictionary<string, VocabularyEntry>? _vocabulary = new();
+
+    [Inject] private IVocabularyConnector? VocabularyConnector { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (VocabularyConnector != null)
+            _vocabulary = await VocabularyConnector.GetAllItemsAsync();
+    }
+
+    private async Task SaveVocabularyAsync()
+    {
+        if (VocabularyConnector != null && _vocabulary != null)
+            await VocabularyConnector.RebuildAllItemsAsync(_vocabulary.Values);
+    }
+}

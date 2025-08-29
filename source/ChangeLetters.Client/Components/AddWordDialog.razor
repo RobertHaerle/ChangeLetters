@@ -1,0 +1,53 @@
+﻿@using ChangeLetters.DTOs
+<div class="modal show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content thick-border modal-back-color">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new word</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col">
+                        <input class="form-control" @bind="UnknownWord" placeholder="Unknown" />
+                    </div>
+                    <div class="col">
+                        <input class="form-control" @bind="CorrectedWord" placeholder="Corrected" />
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col">
+                        unknown
+                    </div>
+                    <div class="col">
+                        corrected
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="() => ClosedPressed.InvokeAsync()">Close</button>
+                <button class="btn btn-primary" @onclick="RaiseNewEntryCreated">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string UnknownWord { get; set; } = string.Empty;
+    private string CorrectedWord { get; set; } = string.Empty;
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ClosedPressed { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<VocabularyEntry> NewEntryCreated { get; set; }
+
+    private Task RaiseNewEntryCreated()
+        => NewEntryCreated.InvokeAsync(new()
+        {
+            UnknownWord = UnknownWord,
+            CorrectedWord = CorrectedWord
+        });
+
+}

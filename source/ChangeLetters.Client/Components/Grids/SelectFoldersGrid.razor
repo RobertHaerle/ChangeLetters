@@ -1,0 +1,58 @@
+﻿@using ChangeLetters.DTOs
+@using ChangeLetters.Client.Components.Svgs
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div style="max-height: 400px; overflow-y: auto;">
+    <FluentDataGrid Items="Items" ShowHover="true" MultiLine="true" RowClass="@((_) => "alternate")">
+        <TemplateColumn Width="190px">
+            <ChildContent>
+                <button class="btn btn-primary" @onclick="() => OpenFolderClicked.InvokeAsync(context.FullName)">
+                    <OpenFolderImage />
+                    Open
+                </button>
+            </ChildContent>
+        </TemplateColumn>
+        <PropertyColumn Property="@(f => InsertZeroWidthSpaceAfterDot(f.Name))" Class="name-column" Sortable="true" />
+        <TemplateColumn  Width="190px">
+            <ChildContent>
+                <button class="btn btn-primary" @onclick="() => ReadUnknownWordsClicked.InvokeAsync(context.FullName)">
+                    <SearchImage />
+                    Read Unknown
+                </button>
+            </ChildContent>
+        </TemplateColumn>
+        <TemplateColumn Sortable="true" SortBy="@(_sortByStatus)" Width="60px"> 
+            <ChildContent Context="context">
+                @if (context.FolderStatus == FolderStatus.HasQuestionMarks)
+                {
+                    <QuestionMarkImage/>
+                }
+                else
+                {
+                    <EmptyImage/>
+                }
+            </ChildContent>
+        </TemplateColumn>
+    </FluentDataGrid>
+</div>
+
+@code {
+
+    private readonly GridSort<FileItem> _sortByStatus = GridSort<FileItem>
+        .ByDescending(a => a.FolderStatus);    
+    
+    [Parameter]
+    [EditorRequired]
+    public IQueryable<FileItem> Items { get; set; } = new EnumerableQuery<FileItem>([]);
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<string> OpenFolderClicked { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<string> ReadUnknownWordsClicked { get; set; }
+
+    private static string InsertZeroWidthSpaceAfterDot(string input)
+        => input.Replace(".", ".\u200B");
+}
