@@ -1,23 +1,47 @@
-# Ignore Python cache files
-__pycache__/
-*.pyc
-*.pyo
-
-# Ignore environment and dependency files
-.env
-.venv/
-venv/
-ENV/
-
-# Ignore macOS system files
-.DS_Store
-
-# Ignore VSCode settings
-.vscode/
-
-# Ignore logs
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
 *.log
 
-# Ignore other common files
-Thumbs.db
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code workspace
+.vscode/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Resharper
+*.DotSettings.user
+
+# Rider
 .idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Publish results
+publish/
+*.publish.xml
+
+# Others
+*.dbmdl
+*.pdb
+*.cache
+*.config
+*.vspscc
+*.vssscc
+*.tmp
+*.bak
+*.swp
+
+# Visual Studio
+.vs/
