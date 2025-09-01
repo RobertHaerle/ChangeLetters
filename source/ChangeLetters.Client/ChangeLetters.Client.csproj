@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
-    <ProjectReference Include="..\ChangeLetters.Interfaces\ChangeLetters.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

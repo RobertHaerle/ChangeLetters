@@ -1,8 +1,6 @@
 ﻿namespace ChangeLetters.DTOs;
 
-/// <summary> 
-/// Class FileItem. 
-/// </summary>
+/// <summary>  Class FileItem.  </summary>
 public class FileItem
 {
     /// <summary>Gets or sets the name.</summary>
@@ -25,7 +23,10 @@ public class FileItem
 /// <summary>Enum FolderStatus</summary>
 public enum FolderStatus
 {
-    Undefined, 
+    /// <summary> The undefined state. </summary>
+    Undefined,
+    /// <summary> The ok state: No question marks in the folder name. </summary>
     Ok,
+    /// <summary> The has question marks state: There are question marks in the folder name. </summary>
     HasQuestionMarks
 }
