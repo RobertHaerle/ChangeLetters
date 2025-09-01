@@ -17,7 +17,7 @@ namespace ChangeLetters.Tests.Handlers
         private IConfigurationIo _configurationIo;
         private IVocabularyHandler _vocabularyHandler;
         private IVocabularyRepository _vocabularyRepository;
-
+        private ISignalRRenameHandler _signalRRenameHandler;
         [SetUp]
         public void Setup()
         {
@@ -28,6 +28,7 @@ namespace ChangeLetters.Tests.Handlers
             _configurationIo = Substitute.For<IConfigurationIo>();
             _vocabularyHandler = Substitute.For<IVocabularyHandler>();
             _vocabularyRepository = Substitute.For<IVocabularyRepository>();
+            _signalRRenameHandler = Substitute.For<ISignalRRenameHandler>();
             _fileItems = [new() { Name = "file?1.txt", FullName = "/folder/file?1.txt", IsFolder = false }];
 
             _configurationIo.GetConfiguration().Returns(_configuration);
@@ -38,7 +39,8 @@ namespace ChangeLetters.Tests.Handlers
                 _ftpConnector,
                 _configurationIo,
                 _vocabularyHandler,
-                _vocabularyRepository);
+                _vocabularyRepository,
+                _signalRRenameHandler);
         }
 
         [Test]
@@ -67,7 +69,7 @@ namespace ChangeLetters.Tests.Handlers
                 .Returns(true);
 
             // Act
-            var result = await _sut.RenameItemsAsync("/folder", FileItemType.File, CancellationToken.None);
+            var result = await _sut.RenameItemsAsync("/folder", FileItemType.File, "ci", CancellationToken.None);
 
             // Assert
             result.Succeeded.ShouldBeTrue();
@@ -100,7 +102,7 @@ namespace ChangeLetters.Tests.Handlers
                 .Returns(false);
 
             // Act
-            var result = await _sut.RenameItemsAsync("/folder", FileItemType.File, CancellationToken.None);
+            var result = await _sut.RenameItemsAsync("/folder", FileItemType.File, "ci", CancellationToken.None);
 
             // Assert
             result.Succeeded.ShouldBeFalse();

@@ -52,7 +52,7 @@ public class FtpControllerTests
     {
         var req = new RenameFileItemsRequest { Folder = "folder", FileItemType = 0 };
         var renameResult = new RenameFileItemsResult { Succeeded = true };
-        _ftpHandler.RenameItemsAsync(req.Folder, req.FileItemType, Arg.Any<CancellationToken>()).Returns(renameResult);
+        _ftpHandler.RenameItemsAsync(req.Folder, req.FileItemType, Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(renameResult);
         var result = await _sut.RenameItemsAsync(req);
         result.Result.ShouldBeOfType<OkObjectResult>();
         ((OkObjectResult)result.Result!).Value.ShouldBe(renameResult);

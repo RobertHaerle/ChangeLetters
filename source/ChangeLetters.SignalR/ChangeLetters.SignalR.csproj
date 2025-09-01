@@ -8,7 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNext.Threading" Version="5.24.0" />
+    <PackageReference Include="DryIocAttributes.dll" Version="7.0.0" />
     <PackageReference Include="SignalRSwaggerGen" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

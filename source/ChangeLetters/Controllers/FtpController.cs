@@ -1,8 +1,8 @@
-using ChangeLetters.DTOs;
-using ChangeLetters.Handlers;
-using ChangeLetters.Model;
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using ChangeLetters.DTOs;
+using ChangeLetters.Model;
+using ChangeLetters.Handlers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Controllers;
 
@@ -60,11 +60,14 @@ public class FtpController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Rename items as an asynchronous operation.</summary>
+    /// <param name="request">The request.</param>
+    /// <returns>Ok result with the success flag.</returns>
     [HttpPost("rename-items")]
     public async Task<ActionResult<RenameFileItemsResult>> RenameItemsAsync([FromBody] RenameFileItemsRequest request)
     {
         _log.LogInformation("RenameItems called for {Folder} ", request.Folder);
-        var result = await _ftpHandler.RenameItemsAsync(request.Folder, request.FileItemType, HttpContext?.RequestAborted ?? CancellationToken.None);
+        var result = await _ftpHandler.RenameItemsAsync(request.Folder, request.FileItemType, request.SignalRConnectionId, HttpContext?.RequestAborted ?? CancellationToken.None);
         _log.LogInformation("RenameItems for {Folder} resulted in {Success}", request.Folder, result.Succeeded ? "succeeded" : "failed");
         return Ok(result);
     }
