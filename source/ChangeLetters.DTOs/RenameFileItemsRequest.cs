@@ -1,8 +1,6 @@
 ﻿namespace ChangeLetters.DTOs;
 
-/// <summary> 
-/// Class RenameFileItemsRequest. 
-/// </summary>
+/// <summary>  Request container for renaming file items. </summary>
 public class RenameFileItemsRequest
 {
     /// <summary>Gets or sets the folder.</summary>
