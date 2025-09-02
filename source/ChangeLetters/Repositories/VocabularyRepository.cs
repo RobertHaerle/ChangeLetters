@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.Repositories;
 
+/// <summary> 
+/// Class VocabularyRepository.
+/// Implements <see cref="IVocabularyRepository" />
+/// </summary>
 [Export(typeof(IVocabularyRepository))]
 public class VocabularyRepository(
     Func<DatabaseContext> _getContext,

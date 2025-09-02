@@ -39,9 +39,10 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+builder.Services.AddSignalR();
+builder.Services.AddSwagger();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwagger();
 
 var app = builder.Build();
 

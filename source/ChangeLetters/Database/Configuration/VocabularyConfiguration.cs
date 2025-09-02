@@ -4,8 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChangeLetters.Database.Configuration;
 
+/// <summary> 
+/// Class VocabularyConfiguration.
+/// Implements <see cref="IEntityTypeConfiguration{VocabularyItem}" />
+/// </summary>
 public class VocabularyConfiguration : IEntityTypeConfiguration<VocabularyItem>
 {
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<VocabularyItem> builder)
     {
         builder.HasKey(x => x.VocabularyItemId);

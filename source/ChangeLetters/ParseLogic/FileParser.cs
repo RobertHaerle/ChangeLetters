@@ -4,6 +4,10 @@ using ChangeLetters.Models;
 
 namespace ChangeLetters.ParseLogic;
 
+/// <summary> 
+/// Class FileParser.
+/// Implements <see cref="IFileParser" />
+/// </summary>
 [Export(typeof(IFileParser))]
 public class FileParser : IFileParser
 {

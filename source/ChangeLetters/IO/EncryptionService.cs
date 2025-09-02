@@ -14,12 +14,15 @@ public class EncryptionService(
     private readonly IDataProtector _protector =
         provider.CreateProtector("ChangeLetters.EncryptionService.Password");
 
+    /// <inheritdoc />
     public string EncryptPassword(string password)
     {
         if (string.IsNullOrEmpty(password))
             return string.Empty;
         return _protector.Protect(password);
     }
+
+    /// <inheritdoc />
 
     public string DecryptPassword(string encryptedPassword)
     {

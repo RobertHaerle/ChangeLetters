@@ -14,6 +14,11 @@ public class VocabularyIo : IVocabularyIo
     private readonly object _lock = new();
     private readonly ILogger<VocabularyIo> _log;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VocabularyIo"/> class.
+    /// </summary>
+    /// <param name="jsonIo">The json io.</param>
+    /// <param name="log">The log.</param>
     public VocabularyIo(IJsonIo jsonIo, ILogger<VocabularyIo> log)
     {
         _log = log;
@@ -21,6 +26,7 @@ public class VocabularyIo : IVocabularyIo
         _log.LogInformation("instantiated {type}", GetType().Name);
     }
 
+    /// <inheritdoc />
     public Dictionary<string, VocabularyEntry> LoadVocabulary()
     {
         lock (_lock)
@@ -33,6 +39,7 @@ public class VocabularyIo : IVocabularyIo
         }
     }
 
+    /// <inheritdoc />
     public void SaveVocabulary(Dictionary<string, VocabularyEntry> vocabulary)
     {
         lock (_lock)
@@ -42,6 +49,7 @@ public class VocabularyIo : IVocabularyIo
         }
     }
 
+    /// <inheritdoc />
     public Dictionary<string, VocabularyEntry> GetUnknownEntries(IList<string> unknownWords)
     {
         var vocabulary = LoadVocabulary();
@@ -54,6 +62,7 @@ public class VocabularyIo : IVocabularyIo
         return unknownEntries;
     }
 
+    /// <inheritdoc />
     public void SaveUnknownEntries(Dictionary<string, VocabularyEntry> unknownEntries)
     {
         var vocabulary = LoadVocabulary();

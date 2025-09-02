@@ -3,6 +3,10 @@ using ChangeLetters.Model;
 
 namespace ChangeLetters.IO;
 
+/// <summary> 
+/// Class ConfigurationIo.
+/// Implements <see cref="IConfigurationIo" />
+/// </summary>
 [Export(typeof(IConfigurationIo))]
 public class ConfigurationIo : IConfigurationIo
 {
@@ -11,6 +15,12 @@ public class ConfigurationIo : IConfigurationIo
     private readonly ILogger<ConfigurationIo> _log;
     private readonly IEncryptionService _encryptionService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfigurationIo"/> class.
+    /// </summary>
+    /// <param name="jsonIo">The json io.</param>
+    /// <param name="log">The log.</param>
+    /// <param name="encryptionService">The encryption service.</param>
     public ConfigurationIo(
         IJsonIo jsonIo,
         ILogger<ConfigurationIo> log,
@@ -19,7 +29,6 @@ public class ConfigurationIo : IConfigurationIo
         _log = log;
         _jsonIo = jsonIo;
         _encryptionService = encryptionService;
-        _log.LogInformation("instantiated {type}", GetType().Name);
     }
 
     /// <inheritdoc />

@@ -3,60 +3,60 @@ using FluentFTP;
 namespace ChangeLetters.IO;
 
 /// <summary>Interface IAsyncFtpClient.
-/// Extends the <see cref="System.IAsyncDisposable" />
-/// Extends the <see cref="System.IDisposable" />
+/// Extends <see cref="System.IAsyncDisposable" />
+/// Extends <see cref="System.IDisposable" />
 /// </summary>
 /// <seealso cref="System.IAsyncDisposable" />
 /// <seealso cref="System.IDisposable" />
 public interface IAsyncFtpClient : IAsyncDisposable, IDisposable
 {
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.Port"/>.
+    /// Corresponds to the <c>Port</c> property of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     int Port { get; set; }
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.Host"/>.
+    /// Corresponds to the <c>Host</c> property of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     string Host { get; set; }
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.Credentials"/>.
+    /// Corresponds to the <c>Credentials</c> property of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     System.Net.NetworkCredential Credentials { get; set; }
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.AutoDetect()"/>.
+    /// Corresponds to the <c>AutoDetect()</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task<List<FtpProfile>> AutoDetect();
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.Connect(System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>Connect(CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task Connect(CancellationToken token = default);
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.MoveDirectory(string, string, FluentFTP.FtpRemoteExists, System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>MoveDirectory(string, string, FtpRemoteExists, CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task<bool> MoveDirectory(string path, string dest);
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.AutoConnect(System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>AutoConnect(CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task AutoConnect(CancellationToken token = default);
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.GetNameListing(string, System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>GetNameListing(string, CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task<string[]> GetNameListing(string path, CancellationToken token = default);
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.GetListing(string, FluentFTP.FtpListOption, System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>GetListing(string, FtpListOption, CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task<FtpListItem[]> GetListing(string path, FtpListOption options, CancellationToken token = default);
 
     /// <summary>
-    /// See <see cref="FluentFTP.AsyncFtpClient.MoveFile(string, string, FluentFTP.FtpRemoteExists, System.Threading.CancellationToken)"/>.
+    /// Corresponds to the <c>MoveFile(string, string, FtpRemoteExists, CancellationToken)</c> method of <c>FluentFTP.AsyncFtpClient</c>.
     /// </summary>
     Task<bool> MoveFile(string path, string dest, FtpRemoteExists existsMode, CancellationToken token = default);
 }

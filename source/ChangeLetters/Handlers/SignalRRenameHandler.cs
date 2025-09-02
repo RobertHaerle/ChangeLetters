@@ -20,7 +20,7 @@ public class SignalRRenameHandler(
         if (await _connectionManager.ExistsAsync(connectionId))
         {
             _log.LogDebug("Sending max changes {numberOfItems} of type {itemType} to connection {connectionId}", numberOfItems, itemType, connectionId);
-            await _hubContext.Clients.Client(connectionId).ItemCountDetermined(itemType, numberOfItems);
+            await _hubContext.Clients.Client(connectionId!).ItemCountDetermined(itemType, numberOfItems);
         }
         else
         {
@@ -34,7 +34,7 @@ public class SignalRRenameHandler(
         if (await _connectionManager.ExistsAsync(connectionId))
         {
             _log.LogDebug("Sending current item number {fileItemNumber} of type {fileItemType} to connection {connectionId}", fileItemNumber, fileItemType, connectionId);
-            await _hubContext.Clients.Client(connectionId).CurrentItemNumberChanged(fileItemType, fileItemNumber);
+            await _hubContext.Clients.Client(connectionId!).CurrentItemNumberChanged(fileItemType, fileItemNumber);
         }
         else
         {

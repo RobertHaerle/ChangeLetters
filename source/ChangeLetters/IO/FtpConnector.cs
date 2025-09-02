@@ -15,6 +15,11 @@ public class FtpConnector : IFtpConnector
     private readonly ILogger<FtpConnector> _log;
     private readonly Func<IAsyncFtpClient> _getNewFtpClient;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FtpConnector"/> class.
+    /// </summary>
+    /// <param name="log">The log.</param>
+    /// <param name="getNewFtpClient">The get new FTP client.</param>
     public FtpConnector(
         ILogger<FtpConnector> log,
         Func<IAsyncFtpClient> getNewFtpClient)

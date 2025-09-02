@@ -1,15 +1,15 @@
 ﻿namespace ChangeLetters.IO;
 
-public interface IDirectoryService
-{
-    DirectoryInfo GetDataDirectory();
-}
-
+/// <summary> 
+/// Class DirectoryService.
+/// Implements <see cref="IDirectoryService" />
+/// </summary>
 [Export(typeof(IDirectoryService))]
 public class DirectoryService(
     IConfiguration _configuration,
     ILogger<DirectoryService> _log) : IDirectoryService
 {
+    /// <inheritdoc />
     public DirectoryInfo GetDataDirectory()
     {
         var dataFolder = _configuration["DataDirectory"]?? Path.Combine(AppContext.BaseDirectory, "../Data");

@@ -19,6 +19,16 @@ public class FtpHandler : IFtpHandler
     private readonly IVocabularyRepository _vocabularyRepository;
     private readonly ISignalRRenameHandler _signalRRenameHandler;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FtpHandler"/> class.
+    /// </summary>
+    /// <param name="fileParser">The file parser.</param>
+    /// <param name="log">The log.</param>
+    /// <param name="ftpConnector">The FTP connector.</param>
+    /// <param name="configurationIo">The configuration io.</param>
+    /// <param name="vocabularyHandler">The vocabulary handler.</param>
+    /// <param name="vocabularyRepository">The vocabulary repository.</param>
+    /// <param name="signalRRenameHandler">The signal r rename handler.</param>
     public FtpHandler(
         IFileParser fileParser,
         ILogger<FtpHandler> log,
