@@ -41,18 +41,19 @@ public static class SwaggerRegistration
                     Description = "(C) by Robert Härle",
                 });
 
-            o.AddSignalRSwaggerGen(o =>
-            {
-                o.ScanAssembly(typeof(SignalRHubRename).Assembly);
-                o.AutoDiscover = AutoDiscover.MethodsAndParams;
-                o.UseXmlComments(xmlSignalRPath);
-                o.UseHubXmlCommentsSummaryAsTag = true;
-            });
 
             o.IncludeXmlComments(xmlModelPath);
             o.IncludeXmlComments(xmlSignalRPath);
             o.IncludeXmlComments(xmlPath, true);
             o.DocumentFilter<AddEnumDescriptions>();
+            o.AddSignalRSwaggerGen(options =>
+            {
+                options.ScanAssembly(typeof(SignalRHubRename).Assembly);
+                options.AutoDiscover = AutoDiscover.MethodsAndParams;
+                options.UseXmlComments(xmlSignalRPath);
+                options.UseXmlComments(xmlModelPath);
+                options.UseHubXmlCommentsSummaryAsTag = true;
+            });
         });
 
         return services;
