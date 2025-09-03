@@ -16,15 +16,15 @@ public class CompleteItemCount
     /// Initializes a new instance of the <see cref="CompleteItemCount"/> class.
     /// </summary>
     /// <param name="fileItemType">Type of the file item.</param>
-    /// <param name="count">The count.</param>
-    public CompleteItemCount(FileItemType fileItemType, int count)
+    /// <param name="total">The total.</param>
+    public CompleteItemCount(FileItemType fileItemType, int total)
     {
         FileItemType = fileItemType;
-        Count = count;
+        Total = total;
     }
     /// <summary>Gets or sets the type of the file item.</summary>
     public FileItemType FileItemType { get; set; }
 
     /// <summary>Gets or sets the count.</summary>
-    public int Count { get; set; }
+    public int Total { get; set; }
 }

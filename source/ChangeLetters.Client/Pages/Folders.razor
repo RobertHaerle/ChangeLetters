@@ -1,4 +1,6 @@
 ﻿@page "/folders"
+@using Blazored.Modal
+@using Blazored.Modal.Services
 @using ChangeLetters.DTOs
 @using ChangeLetters.Client.Connectors
 @using ChangeLetters.Client.Components
@@ -79,7 +81,33 @@
         </div>
         @if (_isRenaming)
         {
+            @if (!_foldersRenamed)
+            {
+                <div class="mb-2">renaming folders...</div>
+            }
+            else
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="RenameFolders" @bind="_foldersRenamed" disabled>
+                    <label class="form-check-label" for="RenameFolders">folders renamed</label>
+                </div>
+                @if (!_filesRenamed)
+                {
+                    <div class="mb-2">renaming files...</div>
+                }
+                else
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="RenameFiles" @bind="_filesRenamed" disabled>
+                        <label class="form-check-label" for="RenameFiles">files renamed</label>
+                    </div>
+                }
+            }
             <RenameItemsProgressBar ChangeValue="@_changeValue" ChangeMax="@_changeMax" />
+            <InfoDialog Title="Finished renaming operation"
+                           Message="@_dialogMessage"
+                           IsVisible="@_showDialog"
+                           OnOk="OnDialogOk" />
         }
     }
 }
@@ -94,6 +122,9 @@
     private string _currentFolder = Root;
     private FileItem[]? _folders = null!;
     private bool _folderSelected = false;
+    private bool _showDialog = false;
+    private string _dialogMessage = string.Empty;
+    private bool _foldersRenamed, _filesRenamed;
     private string _currentlyReadFolder = string.Empty;
     private CancellationTokenSource _cancellationTokenSource = new();
     private Dictionary<string, VocabularyEntry> _unknownEntries = new();
@@ -101,7 +132,8 @@
     [Inject] public IJSRuntime? Js { get; set; }
     [Inject] public IFtpConnectorClient? FtpConnector { get; set; }
     [Inject] public IVocabularyConnector? VocabularyConnector { get; set; }
-
+    [Inject] public ISignalRRenameConnector? SignalRRenameConnector { get; set; }
+    [Inject] public IModalService? ModalService { get; set; }
     protected override Task OnInitializedAsync()
         => OpenFolderAsync(_currentFolder);
 
@@ -112,10 +144,7 @@
     {
         if (FtpConnector != null)
         {
-            var localCts = new CancellationTokenSource();
-            await _cancellationTokenSource.CancelAsync();
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = localCts;
+            var localCts = await RecreateCancellationTokenSource();
             var token = localCts.Token;
 
             _folders = await FtpConnector.ReadFoldersAsync(fullName, token);
@@ -174,10 +203,7 @@
     private async Task ReadUnknownWordsAsync(string fullName)
     {
         _unknownEntries.Clear();
-        await _cancellationTokenSource.CancelAsync();
-        var localCts = new CancellationTokenSource();
-        _cancellationTokenSource.Dispose();
-        _cancellationTokenSource = localCts;
+        var localCts = await RecreateCancellationTokenSource();
         var token = localCts.Token;
         SetReadingFinished();
         if (FtpConnector != null)
@@ -197,49 +223,82 @@
 
     private async Task RenameItems()
     {
-        if (FtpConnector != null && VocabularyConnector != null && Js != null)
+        if (FtpConnector != null && VocabularyConnector != null && Js != null && SignalRRenameConnector != null)
         {
-            var localCts = new CancellationTokenSource();
-            await _cancellationTokenSource.CancelAsync();
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = localCts;
+            var localCts = await RecreateCancellationTokenSource();
             _isRenaming = true;
             var token = localCts.Token;
-            var request = new RenameFileItemsRequest { Folder = _currentFolder, FileItemType = FileItemType.Folder };
+            var connectionId = await ConnectRenamingEventsAsync(token);
+            var request = new RenameFileItemsRequest { Folder = _currentFolder, FileItemType = FileItemType.Folder, SignalRConnectionId = connectionId };
             var result = await FtpConnector.RenameItemsAsync(request, token);
             if (!result.Succeeded)
             {
-                if (!token.IsCancellationRequested)
-                    await Js.InvokeVoidAsync("alert", token, $"Could not rename {result.FailedFile}");
-                SetRenamingFinished();
+                await CleanUpFailedRenameOperation(token, result);
                 return;
             }
+            _foldersRenamed = true;
+            StateHasChanged();
             request.FileItemType = FileItemType.File;
             result = await FtpConnector.RenameItemsAsync(request, token);
             if (!result.Succeeded)
             {
-                if (!token.IsCancellationRequested)
-                    await Js.InvokeVoidAsync("alert", token, $"Could not rename {result.FailedFile}");
-                SetRenamingFinished();
+                await CleanUpFailedRenameOperation(token, result);
                 return;
             }
-
+            _filesRenamed = true;
             DoFolderSelection();
             SetCurrentFolderToOk();
-            await Js.InvokeVoidAsync("alert", token, $"renamed {_changeValue} items in {_currentFolder}");
+            _showDialog = true;
+            _dialogMessage = $"Renamed {_changeValue} items in {_currentFolder}";
+            StateHasChanged();
             SetRenamingFinished();
             StateHasChanged();
         }
     }
+    private void OnDialogOk()
+    {
+        _showDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task CleanUpFailedRenameOperation(CancellationToken token, RenameFileItemsResult result)
+    {
+        if (!token.IsCancellationRequested)
+            await Js!.InvokeVoidAsync("alert", token, $"Could not rename {result.FailedFile}");
+        SetRenamingFinished();
+    }
+
+    private async Task<string> ConnectRenamingEventsAsync(CancellationToken token)
+    {
+        var connectionId = await SignalRRenameConnector!.ConnectAsync(token);
+        SignalRRenameConnector.CurrentItemCountChanged += SignalROnCurrentItemCountChanged;
+        SignalRRenameConnector.CompleteItemCountChanged += SignalROnCompleteItemCountChanged;
+        return connectionId;
+    }
+
+    private void SignalROnCurrentItemCountChanged(CurrentItemCount currentItemCount)
+    {
+        _changeValue = currentItemCount.Current;
+        StateHasChanged();
+    }
+
+    private void SignalROnCompleteItemCountChanged(CompleteItemCount completeItemCount)
+    {
+        SetChangeMax(completeItemCount.Total);
+        StateHasChanged();
+    }
 
     private void SetRenamingFinished()
     {
-        _changeMax = 1;
+        SignalRRenameConnector!.CurrentItemCountChanged -= SignalROnCurrentItemCountChanged;
+        SignalRRenameConnector.CompleteItemCountChanged -= SignalROnCompleteItemCountChanged;
+        SetChangeMax(1);
         _changeValue = 0;
         _isRenaming = false;
+        _filesRenamed = false;
+        _foldersRenamed = false;
     }
 
-    // TODO: to be updated by SignalR
     private void SetChangeMax(int max)
     {
         _changeMax = max;
@@ -269,6 +328,7 @@
     {
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();
+        SignalRRenameConnector?.DisposeAsync().AsTask().Wait();
     }
 
     private void DoFolderSelection()
@@ -281,6 +341,15 @@
     {
         _folders = [];
         _cancellationTokenSource.Cancel();
+    }
+
+    private async Task<CancellationTokenSource> RecreateCancellationTokenSource()
+    {
+        var localCts = new CancellationTokenSource();
+        await _cancellationTokenSource.CancelAsync();
+        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource = localCts;
+        return localCts;
     }
 
 }

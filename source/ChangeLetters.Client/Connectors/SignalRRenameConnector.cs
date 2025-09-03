@@ -1,27 +1,50 @@
 ﻿using Flurl;
+using ChangeLetters.DTOs;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace ChangeLetters.Client.Connectors;
 
-public class SignalRRenameConnector(IWebAssemblyHostEnvironment _hostEnvironment) : IAsyncDisposable
+public class SignalRRenameConnector(IWebAssemblyHostEnvironment _hostEnvironment) : ISignalRRenameConnector
 {
     private HubConnection? _hubConnection = null;
-    public event Action<string> ConnectionIdChanged;
-    private async Task AddSignalRAsync(string path, string methodName)
+
+    /// inheritdoc />
+    public event Action<string>? ConnectionIdChanged;
+
+    /// inheritdoc />
+    public event Action<CurrentItemCount>? CurrentItemCountChanged;
+
+    /// inheritdoc />
+    public event Action<CompleteItemCount>? CompleteItemCountChanged;
+
+    /// inheritdoc />
+    public async Task<string> ConnectAsync(CancellationToken token)
     {
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(_hostEnvironment.BaseAddress
-                .AppendPathSegment(path))
+                .AppendPathSegment(SignalRPath.Rename.Path))
             .Build();
-        //_hubConnection.On<object>(methodName, x => Console.WriteLine(x));
-        //_hubConnection.On<T>(methodName, x => SignalReceived.Raise(x, methodName));
-        await _hubConnection.StartAsync();
+        _hubConnection.Closed += HubConnectionOnClosed;
+        _hubConnection.On<CurrentItemCount>(SignalRPath.Rename.CurrentItemCount, x => CurrentItemCountChanged?.Invoke(x));
+        _hubConnection.On<CompleteItemCount>(SignalRPath.Rename.CompleteItemCount, x => CompleteItemCountChanged?.Invoke(x));
+        await _hubConnection.StartAsync(token);
         ConnectionIdChanged?.Invoke(_hubConnection!.ConnectionId!);
+        return _hubConnection.ConnectionId!;
     }
 
+    /// inheritdoc />
+    public Task CloseAsync()
+        => _hubConnection?.StopAsync() ?? Task.CompletedTask;
+    
+    /// inheritdoc />
     public ValueTask DisposeAsync()
+        => _hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
+
+    private Task HubConnectionOnClosed(Exception? ex)
     {
-        throw new NotImplementedException();
+        ConnectionIdChanged?.Invoke(string.Empty);
+        return Task.CompletedTask;
     }
+
 }

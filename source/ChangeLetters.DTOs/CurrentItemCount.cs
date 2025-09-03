@@ -16,16 +16,16 @@ public class CurrentItemCount
     /// Initializes a new instance of the <see cref="CurrentItemCount"/> class.
     /// </summary>
     /// <param name="fileItemType">Type of the file item.</param>
-    /// <param name="count">The count.</param>
-    public CurrentItemCount(FileItemType fileItemType, int count)
+    /// <param name="current">The current.</param>
+    public CurrentItemCount(FileItemType fileItemType, int current)
     {
         FileItemType = fileItemType;
-        Count = count;
+        Current = current;
     }
 
     /// <summary>Gets or sets the type of the file item.</summary>
     public FileItemType FileItemType { get; set; }
 
     /// <summary>Gets or sets the count.</summary>
-    public int Count { get; set; }
+    public int Current { get; set; }
 }

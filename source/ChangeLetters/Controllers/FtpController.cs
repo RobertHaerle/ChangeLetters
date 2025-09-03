@@ -68,7 +68,7 @@ public class FtpController : ControllerBase
         {
             result = [];
         }
-        _log.LogInformation("ReadFolders returned {Count} items", result.Length);
+        _log.LogInformation("ReadFolders returned {Total} items", result.Length);
         return Ok(result);
     }
 
@@ -110,7 +110,7 @@ public class FtpController : ControllerBase
         folder = WebUtility.UrlDecode(folder);
         _log.LogInformation("ReadUnknownWords called for {folder}", folder);
         var unknownEntries = await _ftpHandler.ReadUnknownWordsAsync(folder, HttpContext?.RequestAborted ?? CancellationToken.None);
-        _log.LogInformation("ReadUnknownWords returned {Count} words", unknownEntries.Count);
+        _log.LogInformation("ReadUnknownWords returned {Total} words", unknownEntries.Count);
         return Ok(unknownEntries);
     }
 }

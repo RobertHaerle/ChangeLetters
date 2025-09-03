@@ -25,18 +25,15 @@ public class SignalRHubRename(IConnectionManager<SignalRHubRename> _connectionMa
     }
 
     /// <summary>Informs the subscriber about the determined amount of file items.</summary>
+    /// <param name="completeItemCount">Information of item type and the item numbers to be processed.</param>
+    /// <returns>See description.</returns>
     [SignalRMethod(SignalRPath.Rename.CompleteItemCount)]
-    public Task ItemCountDetermined(
-        [SignalRParam]
-        CompleteItemCount completeItemCount)
+    public Task ItemCountDetermined([SignalRParam] CompleteItemCount completeItemCount)
         => Task.CompletedTask;
 
     /// <summary>Informs the subscriber about the current item number being processed.</summary>
     /// <param name="currentItemCount">Information of item type and the currently processed item number.</param>
-    /// <returns>See description.</returns>
     [SignalRMethod(SignalRPath.Rename.CurrentItemCount)]
-    public Task CurrentItemNumberChanged(
-        [SignalRParam]
-        CurrentItemCount currentItemCount)
+    public Task CurrentItemNumberChanged([SignalRParam] CurrentItemCount currentItemCount)
         => Task.CompletedTask;
 }
