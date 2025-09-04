@@ -1,11 +1,10 @@
 ﻿@page "/folders"
-@using Blazored.Modal
-@using Blazored.Modal.Services
 @using ChangeLetters.DTOs
 @using ChangeLetters.Client.Connectors
-@using ChangeLetters.Client.Components
-@using ChangeLetters.Client.Components.Grids
-@using ChangeLetters.Client.Components.Buttons
+@using ChangeLetters.Client.SharedComponents.Grids
+@using ChangeLetters.Client.SharedComponents.Buttons
+@using ChangeLetters.Client.SharedComponents.Dialogs
+@using ChangeLetters.Client.SharedComponents.ProgressBars
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
 @implements IDisposable
@@ -81,33 +80,10 @@
         </div>
         @if (_isRenaming)
         {
-            @if (!_foldersRenamed)
-            {
-                <div class="mb-2">renaming folders...</div>
-            }
-            else
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="RenameFolders" @bind="_foldersRenamed" disabled>
-                    <label class="form-check-label" for="RenameFolders">folders renamed</label>
-                </div>
-                @if (!_filesRenamed)
-                {
-                    <div class="mb-2">renaming files...</div>
-                }
-                else
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="RenameFiles" @bind="_filesRenamed" disabled>
-                        <label class="form-check-label" for="RenameFiles">files renamed</label>
-                    </div>
-                }
-            }
-            <RenameItemsProgressBar ChangeValue="@_changeValue" ChangeMax="@_changeMax" />
-            <InfoDialog Title="Finished renaming operation"
-                           Message="@_dialogMessage"
-                           IsVisible="@_showDialog"
-                           OnOk="OnDialogOk" />
+            <RenamingProgress CurrentNumber="_changeValue"
+                              MaxChanges="_changeMax"
+                              FilesRenamed="_filesRenamed"
+                              FoldersRenamed="_foldersRenamed"/>
         }
     }
 }
@@ -122,8 +98,6 @@
     private string _currentFolder = Root;
     private FileItem[]? _folders = null!;
     private bool _folderSelected = false;
-    private bool _showDialog = false;
-    private string _dialogMessage = string.Empty;
     private bool _foldersRenamed, _filesRenamed;
     private string _currentlyReadFolder = string.Empty;
     private CancellationTokenSource _cancellationTokenSource = new();
@@ -133,7 +107,8 @@
     [Inject] public IFtpConnectorClient? FtpConnector { get; set; }
     [Inject] public IVocabularyConnector? VocabularyConnector { get; set; }
     [Inject] public ISignalRRenameConnector? SignalRRenameConnector { get; set; }
-    [Inject] public IModalService? ModalService { get; set; }
+    [CascadingParameter] public IModalService? Modal { get; set; }
+
     protected override Task OnInitializedAsync()
         => OpenFolderAsync(_currentFolder);
 
@@ -246,19 +221,19 @@
                 return;
             }
             _filesRenamed = true;
+            StateHasChanged();
+            await ShowRenamingSuccess();
             DoFolderSelection();
             SetCurrentFolderToOk();
-            _showDialog = true;
-            _dialogMessage = $"Renamed {_changeValue} items in {_currentFolder}";
-            StateHasChanged();
             SetRenamingFinished();
-            StateHasChanged();
         }
     }
-    private void OnDialogOk()
+
+    private async Task ShowRenamingSuccess()
     {
-        _showDialog = false;
-        StateHasChanged();
+        var parameters = new ModalParameters().Add("Message", $"Renamed {_changeValue} items in {_currentFolder}");
+        var modal = Modal!.Show<MessageBox>("Succeeded", parameters);
+        await modal.Result;
     }
 
     private async Task CleanUpFailedRenameOperation(CancellationToken token, RenameFileItemsResult result)
@@ -297,6 +272,7 @@
         _isRenaming = false;
         _filesRenamed = false;
         _foldersRenamed = false;
+        StateHasChanged();
     }
 
     private void SetChangeMax(int max)

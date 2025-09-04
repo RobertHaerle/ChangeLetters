@@ -1,0 +1,45 @@
+﻿@if (!FoldersRenamed)
+{
+    <div class="mb-2">renaming folders...</div>
+}
+else
+{
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="RenameFolders" @bind="FoldersRenamed" disabled>
+        <label class="form-check-label" for="RenameFolders">folders renamed</label>
+    </div>
+    @if (!FilesRenamed)
+    {
+        <div class="mb-2">renaming files...</div>
+    }
+    else
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="RenameFiles" @bind="FilesRenamed" disabled>
+            <label class="form-check-label" for="RenameFiles">files renamed</label>
+        </div>
+    }
+}
+
+@if (!FilesRenamed || !FoldersRenamed)
+{
+    <RenameItemsProgressBar ChangeValue="@CurrentNumber" ChangeMax="@MaxChanges" />
+}
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public int MaxChanges { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public int CurrentNumber { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public bool FilesRenamed { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public bool FoldersRenamed { get; set; }
+}
