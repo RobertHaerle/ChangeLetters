@@ -2,6 +2,8 @@ using DryIoc;
 using ChangeLetters.StartUp;
 using ChangeLetters.Database;
 using ChangeLetters.Components;
+using ChangeLetters.DTOs;
+using ChangeLetters.SignalR;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.FluentUI.AspNetCore.Components;
 
@@ -38,9 +40,10 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+builder.Services.AddSignalR();
+builder.Services.AddSwagger();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwagger();
 
 var app = builder.Build();
 
@@ -61,6 +64,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapControllers();
+app.MapHub<SignalRHubRename>(SignalRPath.Rename.Path);
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()

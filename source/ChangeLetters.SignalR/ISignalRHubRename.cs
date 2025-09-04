@@ -1,9 +1,18 @@
-﻿namespace ChangeLetters.SignalR;
+﻿using ChangeLetters.DTOs;
+
+namespace ChangeLetters.SignalR;
 
 /// <summary>Interface ISignalRHubRename.</summary>
 public interface ISignalRHubRename
 {
-    Task CurrentFileCount(int currentItem);
-    Task FileCountDetermined(int numberOfItems);
+    /// <summary>Informs the subscriber about the number of the currently processed item.</summary>
+    /// <param name="currentItemCount">The current item count.</param>
+    /// <returns>See description.</returns>
+    [HubMethodName(SignalRPath.Rename.CurrentItemCount)]
+    Task CurrentItemNumberChanged(CurrentItemCount currentItemCount);
 
+    /// <summary>Informs the subscriber about the determined amount of file items.</summary>
+    /// <param name="completeItemCount">The complete item count.</param>
+    [HubMethodName(SignalRPath.Rename.CompleteItemCount)]
+    Task ItemCountDetermined(CompleteItemCount completeItemCount);
 }

@@ -12,6 +12,11 @@ public class AsyncFtpClientWrapper : IAsyncFtpClient
 {
     private readonly AsyncFtpClient _client;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AsyncFtpClientWrapper"/> class.
+    /// </summary>
+    /// <param name="client">The client.</param>
+    /// <param name="logAdapter">The log adapter.</param>
     public AsyncFtpClientWrapper(
         AsyncFtpClient client,
         FtpLogAdapter logAdapter)

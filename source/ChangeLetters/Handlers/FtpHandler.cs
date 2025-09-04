@@ -17,25 +17,38 @@ public class FtpHandler : IFtpHandler
     private readonly Configuration _configuration;
     private readonly IVocabularyHandler _vocabularyHandler;
     private readonly IVocabularyRepository _vocabularyRepository;
+    private readonly ISignalRRenameHandler _signalRRenameHandler;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FtpHandler"/> class.
+    /// </summary>
+    /// <param name="fileParser">The file parser.</param>
+    /// <param name="log">The log.</param>
+    /// <param name="ftpConnector">The FTP connector.</param>
+    /// <param name="configurationIo">The configuration io.</param>
+    /// <param name="vocabularyHandler">The vocabulary handler.</param>
+    /// <param name="vocabularyRepository">The vocabulary repository.</param>
+    /// <param name="signalRRenameHandler">The signal r rename handler.</param>
     public FtpHandler(
         IFileParser fileParser,
         ILogger<FtpHandler> log,
         IFtpConnector ftpConnector,
         IConfigurationIo configurationIo,
         IVocabularyHandler vocabularyHandler,
-        IVocabularyRepository vocabularyRepository)
+        IVocabularyRepository vocabularyRepository,
+        ISignalRRenameHandler signalRRenameHandler)
     {
         _log = log;
         _fileParser = fileParser;
         _ftpConnector = ftpConnector;
         _vocabularyHandler = vocabularyHandler;
         _vocabularyRepository = vocabularyRepository;
+        _signalRRenameHandler = signalRRenameHandler;
         _configuration = configurationIo.GetConfiguration();
     }
 
     /// inheritdoc />
-    public async Task<RenameFileItemsResult> RenameItemsAsync(string folder, FileItemType fileItemType, CancellationToken token)
+    public async Task<RenameFileItemsResult> RenameItemsAsync(string folder, FileItemType fileItemType, string? connectionId, CancellationToken token)
     {
         _log.LogInformation("RenameItems called for {Folder} ", folder);
         try
@@ -45,13 +58,17 @@ public class FtpHandler : IFtpHandler
             var itemsToBeChanged = fileItems
                 .Where(f=> ConsiderFileItemType(f, fileItemType))
                 .Where(f => f.Name.Contains('?'))
-                .OrderByDescending(f => f.FullName.Length);
+                .OrderByDescending(f => f.FullName.Length)
+                .ToArray();
 
+            await _signalRRenameHandler.SendMaxChangesAsync(fileItemType, itemsToBeChanged.Length, connectionId);
             var vocabularyItems = await _vocabularyRepository.GetAllItemsAsync(token)
                 .ConfigureAwait(false);
             var vocabulary = vocabularyItems.ToDictionary(x => x.UnknownWord);
+            int counter = 0;
             foreach (var fileItem in itemsToBeChanged)
             {
+                await _signalRRenameHandler.SendCurrentItemNumberAsync(fileItemType, ++counter, connectionId);
                 bool result = false;
                 if (_fileParser.TryReplaceUnknownWordsInName(fileItem, vocabulary, out var newFileItem))
                 {

@@ -4,6 +4,10 @@ using ChangeLetters.Repositories;
 
 namespace ChangeLetters.Handlers;
 
+/// <summary> 
+/// Class VocabularyHandler.
+/// Implements <see cref="IVocabularyHandler" />
+/// </summary>
 [Export(typeof(IVocabularyHandler))]
 public class VocabularyHandler(
     IVocabularyRepository _repository) : IVocabularyHandler

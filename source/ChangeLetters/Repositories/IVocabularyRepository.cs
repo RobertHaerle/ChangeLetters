@@ -2,6 +2,7 @@
 
 namespace ChangeLetters.Repositories;
 
+/// <summary>Interface IVocabularyRepository.</summary>
 public interface IVocabularyRepository
 {
     /// <summary>Inserts or update entries as an asynchronous operation.</summary>
