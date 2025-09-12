@@ -15,7 +15,7 @@ public class FileItem
     /// <summary>Gets or sets the folder status.</summary>
     public FolderStatus FolderStatus { get; set; }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public override string ToString()
         => FullName;
 }

@@ -1,6 +1,6 @@
 ﻿using ChangeLetters.DTOs;
 
-namespace ChangeLetters.Model;
+namespace ChangeLetters.IO;
 
 /// <summary>Interface IVocabularyIo.</summary>
 public interface IVocabularyIo

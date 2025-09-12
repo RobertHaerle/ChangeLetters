@@ -31,7 +31,7 @@ public class AddEnumDescriptions : IDocumentFilter
         _enumTypes = enumTypes.ToArray();
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         RemoveUselessSchemas(swaggerDoc);

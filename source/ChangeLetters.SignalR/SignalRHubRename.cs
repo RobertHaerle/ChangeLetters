@@ -8,7 +8,7 @@ namespace ChangeLetters.SignalR;
 [SignalRHub(SignalRPath.Rename.Path)]
 public class SignalRHubRename(IConnectionManager<SignalRHubRename> _connectionManager) : Hub<ISignalRHubRename>
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     [SignalRHidden]
     public override async Task OnConnectedAsync()
     {
@@ -16,7 +16,7 @@ public class SignalRHubRename(IConnectionManager<SignalRHubRename> _connectionMa
         await base.OnConnectedAsync();
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     [SignalRHidden]
     public override async Task OnDisconnectedAsync(Exception? exception)
     {

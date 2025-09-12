@@ -1,7 +1,7 @@
 ﻿using ChangeLetters.DTOs;
 using ChangeLetters.Models;
 
-namespace ChangeLetters.Model;
+namespace ChangeLetters.ParseLogic;
 
 /// <summary>Interface IFileParser.</summary>
 public interface IFileParser

@@ -1,5 +1,4 @@
 ﻿using ChangeLetters.DTOs;
-using ChangeLetters.Model;
 using ChangeLetters.Models;
 
 namespace ChangeLetters.ParseLogic;
@@ -11,7 +10,7 @@ namespace ChangeLetters.ParseLogic;
 [Export(typeof(IFileParser))]
 public class FileParser : IFileParser
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     public List<string> GetWordsWithUnknownLetters(IList<FileItem> items)
     {
         var resultSet = new List<string>();
@@ -25,7 +24,7 @@ public class FileParser : IFileParser
         return resultSet;
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public bool TryReplaceUnknownWordsInName(FileItem fileItem, Dictionary<string, VocabularyItem> vocabulary, 
         out FileItem newFileItem)
     {

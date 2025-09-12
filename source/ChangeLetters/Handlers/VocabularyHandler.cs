@@ -12,7 +12,7 @@ namespace ChangeLetters.Handlers;
 public class VocabularyHandler(
     IVocabularyRepository _repository) : IVocabularyHandler
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<List<VocabularyEntry>> GetRequiredVocabularyAsync(IList<string> unknownWords, CancellationToken token)
     {
         try

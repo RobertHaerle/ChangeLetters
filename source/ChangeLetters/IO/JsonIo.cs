@@ -11,7 +11,7 @@ public class JsonIo(
     ILogger<JsonIo> _log,
     IDirectoryService _directoryService) : IJsonIo
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     public T Load<T>(string fileName) where T : new()
     {
         try

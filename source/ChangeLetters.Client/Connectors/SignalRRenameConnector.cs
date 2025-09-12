@@ -1,30 +1,31 @@
 ﻿using Flurl;
 using ChangeLetters.DTOs;
-using Microsoft.AspNetCore.SignalR.Client;
+using ChangeLetters.Client.HubConnection;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace ChangeLetters.Client.Connectors;
 
-public class SignalRRenameConnector(IWebAssemblyHostEnvironment _hostEnvironment) : ISignalRRenameConnector
+public class SignalRRenameConnector(
+    IHubConnectionFactory _hubConnectionFactory,
+    IWebAssemblyHostEnvironment _hostEnvironment) : ISignalRRenameConnector
 {
-    private HubConnection? _hubConnection = null;
+    private IHubConnection? _hubConnection = null;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public event Action<string>? ConnectionIdChanged;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public event Action<CurrentItemCount>? CurrentItemCountChanged;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public event Action<CompleteItemCount>? CompleteItemCountChanged;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<string> ConnectAsync(CancellationToken token)
     {
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(_hostEnvironment.BaseAddress
-                .AppendPathSegment(SignalRPath.Rename.Path))
-            .Build();
+        var url = new Url(_hostEnvironment.BaseAddress)
+            .AppendPathSegment(SignalRPath.Rename.Path);
+        _hubConnection = _hubConnectionFactory.CreateConnection(url);
         _hubConnection.Closed += HubConnectionOnClosed;
         _hubConnection.On<CurrentItemCount>(SignalRPath.Rename.CurrentItemCount, x => CurrentItemCountChanged?.Invoke(x));
         _hubConnection.On<CompleteItemCount>(SignalRPath.Rename.CompleteItemCount, x => CompleteItemCountChanged?.Invoke(x));
@@ -33,11 +34,11 @@ public class SignalRRenameConnector(IWebAssemblyHostEnvironment _hostEnvironment
         return _hubConnection.ConnectionId!;
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public Task CloseAsync()
         => _hubConnection?.StopAsync() ?? Task.CompletedTask;
     
-    /// inheritdoc />
+    /// <inheritdoc />
     public ValueTask DisposeAsync()
         => _hubConnection?.DisposeAsync() ?? ValueTask.CompletedTask;
 
@@ -46,5 +47,4 @@ public class SignalRRenameConnector(IWebAssemblyHostEnvironment _hostEnvironment
         ConnectionIdChanged?.Invoke(string.Empty);
         return Task.CompletedTask;
     }
-
 }

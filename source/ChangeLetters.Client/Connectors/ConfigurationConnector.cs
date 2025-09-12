@@ -11,7 +11,7 @@ public class ConfigurationConnector(HttpClient _httpClient) : IConfigurationConn
 {
     private const string Endpoint = "api/configuration";
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<Configuration?> GetConfigurationAsync()
     {
         try
@@ -25,7 +25,7 @@ public class ConfigurationConnector(HttpClient _httpClient) : IConfigurationConn
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task SaveConfigurationAsync(Configuration configuration)
     {
         await _httpClient.PostAsJsonAsync(Endpoint, configuration);

@@ -1,7 +1,7 @@
-﻿using ChangeLetters.DTOs;
-using FluentFTP;
-using ChangeLetters.Model;
+﻿using FluentFTP;
+using ChangeLetters.DTOs;
 using FluentFTP.Exceptions;
+using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
 
 namespace ChangeLetters.IO;
 
@@ -28,7 +28,7 @@ public class FtpConnector : IFtpConnector
         _getNewFtpClient = getNewFtpClient;
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<bool> ConnectAsync(Configuration config)
     {
         await using var ftpClient = GetFtpClient(config);
@@ -45,7 +45,7 @@ public class FtpConnector : IFtpConnector
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<FileItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token)
     {
         await using var ftpClient = GetFtpClient(config);

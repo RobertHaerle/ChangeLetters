@@ -45,9 +45,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Connectors\" />
-    <Folder Include="Server\Handlers\" />
-  </ItemGroup>
-
 </Project>
