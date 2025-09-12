@@ -1,6 +1,5 @@
-using ChangeLetters.DTOs;
 using ChangeLetters.IO;
-using ChangeLetters.Model;
+using ChangeLetters.DTOs;
 
 namespace ChangeLetters.Tests.Server.IO;
 
@@ -53,7 +52,7 @@ public class ConfigurationIoTests
             Password = "plain"
         };
         _encryptionServiceMock.EncryptPassword("plain").Returns("encrypted2");
-        EncryptedConfiguration? savedConfig = null;
+        EncryptedConfiguration savedConfig = null;
         _jsonIoMock
             .When(x => x.Save(Arg.Any<string>(), Arg.Any<EncryptedConfiguration>()))
             .Do(call => savedConfig = (EncryptedConfiguration)call.Args()[1]);
