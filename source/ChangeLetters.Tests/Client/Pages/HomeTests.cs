@@ -39,4 +39,19 @@ public class HomeTests : TestContext
         // Assert
         header.MarkupMatches("<h1>Enter connection data</h1>");
     }
+
+    [Test]
+    public void ConnectButton_ShouldShowConnectedSuccessfullyMessage()
+    {
+        // Arrange
+        var component = RenderComponent<Home>();
+        var button = component.Find("#save");
+
+        // Act
+        button.Click();
+
+        // Assert
+        var alert = component.Find(".alert-success");
+        alert.MarkupMatches(@"<div class=""alert alert-success"" role=""alert""><strong>Connected successfully!</strong></div>");
+    }
 }
