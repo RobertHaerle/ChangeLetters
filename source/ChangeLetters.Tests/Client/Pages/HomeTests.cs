@@ -7,11 +7,13 @@ using TestContext = Bunit.TestContext;
 
 namespace ChangeLetters.Tests.Client.Pages;
 
-public class HomeTests : TestContext
+public class HomeTests
 {
+    private TestContext _textContext;
     [SetUp]
     public void Setup()
     {   
+        _textContext = new TestContext();
         var ftpConnector = Substitute.For<IFtpConnectorClient>();
         var configConnector = Substitute.For<IConfigurationConnector>();
 
@@ -25,15 +27,22 @@ public class HomeTests : TestContext
 
         ftpConnector.ConnectAsync(Arg.Any<Configuration>()).Returns(Task.FromResult(true));
 
-        Services.AddSingleton(ftpConnector);
-        Services.AddSingleton(configConnector);
+        _textContext.Services.AddSingleton(ftpConnector);
+        _textContext.Services.AddSingleton(configConnector);
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _textContext.Dispose();
+    }
+
 
     [Test]
     public void HomePage_ShouldRenderCorrectly()
     {
         // Arrange
-        var component = RenderComponent<Home>();
+        var component = _textContext.RenderComponent<Home>();
         // Act
         var header = component.Find("h1");
         // Assert
@@ -44,7 +53,7 @@ public class HomeTests : TestContext
     public void ConnectButton_ShouldShowConnectedSuccessfullyMessage()
     {
         // Arrange
-        var component = RenderComponent<Home>();
+        var component = _textContext.RenderComponent<Home>();
         var button = component.Find("#save");
 
         // Act
