@@ -71,7 +71,7 @@ public class FtpConnectorClient : IFtpConnectorClient
         return new();
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<RenameFileItemsResult> RenameItemsAsync(RenameFileItemsRequest request, CancellationToken token)
     {
         try

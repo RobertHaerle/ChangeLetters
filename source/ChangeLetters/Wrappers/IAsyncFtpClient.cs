@@ -1,13 +1,13 @@
 using FluentFTP;
 
-namespace ChangeLetters.IO;
+namespace ChangeLetters.Wrappers;
 
 /// <summary>Interface IAsyncFtpClient.
-/// Extends <see cref="System.IAsyncDisposable" />
-/// Extends <see cref="System.IDisposable" />
+/// Extends <see cref="IAsyncDisposable" />
+/// Extends <see cref="IDisposable" />
 /// </summary>
-/// <seealso cref="System.IAsyncDisposable" />
-/// <seealso cref="System.IDisposable" />
+/// <seealso cref="IAsyncDisposable" />
+/// <seealso cref="IDisposable" />
 public interface IAsyncFtpClient : IAsyncDisposable, IDisposable
 {
     /// <summary>

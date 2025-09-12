@@ -1,7 +1,7 @@
 using FluentFTP;
 using FluentFTP.Logging;
 
-namespace ChangeLetters.IO;
+namespace ChangeLetters.Wrappers;
 
 /// <summary> 
 /// Class AsyncFtpClientWrapper.

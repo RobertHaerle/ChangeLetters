@@ -1,5 +1,6 @@
 ﻿using ChangeLetters.DTOs;
-using ChangeLetters.Model;
+using ChangeLetters.IO;
+using ChangeLetters.ParseLogic;
 using ChangeLetters.Repositories;
 
 namespace ChangeLetters.Handlers;
@@ -47,7 +48,7 @@ public class FtpHandler : IFtpHandler
         _configuration = configurationIo.GetConfiguration();
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<RenameFileItemsResult> RenameItemsAsync(string folder, FileItemType fileItemType, string? connectionId, CancellationToken token)
     {
         _log.LogInformation("RenameItems called for {Folder} ", folder);
@@ -103,7 +104,7 @@ public class FtpHandler : IFtpHandler
     => fileItem.IsFolder && requiredFileItemType == FileItemType.Folder
         || !fileItem.IsFolder && requiredFileItemType == FileItemType.File;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<List<VocabularyEntry>> ReadUnknownWordsAsync(string folder, CancellationToken token)
     {
         try

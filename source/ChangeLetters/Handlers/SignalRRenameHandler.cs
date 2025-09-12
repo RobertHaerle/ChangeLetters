@@ -14,7 +14,7 @@ public class SignalRRenameHandler(
     IConnectionManager<SignalRHubRename> _connectionManager,
     IHubContext<SignalRHubRename, ISignalRHubRename> _hubContext) : ISignalRRenameHandler
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task SendMaxChangesAsync(FileItemType itemType, int numberOfItems, string? connectionId)
     {
         if (await _connectionManager.ExistsAsync(connectionId))
@@ -28,7 +28,7 @@ public class SignalRRenameHandler(
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task SendCurrentItemNumberAsync(FileItemType fileItemType, int fileItemNumber, string? connectionId)
     {
         if (await _connectionManager.ExistsAsync(connectionId))

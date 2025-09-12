@@ -16,7 +16,7 @@ public class VocabularyEntry
         => !string.IsNullOrEmpty(CorrectedWord) && 
            !CorrectedWord.Contains('?');
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public override string ToString()
         => CorrectedWord;
 }

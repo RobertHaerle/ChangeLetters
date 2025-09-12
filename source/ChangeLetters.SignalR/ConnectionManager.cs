@@ -15,7 +15,7 @@ public class ConnectionManager<T> : IConnectionManager<T> where T : Hub
     private readonly HashSet<string> _connections = new();
     private readonly AsyncReaderWriterLock _rwLock = new();
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<bool> AddAsync(string connectionId)
     {
         try
@@ -29,7 +29,7 @@ public class ConnectionManager<T> : IConnectionManager<T> where T : Hub
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<bool> RemoveAsync(string connectionId)
     {
         try
@@ -43,7 +43,7 @@ public class ConnectionManager<T> : IConnectionManager<T> where T : Hub
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<bool> ExistsAsync (string? connectionId)
     {
         if (string.IsNullOrEmpty(connectionId))

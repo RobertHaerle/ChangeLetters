@@ -1,10 +1,11 @@
 using ChangeLetters.DTOs;
-using ChangeLetters.Model;
 using ChangeLetters.Models;
 using ChangeLetters.Handlers;
+using ChangeLetters.IO;
+using ChangeLetters.ParseLogic;
 using ChangeLetters.Repositories;
 
-namespace ChangeLetters.Tests.Handlers
+namespace ChangeLetters.Tests.Server.Handlers
 {
     public class FtpHandlerTests
     {

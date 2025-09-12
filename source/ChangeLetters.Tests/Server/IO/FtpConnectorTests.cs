@@ -1,6 +1,6 @@
 using ChangeLetters.DTOs;
 using ChangeLetters.IO;
-using ChangeLetters.Model;
+using ChangeLetters.Wrappers;
 
 namespace ChangeLetters.Tests.Server.IO;
 

@@ -13,7 +13,7 @@ public class VocabularyRepository(
     Func<DatabaseContext> _getContext,
     ILogger<VocabularyRepository> _log) : IVocabularyRepository
 {
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task UpsertEntriesAsync(IList<VocabularyItem> items)
     {
         var unknownWords = items.Select(x => x.UnknownWord);
@@ -28,7 +28,7 @@ public class VocabularyRepository(
         await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task RecreateAllItemsAsync(IList<VocabularyItem> items)
     {
         await using var context = _getContext();
@@ -48,7 +48,7 @@ public class VocabularyRepository(
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     /// <param name="token"></param>
     public async Task<VocabularyItem[]> GetAllItemsAsync(CancellationToken token)
     {
@@ -68,7 +68,7 @@ public class VocabularyRepository(
         }
     }
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public async Task<List<VocabularyItem>> GetItemsAsync(IList<string> unknownWords, CancellationToken token)
     {
         await using var context = _getContext();

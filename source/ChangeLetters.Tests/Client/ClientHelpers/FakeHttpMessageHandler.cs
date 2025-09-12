@@ -3,7 +3,7 @@
 public class FakeHttpMessageHandler : HttpMessageHandler
 {
     private readonly HttpResponseMessage _response;
-    public HttpRequestMessage? LastRequest { get; private set; }
+    public HttpRequestMessage LastRequest { get; private set; }
 
     public FakeHttpMessageHandler(HttpResponseMessage response)
     {

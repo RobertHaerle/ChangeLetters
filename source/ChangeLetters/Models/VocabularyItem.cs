@@ -16,7 +16,7 @@ public class VocabularyItem
     /// <summary>Gets or sets the corrected word.</summary>
     public string CorrectedWord { get; set; } = string.Empty;
 
-    /// inheritdoc />
+    /// <inheritdoc />
     public override string ToString()
         => $"{UnknownWord} -> {CorrectedWord}";
 }
