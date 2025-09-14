@@ -66,9 +66,6 @@ namespace ChangeLetters.Tests {
         ///  &quot;UnknownWord&quot;: &quot;Pr?sidenten&quot;
         /// },
         /// {
-        ///  &quot;UnknownWord&quot;: &quot;B?ttcher&quot;
-        /// },
-        /// {
         ///  &quot;UnknownWord&quot;: &quot;Zur?ck&quot;
         /// },
         /// {
@@ -102,7 +99,10 @@ namespace ChangeLetters.Tests {
         ///  &quot;UnknownWord&quot;: &quot;Plan?nderung&quot;
         /// },
         /// {
-        ///  &quot;UnknownWo [rest of string was truncated]&quot;;.
+        ///  &quot;UnknownWord&quot;: &quot;Verm?chtnis&quot;
+        /// },
+        /// {
+        ///  &quot;Unknow [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string fiftyUnknownWords {
             get {
@@ -112,10 +112,6 @@ namespace ChangeLetters.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to [
-        ///  {
-        ///    &quot;UnknownWord&quot;: &quot;M?bius&quot;,
-        ///    &quot;CorrectedWord&quot;: &quot;Möbius&quot;
-        ///  },
         ///  {
         ///    &quot;UnknownWord&quot;: &quot;Ungek?rzt&quot;,
         ///    &quot;CorrectedWord&quot;: &quot;Ungekürzt&quot;
@@ -129,16 +125,18 @@ namespace ChangeLetters.Tests {
         ///    &quot;CorrectedWord&quot;: &quot;Über&quot;
         ///  },
         ///  {
-        ///    &quot;UnknownWord&quot;: &quot;B?sen&quot;,
-        ///    &quot;CorrectedWord&quot;: &quot;Bösen&quot;
+        ///    &quot;UnknownWord&quot;: &quot;B?se&quot;,
+        ///    &quot;CorrectedWord&quot;: &quot;Böse&quot;
         ///  },
         ///  {
         ///    &quot;UnknownWord&quot;: &quot;Unterst?tzt&quot;,
         ///    &quot;CorrectedWord&quot;: &quot;Unterstützt&quot;
         ///  },
         ///  {
-        ///    &quot;UnknownWord&quot;: &quot;Kalenderm?dchen&quot;,
-        ///    &quot;Correcte [rest of string was truncated]&quot;;.
+        ///    &quot;UnknownWord&quot;: &quot;Pr?sident&quot;,
+        ///    &quot;CorrectedWord&quot;: &quot;Präsident&quot;
+        ///  }
+        ///].
         /// </summary>
         internal static string Vocabulary {
             get {

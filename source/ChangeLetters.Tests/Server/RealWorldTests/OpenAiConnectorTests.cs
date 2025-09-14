@@ -30,6 +30,7 @@ public class OpenAiConnectorTests
     }
 
     [Test]
+    [Ignore("real world test")]
     public async Task GetUnknownWordSuggestion_ShouldReturnSuggestion()
     {
         var result = await _sut.GetUnknownWordSuggestionAsync("G?te", CancellationToken.None);
@@ -38,13 +39,15 @@ public class OpenAiConnectorTests
     }
 
     [Test]
+    [Ignore("real world test")]
     public async Task GetUnknownWordSuggestion_ShouldReturnNoSuggestion()
     {
-        var result = await _sut.GetUnknownWordSuggestionAsync("Shitb?gertum", CancellationToken.None);
-        result.ShouldBe("Shitb?gertum");
+        var result = await _sut.GetUnknownWordSuggestionAsync("?ngosutt", CancellationToken.None);
+        result.ShouldBe("?ngosutt");
     }
 
     [Test]
+    [Ignore("real world test")]
     public async Task GetUnknownWordsAsync_ShouldReturnSuggestions()
     {
         var vocabulary = TestExtensions.LoadFromJson<VocabularyItem>(resources.fiftyUnknownWords);

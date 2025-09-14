@@ -51,6 +51,6 @@ public class FileParser : IFileParser
     {
         return fileName.Split(' ', '.', '-')
             .Where(x => x.Contains('?'))
-            .Select(x => x.Trim('(', ')', ',', '\'', '_'));
+            .Select(x => x.Trim('(', ')', ',', '\'', '_', '"'));
     }
 }
