@@ -1,11 +1,13 @@
-using DryIoc;
-using ChangeLetters.StartUp;
-using ChangeLetters.Database;
 using ChangeLetters.Components;
+using ChangeLetters.Connectors;
+using ChangeLetters.Database;
 using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
+using ChangeLetters.StartUp;
+using DryIoc;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.FluentUI.AspNetCore.Components;
+using OpenAI.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host
@@ -28,6 +30,7 @@ builder.Services.AddRazorComponents()
 builder.Services
     .AddFluentUIComponents()
     .AddFluentFtpComponents()
+    .AddOpenAI(builder.Configuration)
     .AddDatabase(builder.Configuration)
     .AddDataProtectionComponents(builder.Configuration);
 
@@ -57,9 +60,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler("/Error", createScopeForErrors: true);
 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 app.UseHsts();
-
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 
@@ -72,5 +73,6 @@ app.MapRazorComponents<App>()
 
 var context = app.Services.GetRequiredService<DatabaseContext>();
 context.Database.EnsureCreated();
+var o = app.Services.GetRequiredService<IOpenAiConnector>();
 
 app.Run();

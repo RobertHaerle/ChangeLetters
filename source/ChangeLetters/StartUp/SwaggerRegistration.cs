@@ -17,7 +17,7 @@ public static class SwaggerRegistration
 {
     /// <summary>Adds the swagger.</summary>
     /// <param name="services">The services.</param>
-    /// <returns>See description.</returns>
+    /// <returns><see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(o =>
@@ -61,7 +61,7 @@ public static class SwaggerRegistration
 
     /// <summary>Starts the swagger.</summary>
     /// <param name="app">The application.</param>
-    /// <returns>See description.</returns>
+    /// <returns><see cref="IApplicationBuilder"/>.</returns>
     public static IApplicationBuilder StartSwagger(this IApplicationBuilder app)
     {
         app.UseSwagger();

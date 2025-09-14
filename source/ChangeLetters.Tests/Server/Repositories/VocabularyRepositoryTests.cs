@@ -1,8 +1,8 @@
 ﻿using ChangeLetters.Models;
 using Microsoft.Data.Sqlite;
 using ChangeLetters.Repositories;
-using ChangeLetters.Tests.Server.TestHelpers;
 using Microsoft.EntityFrameworkCore;
+using ChangeLetters.Tests.Server.TestHelpers;
 
 namespace ChangeLetters.Tests.Server.Repositories;
 
@@ -11,6 +11,7 @@ public class VocabularyRepositoryTests : IDisposable
     private VocabularyRepository _sut;
     private SqliteConnection _connection;
     private IList<VocabularyItem> _vocabulary;
+
     [SetUp]
     public void SetUp()
     {
@@ -75,7 +76,7 @@ public class VocabularyRepositoryTests : IDisposable
         {
             new() { UnknownWord = "Ungek?rzt", CorrectedWord = "Ungekürzt" },
             new() { UnknownWord = "Pr?sident", CorrectedWord = "Präsident" },
-            new() { UnknownWord = "Pr?sidenten", CorrectedWord = "Prösidenten" },
+            new() { UnknownWord = "Pr?sidenten", CorrectedWord = "Präsidenten" },
         };
 
         await _sut.UpsertEntriesAsync(items2Bchanged);
@@ -85,6 +86,6 @@ public class VocabularyRepositoryTests : IDisposable
         allItems.Length.ShouldBe(_vocabulary.Count + 1);
         allItems.ShouldContain(x => x.UnknownWord == "Ungek?rzt" && x.CorrectedWord == "Ungekürzt");
         allItems.ShouldContain(x => x.UnknownWord == "Pr?sident" && x.CorrectedWord == "Präsident");
-        allItems.ShouldContain(x => x.UnknownWord == "Pr?sidenten" && x.CorrectedWord == "Prösidenten");
+        allItems.ShouldContain(x => x.UnknownWord == "Pr?sidenten" && x.CorrectedWord == "Präsidenten");
     }
 }

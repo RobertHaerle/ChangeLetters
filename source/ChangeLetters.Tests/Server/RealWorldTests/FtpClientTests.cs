@@ -1,9 +1,9 @@
 using FluentFTP;
 
-namespace ChangeLetters.Tests;
+namespace ChangeLetters.Tests.Server.RealWorldTests;
 
 [Ignore("real world test")]
-public class RealWorldTests
+public class FtpClientTests
 {
     private FtpClient _ftpClient;
 

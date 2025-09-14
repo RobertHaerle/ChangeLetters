@@ -2,8 +2,9 @@
 using ChangeLetters.DTOs;
 using FluentFTP.Exceptions;
 using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
+using ChangeLetters.Extensions;
 
-namespace ChangeLetters.IO;
+namespace ChangeLetters.Connectors;
 
 /// <summary> 
 /// Class FtpConnector.
@@ -169,8 +170,8 @@ public class FtpConnector : IFtpConnector
     {
         if (fullName.Contains('?'))
             return true;
-        int counter = 0;
-        bool succeeded = false;
+        var counter = 0;
+        var succeeded = false;
         while (!succeeded)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -182,10 +183,8 @@ public class FtpConnector : IFtpConnector
                     return true;
                 var folders = resultSet.Where(item => item.Type == FtpObjectType.Directory);
                 foreach (var folder in folders)
-                {
                     if (await HasQuestionMarksAsync(folder.FullName, ftpClient, cancellationToken))
                         return true;
-                }
                 succeeded = true;
             }
             catch (OperationCanceledException)
@@ -259,16 +258,12 @@ public class FtpConnector : IFtpConnector
     {
         var resultSet = await ftpClient.GetListing(folder, FtpListOption.AllFiles, token);
         foreach (var item in resultSet)
-        {
             if (item.Type == FtpObjectType.Directory)
             {
                 list.Add(new FileItem { Name = item.Name, FullName = item.FullName, IsFolder = true });
                 await AddItemsToListAsync(item.FullName, list, ftpClient, token);
             }
             else if (item.Type == FtpObjectType.File)
-            {
                 list.Add(new FileItem { Name = item.Name, FullName = item.FullName, IsFolder = false });
-            }
-        }
     }
 }
