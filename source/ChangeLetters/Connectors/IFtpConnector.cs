@@ -1,6 +1,6 @@
 ﻿using ChangeLetters.DTOs;
 
-namespace ChangeLetters.IO;
+namespace ChangeLetters.Connectors;
 
 /// <summary>Interface IFtpConnector.</summary>
 public interface IFtpConnector

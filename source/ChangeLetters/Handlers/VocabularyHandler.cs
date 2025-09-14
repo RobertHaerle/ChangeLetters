@@ -1,5 +1,6 @@
 ﻿using ChangeLetters.DTOs;
 using ChangeLetters.Models;
+using ChangeLetters.Connectors;
 using ChangeLetters.Repositories;
 
 namespace ChangeLetters.Handlers;
@@ -10,6 +11,7 @@ namespace ChangeLetters.Handlers;
 /// </summary>
 [Export(typeof(IVocabularyHandler))]
 public class VocabularyHandler(
+    IOpenAiConnector _openAiConnector,
     IVocabularyRepository _repository) : IVocabularyHandler
 {
     /// <inheritdoc />
@@ -20,6 +22,7 @@ public class VocabularyHandler(
             var items = await _repository.GetItemsAsync(unknownWords, token).ConfigureAwait(false);
             var entries = items.Select(i => i.ToDto()).ToList();
             FillUpUnknownWords(entries, unknownWords);
+            await TryResolveWithOpenAiAsync(entries);
             return entries;
 
         }
@@ -29,6 +32,31 @@ public class VocabularyHandler(
 
         return [];
     }
+
+    private async Task TryResolveWithOpenAiAsync(List<VocabularyEntry> entries)
+    {
+        var unknownVocabulary = entries.Where(e => e.CorrectedWord.Contains('?')).ToArray();
+        if (unknownVocabulary.Length == 0)
+            return;
+        var unresolvedWords = unknownVocabulary.Select(e => e.UnknownWord).ToArray();
+        var suggestions = await _openAiConnector.GetUnknownWordSuggestionsAsync(unresolvedWords, CancellationToken.None);
+        AddToEntries(suggestions, entries);
+    }
+
+    private void AddToEntries((string UnknownWord, string Suggestion)[] suggestions, List<VocabularyEntry> entries)
+    {
+        foreach (var suggestion in suggestions
+                     .Where(s=> !s.Suggestion.Contains('?')))
+        {
+            var entry = entries.FirstOrDefault(e => e.UnknownWord == suggestion.UnknownWord);
+            if (entry != null && entry.CorrectedWord.Contains('?'))
+            {
+                entry.CorrectedWord = suggestion.Suggestion;
+                entry.AiResolved = true;
+            }
+        }
+    }
+
 
     private void FillUpUnknownWords(List<VocabularyEntry> entries, IList<string> unknownWords)
     {

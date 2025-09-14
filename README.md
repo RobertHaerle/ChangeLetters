@@ -5,3 +5,4 @@ The NAS uses an ASUS tool, that can not create characters from outside the ASCII
 This is neither readable by the File Explorer of the Asustor NAS nor by the Windows File Explorer.
 This may be a codepage problem of the software. But there is no possibility to set up anything.
 ChangeLetters uses a database with vocabulary to exchange the characters into the correct ones.
+ChangeLetters tries to resolve unknown terms with the help of OpenAI.

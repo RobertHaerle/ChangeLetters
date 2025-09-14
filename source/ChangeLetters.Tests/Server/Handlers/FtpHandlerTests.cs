@@ -4,6 +4,7 @@ using ChangeLetters.Handlers;
 using ChangeLetters.IO;
 using ChangeLetters.ParseLogic;
 using ChangeLetters.Repositories;
+using ChangeLetters.Connectors;
 
 namespace ChangeLetters.Tests.Server.Handlers
 {
