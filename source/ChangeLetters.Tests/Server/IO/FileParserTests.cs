@@ -17,16 +17,16 @@ public class FileParserTests
     public void ReplaceUnknownWords()
     {
         var fullFileName =
-            "/Download/[Sci-Fi] Brandon Q. Morris - M?bius (3) - Das zeitlose Artefakt (\"Ungek?rzt\") - filecrypt.cc/Brandon Q. Morris - M?bius (3) - Das zeitlose Artefakt (Ungek?rzt)";
+            "/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der ?lprinz (\"Ungek?rzt\") part01";
         var fileItem = new FileItem
-            { FullName = fullFileName, Name = "Brandon Q. Morris - M?bius (3) - Das zeitlose Artefakt (Ungek?rzt)" };
+            { FullName = fullFileName, Name = "Karl May - Der ?lprinz (\"Ungek?rzt\") part01" };
         var vocabulary = new Dictionary<string, VocabularyItem>
         {
             {
-                "M?bius", new VocabularyItem
+                "?lprinz", new VocabularyItem
                 {
-                    UnknownWord = "M?bius",
-                    CorrectedWord = "Möbius"
+                    UnknownWord = "?lprinz",
+                    CorrectedWord = "Ölprinz"
                 }
             },
             {
@@ -42,6 +42,6 @@ public class FileParserTests
 
         Assert.That(result, Is.True);
         newItem.Name.ShouldNotContain("?");
-        newItem.FullName.ShouldBe("/Download/[Sci-Fi] Brandon Q. Morris - M?bius (3) - Das zeitlose Artefakt (\"Ungek?rzt\") - filecrypt.cc/Brandon Q. Morris - Möbius (3) - Das zeitlose Artefakt (Ungekürzt)");
+        newItem.FullName.ShouldBe("/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der Ölprinz (\"Ungekürzt\") part01");
     }
 }

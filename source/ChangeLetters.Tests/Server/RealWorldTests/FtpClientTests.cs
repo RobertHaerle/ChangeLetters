@@ -20,7 +20,7 @@ public class FtpClientTests
     }
 
     [Test]
-    public void Test1()
+    public void FindProfiles()
     {
         var result = _ftpClient.AutoDetect(null);
         result.Count.ShouldBe(3);

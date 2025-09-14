@@ -63,9 +63,9 @@ public class VocabularyRepositoryTests : IDisposable
         var items = await _sut.GetItemsAsync(requiredWords, CancellationToken.None);
 
         items.Count.ShouldBe(2);
-        items.ShouldNotContain(x => x.UnknownWord == "Pr?sident" );
+        items.ShouldNotContain(x => x.UnknownWord == "Pr?sidenten" );
         items.ShouldContain(x => x.UnknownWord == "Ungek?rzt" && x.CorrectedWord == "Ungekürzt");
-        items.ShouldContain(x => x.UnknownWord == "Pr?sidenten" && x.CorrectedWord == "Präsidenten");
+        items.ShouldContain(x => x.UnknownWord == "Pr?sident" && x.CorrectedWord == "Präsident");
     }
 
 

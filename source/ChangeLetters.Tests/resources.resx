@@ -123,9 +123,6 @@
   "UnknownWord": "Pr?sidenten"
  },
  {
-  "UnknownWord": "B?ttcher"
- },
- {
   "UnknownWord": "Zur?ck"
  },
  {
@@ -165,9 +162,6 @@
   "UnknownWord": "?berfall"
  },
  {
-  "UnknownWord": "S?ren"
- },
- {
   "UnknownWord": "F?nfzehn"
  },
  {
@@ -181,9 +175,6 @@
  },
  {
   "UnknownWord": "T?glich"
- },
- {
-  "UnknownWord": "Vergi?meinnicht"
  },
  {
   "UnknownWord": "?ber"
@@ -228,9 +219,6 @@
   "UnknownWord": "H?rst"
  },
  {
-  "UnknownWord": "S?nke"
- },
- {
   "UnknownWord": "Schei?vieh"
  },
  {
@@ -252,9 +240,6 @@
   "UnknownWord": "F?lle"
  },
  {
-  "UnknownWord": "Hofs?nger"
- },
- {
   "UnknownWord": "T?uschung"
  },
  {
@@ -271,10 +256,6 @@
   <data name="Vocabulary" xml:space="preserve">
     <value>[
   {
-    "UnknownWord": "M?bius",
-    "CorrectedWord": "Möbius"
-  },
-  {
     "UnknownWord": "Ungek?rzt",
     "CorrectedWord": "Ungekürzt"
   },
@@ -287,20 +268,16 @@
     "CorrectedWord": "Über"
   },
   {
-    "UnknownWord": "B?sen",
-    "CorrectedWord": "Bösen"
+    "UnknownWord": "B?se",
+    "CorrectedWord": "Böse"
   },
   {
     "UnknownWord": "Unterst?tzt",
     "CorrectedWord": "Unterstützt"
   },
   {
-    "UnknownWord": "Kalenderm?dchen",
-    "CorrectedWord": "Kalendermädchen"
-  },
-  {
-    "UnknownWord": "Pr?sidenten",
-    "CorrectedWord": "Präsidenten"
+    "UnknownWord": "Pr?sident",
+    "CorrectedWord": "Präsident"
   }
 ]</value>
   </data>
