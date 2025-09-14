@@ -18,7 +18,7 @@ public class OpenAiConnector(
     public async Task<string?> GetUnknownWordSuggestionAsync(string unknownWord, CancellationToken token)
     {
         _log.LogTrace("Getting suggestion for unknown word: {word}", unknownWord);
-        string question = $"Suggest a similar word for the unknown, most possibly German word '{unknownWord}' by changing the question marks. Respond with only the suggested word.";
+        string question = $"Suggest a similar word for the unknown, most possibly German word '{unknownWord}' by changing the question marks. It should be a German special character. Respond with only the suggested word.";
         var messages = new[] { new UserChatMessage(question) };
 
         var options = GetChatOptions();

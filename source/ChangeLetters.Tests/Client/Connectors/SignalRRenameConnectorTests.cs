@@ -51,7 +51,7 @@ public class SignalRRenameConnectorTests
     public async Task ConnectAsync_ShouldRaiseConnectionIdChangedEvent()
     {
         // Arrange
-        string? receivedId = null;
+        string receivedId = null;
         _sut.ConnectionIdChanged += id => receivedId = id;
 
         // Act
@@ -93,7 +93,7 @@ public class SignalRRenameConnectorTests
     public async Task CurrentItemCountChanged_ShouldBeTriggeredBySignalREvent()
     {
         // Arrange
-        CurrentItemCount? receivedCount = null;
+        CurrentItemCount receivedCount = null;
         _sut.CurrentItemCountChanged += count => receivedCount = count;
 
         Action<CurrentItemCount> capturedHandler = null!;
@@ -118,11 +118,11 @@ public class SignalRRenameConnectorTests
     public async Task HubConnectionClosed_ShouldRaiseConnectionIdChangedWithEmptyString()
     {
         // Arrange
-        string? receivedId = null;
+        string receivedId = null;
         _sut.ConnectionIdChanged += id => receivedId = id;
 
-        Func<Exception?, Task> capturedClosedHandler = null!;
-        _mockHubConnection.Closed += Arg.Do<Func<Exception?, Task>>(
+        Func<Exception, Task> capturedClosedHandler = null!;
+        _mockHubConnection.Closed += Arg.Do<Func<Exception, Task>>(
             handler => capturedClosedHandler = handler);
 
         await _sut.ConnectAsync(CancellationToken.None);

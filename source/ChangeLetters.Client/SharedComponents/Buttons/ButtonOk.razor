@@ -1,0 +1,19 @@
+@if (Visible)
+{
+    <button class="btn btn-success" @onclick="Clicked" >
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle;">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            <polyline points="8 12 11 15 16 10" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        <span class="ms-1">OK</span>
+    </button>
+}
+
+@code {
+    [Parameter] 
+    [EditorRequired]
+    public EventCallback Clicked { get; set; }
+
+    [Parameter] 
+    public bool Visible { get; set; } = true;
+}

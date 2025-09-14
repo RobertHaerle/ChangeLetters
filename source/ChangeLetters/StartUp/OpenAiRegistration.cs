@@ -13,6 +13,7 @@ public static class OpenAiRegistration
     /// <param name="services">The services.</param>
     /// <param name="configuration">The configuration.</param>
     /// <returns><see cref="IServiceCollection" />.</returns>
+    // ReSharper disable once InconsistentNaming
     public static IServiceCollection AddOpenAI(this IServiceCollection services, IConfiguration configuration)
     {
         var settings = configuration.Deserialize<OpenAiSettings>();
@@ -21,5 +22,4 @@ public static class OpenAiRegistration
         services.AddSingleton(settings);
         return services;
     }
-
 }

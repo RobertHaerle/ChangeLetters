@@ -13,8 +13,12 @@ public class VocabularyEntry
 
     /// <summary>Determines whether this instance is corrected.</summary>
     public bool IsCorrected ()
-        => !string.IsNullOrEmpty(CorrectedWord) && 
-           !CorrectedWord.Contains('?');
+        => !string.IsNullOrEmpty(CorrectedWord) 
+            && !CorrectedWord.Contains('?')
+            && !AiResolved;
+
+    /// <summary>Gets or sets the information whether this entity contains an ai suggestion.</summary>
+    public bool AiResolved { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

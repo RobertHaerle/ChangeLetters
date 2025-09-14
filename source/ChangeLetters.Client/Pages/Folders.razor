@@ -9,6 +9,11 @@
 
 @implements IDisposable
 
+@inject IJSRuntime Js
+@inject IFtpConnectorClient FtpConnector
+@inject IVocabularyConnector VocabularyConnector
+@inject ISignalRRenameConnector SignalRRenameConnector
+
 <PageTitle>Select folder</PageTitle>
 <div class="mb-2">
     @_currentFolder
@@ -83,7 +88,7 @@
             <RenamingProgress CurrentNumber="_changeValue"
                               MaxChanges="_changeMax"
                               FilesRenamed="_filesRenamed"
-                              FoldersRenamed="_foldersRenamed"/>
+                              FoldersRenamed="_foldersRenamed" />
         }
     }
 }
@@ -103,10 +108,7 @@
     private CancellationTokenSource _cancellationTokenSource = new();
     private Dictionary<string, VocabularyEntry> _unknownEntries = new();
 
-    [Inject] public IJSRuntime? Js { get; set; }
-    [Inject] public IFtpConnectorClient? FtpConnector { get; set; }
-    [Inject] public IVocabularyConnector? VocabularyConnector { get; set; }
-    [Inject] public ISignalRRenameConnector? SignalRRenameConnector { get; set; }
+
     [CascadingParameter] public IModalService? Modal { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -150,20 +152,25 @@
                         SetReadingFinished();
                     return;
                 }
-                _currentlyReadFolder = fileItem.Name;
-                StateHasChanged();
-                if (fileItem.FolderStatus == FolderStatus.Undefined)
-                {
-                    await FtpConnector.CheckQuestionMarksAsync(fileItem, token);
-                    _progressValue++;
-                    if (fileItem.FolderStatus != FolderStatus.Undefined)
-                        StateHasChanged();
-                }
 
+                await CheckQuestionMarkAsync(fileItem, token);
                 await Task.Yield();
             }
             if (_cancellationTokenSource == localCts)
                 SetReadingFinished();
+        }
+    }
+
+    private async Task CheckQuestionMarkAsync(FileItem fileItem, CancellationToken token)
+    {
+        _currentlyReadFolder = fileItem.Name;
+        StateHasChanged();
+        if (fileItem.FolderStatus == FolderStatus.Undefined)
+        {
+            await FtpConnector.CheckQuestionMarksAsync(fileItem, token);
+            _progressValue++;
+            if (fileItem.FolderStatus != FolderStatus.Undefined)
+                StateHasChanged();
         }
     }
 
@@ -181,52 +188,45 @@
         var localCts = await RecreateCancellationTokenSource();
         var token = localCts.Token;
         SetReadingFinished();
-        if (FtpConnector != null)
-        {
-            _currentFolder = fullName;
-            _unknownEntries = await FtpConnector.ReadUnknownWordsAsync(fullName, token);
-            _folderSelected = true;
-            StateHasChanged();
-        }
+        _currentFolder = fullName;
+        _unknownEntries = await FtpConnector.ReadUnknownWordsAsync(fullName, token);
+        _folderSelected = true;
+        StateHasChanged();
     }
 
-    private void SaveVocabulary()
+    private async Task SaveVocabulary()
     {
-        VocabularyConnector?.UpsertEntriesAsync(_unknownEntries.Values);
-        _unknownEntries.Clear();
+        await VocabularyConnector.UpsertEntriesAsync(_unknownEntries.Values);
     }
 
     private async Task RenameItems()
     {
-        if (FtpConnector != null && VocabularyConnector != null && Js != null && SignalRRenameConnector != null)
+        var localCts = await RecreateCancellationTokenSource();
+        _isRenaming = true;
+        var token = localCts.Token;
+        var connectionId = await ConnectRenamingEventsAsync(token);
+        var request = new RenameFileItemsRequest { Folder = _currentFolder, FileItemType = FileItemType.Folder, SignalRConnectionId = connectionId };
+        var result = await FtpConnector.RenameItemsAsync(request, token);
+        if (!result.Succeeded)
         {
-            var localCts = await RecreateCancellationTokenSource();
-            _isRenaming = true;
-            var token = localCts.Token;
-            var connectionId = await ConnectRenamingEventsAsync(token);
-            var request = new RenameFileItemsRequest { Folder = _currentFolder, FileItemType = FileItemType.Folder, SignalRConnectionId = connectionId };
-            var result = await FtpConnector.RenameItemsAsync(request, token);
-            if (!result.Succeeded)
-            {
-                await CleanUpFailedRenameOperation(token, result);
-                return;
-            }
-            _foldersRenamed = true;
-            StateHasChanged();
-            request.FileItemType = FileItemType.File;
-            result = await FtpConnector.RenameItemsAsync(request, token);
-            if (!result.Succeeded)
-            {
-                await CleanUpFailedRenameOperation(token, result);
-                return;
-            }
-            _filesRenamed = true;
-            StateHasChanged();
-            await ShowRenamingSuccess();
-            DoFolderSelection();
-            SetCurrentFolderToOk();
-            SetRenamingFinished();
+            await CleanUpFailedRenameOperation(token, result);
+            return;
         }
+        _foldersRenamed = true;
+        StateHasChanged();
+        request.FileItemType = FileItemType.File;
+        result = await FtpConnector.RenameItemsAsync(request, token);
+        if (!result.Succeeded)
+        {
+            await CleanUpFailedRenameOperation(token, result);
+            return;
+        }
+        _filesRenamed = true;
+        StateHasChanged();
+        await ShowRenamingSuccess();
+        DoFolderSelection();
+        SetCurrentFolderToOk();
+        SetRenamingFinished();
     }
 
     private async Task ShowRenamingSuccess()

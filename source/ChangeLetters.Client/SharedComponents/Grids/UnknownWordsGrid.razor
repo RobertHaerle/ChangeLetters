@@ -26,6 +26,11 @@ else
                                style="width: 100%;" />
                 </ChildContent>
             </TemplateColumn>
+            <TemplateColumn>
+                <ChildContent>
+                    <ButtonOk Clicked="() => MarkAsCorrected(context)" Visible="@IsAiSolutionValid(context)" />
+                </ChildContent>
+            </TemplateColumn>
         </QuickGrid>
     </div>
     <div class="row mb-2">
@@ -101,4 +106,10 @@ else
                 Js.InvokeVoidAsync("alert", $"{newEntry.UnknownWord} already exists.");
         }
     }
+
+    private bool IsAiSolutionValid(VocabularyEntry context)
+        => context.AiResolved && !context.CorrectedWord.Contains('?');
+
+    private void MarkAsCorrected(VocabularyEntry context)
+        => context.AiResolved = false;
 }
