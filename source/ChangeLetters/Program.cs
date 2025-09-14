@@ -28,7 +28,6 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services
-    .AddFluentUIComponents()
     .AddFluentFtpComponents()
     .AddOpenAI(builder.Configuration)
     .AddDatabase(builder.Configuration)
