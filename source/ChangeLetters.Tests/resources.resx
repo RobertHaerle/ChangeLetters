@@ -117,6 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="fiftyUnknownWords" xml:space="preserve">
+    <value>[
+ {
+  "UnknownWord": "Pr?sidenten"
+ },
+ {
+  "UnknownWord": "B?ttcher"
+ },
+ {
+  "UnknownWord": "Zur?ck"
+ },
+ {
+  "UnknownWord": "Shitb?rgertum"
+ },
+ {
+  "UnknownWord": "Sch?ner"
+ },
+ {
+  "UnknownWord": "Kv?ven"
+ },
+ {
+  "UnknownWord": "Aufz?gen"
+ },
+ {
+  "UnknownWord": "Au?enposten"
+ },
+ {
+  "UnknownWord": "M?nner"
+ },
+ {
+  "UnknownWord": "W?r"
+ },
+ {
+  "UnknownWord": "Million?r"
+ },
+ {
+  "UnknownWord": "F?r"
+ },
+ {
+  "UnknownWord": "Plan?nderung"
+ },
+ {
+  "UnknownWord": "Verm?chtnis"
+ },
+ {
+  "UnknownWord": "?berfall"
+ },
+ {
+  "UnknownWord": "S?ren"
+ },
+ {
+  "UnknownWord": "F?nfzehn"
+ },
+ {
+  "UnknownWord": "Bi?chen"
+ },
+ {
+  "UnknownWord": "Verr?ter"
+ },
+ {
+  "UnknownWord": "Gespr?ch"
+ },
+ {
+  "UnknownWord": "T?glich"
+ },
+ {
+  "UnknownWord": "Vergi?meinnicht"
+ },
+ {
+  "UnknownWord": "?ber"
+ },
+ {
+  "UnknownWord": "K?sse"
+ },
+ {
+  "UnknownWord": "Wundersch?nes"
+ },
+ {
+  "UnknownWord": "R?ckenwind"
+ },
+ {
+  "UnknownWord": "Geb?rmutter"
+ },
+ {
+  "UnknownWord": "F?ngt"
+ },
+ {
+  "UnknownWord": "R?ntgenblick"
+ },
+ {
+  "UnknownWord": "H?lle"
+ },
+ {
+  "UnknownWord": "Aufkl?rung"
+ },
+ {
+  "UnknownWord": "Sch?nster"
+ },
+ {
+  "UnknownWord": "Wundersch?n"
+ },
+ {
+  "UnknownWord": "Pl?ne"
+ },
+ {
+  "UnknownWord": "Vor?ber"
+ },
+ {
+  "UnknownWord": "H?rst"
+ },
+ {
+  "UnknownWord": "S?nke"
+ },
+ {
+  "UnknownWord": "Schei?vieh"
+ },
+ {
+  "UnknownWord": "M?dchen"
+ },
+ {
+  "UnknownWord": "Wei?"
+ },
+ {
+  "UnknownWord": "Hei?er"
+ },
+ {
+  "UnknownWord": "N?chster"
+ },
+ {
+  "UnknownWord": "L?sung"
+ },
+ {
+  "UnknownWord": "F?lle"
+ },
+ {
+  "UnknownWord": "Hofs?nger"
+ },
+ {
+  "UnknownWord": "T?uschung"
+ },
+ {
+  "UnknownWord": "m?chtige"
+ },
+ {
+  "UnknownWord": "H?lfte"
+ },
+ {
+  "UnknownWord": "allt?gliche"
+ }
+]</value>
+  </data>
   <data name="Vocabulary" xml:space="preserve">
     <value>[
   {

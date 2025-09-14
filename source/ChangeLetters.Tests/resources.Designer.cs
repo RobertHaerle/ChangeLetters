@@ -62,6 +62,56 @@ namespace ChangeLetters.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to [
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Pr?sidenten&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;B?ttcher&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Zur?ck&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Shitb?rgertum&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Sch?ner&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Kv?ven&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Aufz?gen&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Au?enposten&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;M?nner&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;W?r&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Million?r&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;F?r&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWord&quot;: &quot;Plan?nderung&quot;
+        /// },
+        /// {
+        ///  &quot;UnknownWo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string fiftyUnknownWords {
+            get {
+                return ResourceManager.GetString("fiftyUnknownWords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
         ///  {
         ///    &quot;UnknownWord&quot;: &quot;M?bius&quot;,
         ///    &quot;CorrectedWord&quot;: &quot;Möbius&quot;
@@ -88,8 +138,7 @@ namespace ChangeLetters.Tests {
         ///  },
         ///  {
         ///    &quot;UnknownWord&quot;: &quot;Kalenderm?dchen&quot;,
-        ///    &quot;CorrectedWord&quot;: &quot;Kalendermädchen&quot;
-        ///  [rest of string was truncated]&quot;;.
+        ///    &quot;Correcte [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Vocabulary {
             get {
