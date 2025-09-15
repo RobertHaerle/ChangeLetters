@@ -42,3 +42,21 @@ ChangeLetters:
 
 4. Open the UI in your browser:
    https://localhost:7251
+
+---
+
+## 🛠 Tech Stack
+
+- Languages: C#
+
+- Databases: SQLite (for vocabulary), extensible to others
+
+- Tools: Git, Docker, CI/CD
+
+- Practices: TDD, Clean Code, Clean Architecture
+
+- UI: ASP.NET Core with a simple web frontend
+
+- Communication: REST, Signal-R, FTP (NAS access)  
+
+- **Integrations:** OpenAI API (for intelligent character replacement suggestions)

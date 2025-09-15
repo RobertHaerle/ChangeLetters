@@ -26,7 +26,9 @@
         "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
         "applicationUrl": "https://localhost:7251",
         "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "OpenAI__UseOpenAI": "true",
+            "ConnectionStrings__Sqlite": "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;"
         }
       },
       "IIS Express": {

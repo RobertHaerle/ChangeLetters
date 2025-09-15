@@ -2,6 +2,7 @@
 using ChangeLetters.Models;
 using ChangeLetters.Connectors;
 using ChangeLetters.Repositories;
+using ChangeLetters.Configurations;
 
 namespace ChangeLetters.Handlers;
 
@@ -11,6 +12,7 @@ namespace ChangeLetters.Handlers;
 /// </summary>
 [Export(typeof(IVocabularyHandler))]
 public class VocabularyHandler(
+    OpenAiSettings _openAiSettings,
     IOpenAiConnector _openAiConnector,
     IVocabularyRepository _repository) : IVocabularyHandler
 {
@@ -22,9 +24,9 @@ public class VocabularyHandler(
             var items = await _repository.GetItemsAsync(unknownWords, token).ConfigureAwait(false);
             var entries = items.Select(i => i.ToDto()).ToList();
             FillUpUnknownWords(entries, unknownWords);
-            await TryResolveWithOpenAiAsync(entries);
+            if (_openAiSettings.UseOpenAI)
+                await TryResolveWithOpenAiAsync(entries);
             return entries;
-
         }
         catch (TaskCanceledException)
         {
@@ -56,7 +58,6 @@ public class VocabularyHandler(
             }
         }
     }
-
 
     private void FillUpUnknownWords(List<VocabularyEntry> entries, IList<string> unknownWords)
     {
