@@ -28,7 +28,8 @@
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
             "OpenAI__UseOpenAI": "true",
-            "ConnectionStrings__Sqlite": "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;"
+            "ConnectionStrings__Sqlite": "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;",
+            "DataDirectory": "c:/Data/ChangeLetters/"
         }
       },
       "IIS Express": {

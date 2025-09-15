@@ -23,12 +23,12 @@ public class OpenAiConnectorTests
         _log = Substitute.For<ILogger<OpenAiConnector>>();
         _settings = new OpenAiSettings
         {
-            ApiKey = "test-api-key",
             Model = "gpt-5-nano",
+            ApiKey = "test-api-key",
+            TopP = 1.0F,
             MaxTokens = 100,
-            TopP = 1.0,
-            FrequencyPenalty = 0.0,
-            PresencePenalty = 0.0
+            PresencePenalty = 0.0F,
+            FrequencyPenalty = 0.0F
         };
         
         _sut = new OpenAiConnector(_chatClient, _settings, _log);
@@ -198,10 +198,10 @@ public class OpenAiConnectorTests
             Arg.Any<ChatCompletionOptions>(),
             cancellationToken);
 
-        options.TopP!.Value.ShouldBe((float)_settings.TopP);
+        options.TopP!.Value.ShouldBe(_settings.TopP);
         options.MaxOutputTokenCount.ShouldBe(_settings.MaxTokens);
-        options.PresencePenalty.ShouldBe((float)_settings.PresencePenalty);
-        options.FrequencyPenalty.ShouldBe((float)_settings.FrequencyPenalty);
+        options.PresencePenalty.ShouldBe(_settings.PresencePenalty);
+        options.FrequencyPenalty.ShouldBe(_settings.FrequencyPenalty);
     }
 
     [Test]
