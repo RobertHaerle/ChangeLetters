@@ -1,4 +1,5 @@
 ﻿using ChangeLetters.Models;
+using ChangeLetters.Wrappers;
 using ChangeLetters.Connectors;
 using ChangeLetters.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -25,8 +26,9 @@ public class OpenAiConnectorTests
         settings.Model = "gpt-5-nano";
 
         var chatClient = new OpenAI.Chat.ChatClient(settings.Model, settings.ApiKey);
+        var chatClientWrapper = new ChatClientWrapper(chatClient);
 
-        _sut = new OpenAiConnector(chatClient, settings, log);
+        _sut = new OpenAiConnector(chatClientWrapper, settings, log);
     }
 
     [Test]

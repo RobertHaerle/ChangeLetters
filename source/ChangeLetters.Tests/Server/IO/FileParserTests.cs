@@ -17,9 +17,9 @@ public class FileParserTests
     public void ReplaceUnknownWords()
     {
         var fullFileName =
-            "/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der ?lprinz (\"Ungek?rzt\") part01";
+            "/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der ?lprinz (\"Ungek?rzt\") CD01";
         var fileItem = new FileItem
-            { FullName = fullFileName, Name = "Karl May - Der ?lprinz (\"Ungek?rzt\") part01" };
+            { FullName = fullFileName, Name = "Karl May - Der ?lprinz (\"Ungek?rzt\") CD01" };
         var vocabulary = new Dictionary<string, VocabularyItem>
         {
             {
@@ -42,6 +42,6 @@ public class FileParserTests
 
         Assert.That(result, Is.True);
         newItem.Name.ShouldNotContain("?");
-        newItem.FullName.ShouldBe("/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der Ölprinz (\"Ungekürzt\") part01");
+        newItem.FullName.ShouldBe("/Backup/Karl May - Der ?lprinz (\"Ungek?rzt\")/Karl May - Der Ölprinz (\"Ungekürzt\") CD01");
     }
 }
