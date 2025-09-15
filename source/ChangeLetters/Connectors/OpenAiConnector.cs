@@ -1,4 +1,6 @@
 ﻿using OpenAI.Chat;
+using System.ClientModel;
+using System.Diagnostics;
 using ChangeLetters.Extensions;
 using ChangeLetters.Configurations;
 
@@ -20,23 +22,22 @@ public class OpenAiConnector(
         _log.LogTrace("Getting suggestion for unknown word: {word}", unknownWord);
         string question = $"Suggest a similar word for the unknown, most possibly German word '{unknownWord}' by changing the question marks. It should be a German special character. Respond with only the suggested word.";
         var messages = new[] { new UserChatMessage(question) };
-
         var options = GetChatOptions();
 
-        var response = await _chatClient.CompleteChatAsync(messages, options, token);
-        if (response?.Value?.Content?.Any() ?? false)
+        ClientResult<ChatCompletion>? response;
+        var stopwatch = Stopwatch.StartNew();
+        try
         {
-            var suggestion = response.Value.Content[0].Text;
-            if (suggestion.IsNullOrEmpty())
-                suggestion = unknownWord;
-            _log.LogTrace("Suggestion received for unknown word {word}: {suggestedWord}", unknownWord, suggestion);
-            return suggestion;
+            response = await _chatClient.CompleteChatAsync(messages, options, token);
         }
-        else
+        catch (Exception ex)
         {
-            _log.LogInformation("No suggestion received for unknown word {word}", unknownWord);
+            stopwatch.Stop();
+            _log.LogError(ex, $" openAI request failed after {stopwatch.Elapsed.TotalSeconds:F1} seconds.");
             return unknownWord;
         }
+        stopwatch.Stop();
+        return ExtractSuggestion(response, unknownWord, stopwatch);
     }
 
     /// <inheritdoc />
@@ -49,7 +50,23 @@ public class OpenAiConnector(
         });
         return await Task.WhenAll(tasks);
     }
-    
+
+    private string ExtractSuggestion(ClientResult<ChatCompletion>? response, string unknownWord, Stopwatch stopwatch)
+    {
+        if (response?.Value.Content?.Any() ?? false)
+        {
+            var suggestion = response.Value.Content[0].Text;
+            if (suggestion.IsNullOrEmpty())
+            {
+                suggestion = unknownWord;
+                _log.LogTrace("Suggestion received for unknown word {word}: {suggestedWord}. Required time: {seconds} seconds.", unknownWord, suggestion, stopwatch.Elapsed.TotalSeconds);
+                return suggestion;
+            }
+        }
+
+        _log.LogInformation("No suggestion received for unknown word {word}. Required time: {seconds} seconds.", unknownWord, stopwatch.Elapsed.TotalSeconds);
+        return unknownWord;
+    }
 
     private ChatCompletionOptions GetChatOptions()
     {
