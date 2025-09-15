@@ -7,6 +7,11 @@
 public class OpenAiSettings
 {
     /// <summary>
+    /// Indicates whether OpenAI should be used.
+    /// </summary>
+    public bool UseOpenAI { get; set; }
+
+    /// <summary>
     /// The API key used to authenticate requests to the OpenAI service.
     /// </summary>
     public string ApiKey { get; set; } = string.Empty;
@@ -24,15 +29,15 @@ public class OpenAiSettings
     /// <summary>
     /// Controls the diversity via nucleus sampling.
     /// </summary>
-    public double TopP { get; set; }
+    public float TopP { get; set; }
 
     /// <summary>
     /// Penalizes new tokens based on their frequency in the text so far.
     /// </summary>
-    public double FrequencyPenalty { get; set; }
+    public float FrequencyPenalty { get; set; }
 
     /// <summary>
     /// Penalizes new tokens based on whether they appear in the text so far.
     /// </summary>
-    public double PresencePenalty { get; set; }
+    public float PresencePenalty { get; set; }
 }
