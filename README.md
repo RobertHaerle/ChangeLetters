@@ -25,7 +25,7 @@ ChangeLetters:
 
 ## 📸 Screenshot
 
-![ChangeLetters Screenshot](docs/screenshot.png)  
+![ChangeLetters Screenshot](docs/images/screenshot.png)  
 *Folder selection in the ChangeLetters web UI.*
 
 ---
