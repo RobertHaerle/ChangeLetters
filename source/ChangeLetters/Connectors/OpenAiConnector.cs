@@ -3,6 +3,7 @@ using System.ClientModel;
 using System.Diagnostics;
 using ChangeLetters.Extensions;
 using ChangeLetters.Configurations;
+using ChangeLetters.Wrappers;
 
 namespace ChangeLetters.Connectors;
 
@@ -12,7 +13,7 @@ namespace ChangeLetters.Connectors;
 /// </summary>
 [Export(typeof(IOpenAiConnector))]
 public class OpenAiConnector(
-    ChatClient _chatClient,
+    IChatClient _chatClient,
     OpenAiSettings _settings,
     ILogger<OpenAiConnector> _log) : IOpenAiConnector
 {
@@ -56,9 +57,8 @@ public class OpenAiConnector(
         if (response?.Value.Content?.Any() ?? false)
         {
             var suggestion = response.Value.Content[0].Text;
-            if (suggestion.IsNullOrEmpty())
+            if (!suggestion.IsNullOrEmpty())
             {
-                suggestion = unknownWord;
                 _log.LogTrace("Suggestion received for unknown word {word}: {suggestedWord}. Required time: {seconds} seconds.", unknownWord, suggestion, stopwatch.Elapsed.TotalSeconds);
                 return suggestion;
             }
