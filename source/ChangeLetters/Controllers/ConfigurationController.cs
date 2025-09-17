@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChangeLetters.Controllers;
 
 /// <summary> 
-/// Access point +für the FTP configuration
+/// Access point for the FTP configuration
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
@@ -13,7 +13,7 @@ public class ConfigurationController(
     IConfigurationIo _configurationIo,
     ILogger<ConfigurationController> _log) : ControllerBase
 {
-    /// <summary>Gets this instance.</summary>
+    /// <summary>Gets the FTP configuration.</summary>
     [HttpGet]
     [ProducesResponseType<Configuration>(StatusCodes.Status200OK)]
     public ActionResult<Configuration> Get()

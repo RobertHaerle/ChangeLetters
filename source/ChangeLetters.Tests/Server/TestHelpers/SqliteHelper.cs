@@ -15,6 +15,8 @@ public static class SqliteHelper
         {
             Options = options,
             ConfigurationAssembly = typeof(DatabaseContext).Assembly,
+            DatabaseType = DatabaseType.Sqlite,
+            ConnectionString = connection.ConnectionString
         };
         var context = new DatabaseContext(dbConfig);
         if (ensureCreation)

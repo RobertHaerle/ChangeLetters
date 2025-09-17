@@ -5,6 +5,7 @@ using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
 using DryIoc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.FluentUI.AspNetCore.Components;
 using OpenAI.Chat;
@@ -70,8 +71,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(ChangeLetters.Client._Imports).Assembly);
 
-var context = app.Services.GetRequiredService<DatabaseContext>();
-context.Database.EnsureCreated();
-var o = app.Services.GetRequiredService<IOpenAiConnector>();
+app.InitializeDatabase();
 
 app.Run();
