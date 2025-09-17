@@ -10,8 +10,12 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
       ASPNETCORE_HTTPS_PORTS: 8081
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetcore.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: MyPassword
       DataDirectory: /data
       ConnectionStrings__Sqlite: Data Source=/data/ChangeLetters.db;
+    volumes:
+      - ../IntegrationTests/https:/https
   ftp:
     image: garethflowers/ftp-server
     container_name: test-ftp

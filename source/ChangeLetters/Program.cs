@@ -72,5 +72,4 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(ChangeLetters.Client._Imports).Assembly);
 
 app.InitializeDatabase();
-
 app.Run();

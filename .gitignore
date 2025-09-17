@@ -45,3 +45,4 @@ publish/
 
 # Visual Studio
 .vs/
+/source/IntegrationTests/https/aspnetcore.pfx
