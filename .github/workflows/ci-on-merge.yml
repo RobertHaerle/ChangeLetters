@@ -72,7 +72,6 @@ jobs:
         env:
           PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
         run: |
-          set -e
           mkdir -p logs
           docker ps -a > logs/compose-ps.txt || true
           docker compose ls > logs/compose-ls.txt || true
