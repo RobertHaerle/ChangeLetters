@@ -73,35 +73,34 @@ jobs:
           PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
         run: |
           set -Eeuo pipefail
-          mkdir -p logs
-          docker ps -a > logs/compose-ps.txt || true
-          docker compose ls > logs/compose-ls.txt || true
+          LOGDIR="${GITHUB_WORKSPACE}/logs"
+          mkdir -p "${LOGDIR}"
+          docker ps -a > ${LOGDIR}/compose-ps.txt || true
+          docker compose ls > ${LOGDIR}/compose-ls.txt || true
           BASE_FILTER="label=com.docker.compose.service"
           PROJ_FILTER=""
           if [ -n "$PROJECT" ]; then
             PROJ_FILTER="--filter label=com.docker.compose.project=$PROJECT"
           fi
-          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=ftp-server" || true)
+          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=test-ftp" || true)
           APP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=changeletters" || true)
-          echo "FTP_ID=${FTP_ID}"        | tee -a logs/_ids.txt
-          echo "APP_ID=${APP_ID}"        | tee -a logs/_ids.txt
-          echo "PROJECT=${PROJECT}"      | tee -a logs/_ids.txt
+          printf "FTP_ID=%s\nAPP_ID=%s\nPROJECT=%s\n" "${FTP_ID}" "${APP_ID}" "${PROJECT:-}" | tee -a "${LOGDIR}/_ids.txt"
           # Alle Compose-Logs (falls compose-Files greifbar sind)
-          docker compose logs --no-color > logs/compose-all.log 2>&1 || true
+          docker compose logs --no-color > ${LOGDIR}/compose-all.log 2>&1 || true
           # Einzel-Logs + Inspect + wichtige Dateien
           if [ -n "$FTP_ID" ]; then
-            docker logs --timestamps "$FTP_ID" > logs/ftp-server.log 2>&1 || true
-            docker inspect "$FTP_ID" > logs/ftp-server.inspect.json 2>&1 || true
-            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > logs/ftp-server.vsftpd.conf 2>&1 || true
+            docker logs --timestamps "$FTP_ID" > ${LOGDIR}/ftp-server.log 2>&1 || true
+            docker inspect "$FTP_ID" > ${LOGDIR}/ftp-server.inspect.json 2>&1 || true
+            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > ${LOGDIR}/ftp-server.vsftpd.conf 2>&1 || true
           fi
           if [ -n "$APP_ID" ]; then
-            docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
-            docker inspect "$APP_ID" > logs/changeletters.inspect.json 2>&1 || true
+            docker logs --timestamps "$APP_ID" > ${LOGDIR}/changeletters.log 2>&1 || true
+            docker inspect "$APP_ID" > ${LOGDIR}/changeletters.inspect.json 2>&1 || true
           fi
-          [ -s logs/compose-all.log ] || echo "no logs" > logs/EMPTY.txt
+          [ -s ${LOGDIR}/compose-all.log ] || echo "no logs" > ${LOGDIR}/EMPTY.txt
           # Compose-Dateien mit sichern (falls vorhanden)
-          [ -f docker-compose.yml ] && cp docker-compose.yml logs/ || true
-          [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml logs/ || true
+          [ -f docker-compose.yml ] && cp docker-compose.yml ${LOGDIR}/ || true
+          [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml ${LOGDIR}/ || true
 
       - name: Upload container logs
         if: always()
