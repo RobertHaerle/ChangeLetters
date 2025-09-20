@@ -80,14 +80,13 @@ jobs:
             docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
           fi
 
-    - name: Upload container logs
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: docker-logs
-        path: logs
-        
-    - name: Compose down (cleanup)
-      if: always()
-      run: docker compose down -v
-        
+      - name: Upload container logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: logs
+     
+      - name: Compose down (cleanup)
+        if: always()
+        run: docker compose down -v
