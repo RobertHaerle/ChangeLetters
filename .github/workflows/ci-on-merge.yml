@@ -72,6 +72,7 @@ jobs:
         env:
           PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
         run: |
+          set -Eeuo pipefail
           mkdir -p logs
           docker ps -a > logs/compose-ps.txt || true
           docker compose ls > logs/compose-ls.txt || true
@@ -97,6 +98,7 @@ jobs:
             docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
             docker inspect "$APP_ID" > logs/changeletters.inspect.json 2>&1 || true
           fi
+          [ -s logs/compose-all.log ] || echo "no logs" > logs/EMPTY.txt
           # Compose-Dateien mit sichern (falls vorhanden)
           [ -f docker-compose.yml ] && cp docker-compose.yml logs/ || true
           [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml logs/ || true
