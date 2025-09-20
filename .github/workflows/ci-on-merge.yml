@@ -68,24 +68,46 @@ jobs:
 
       - name: Collect container logs
         if: always()
+          env:
+            PROJECT: ${{ env.COMPOSE_PROJECT_NAME }}
         run: |
+          set -e
           mkdir -p logs
-          docker compose ps > logs/compose-ps.txt  
-          FTP_ID=$(docker compose ps -q ftp || true)
-          APP_ID=$(docker compose ps -q changeletters || true)
+          docker ps -a > logs/compose-ps.txt || true
+          docker compose ls > logs/compose-ls.txt || true
+          BASE_FILTER="label=com.docker.compose.service"
+          PROJ_FILTER=""
+          if [ -n "$PROJECT" ]; then
+            PROJ_FILTER="--filter label=com.docker.compose.project=$PROJECT"
+          fi
+          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=ftp-server" || true)
+          APP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=changeletters" || true)
+          echo "FTP_ID=${FTP_ID}"        | tee -a logs/_ids.txt
+          echo "APP_ID=${APP_ID}"        | tee -a logs/_ids.txt
+          echo "PROJECT=${PROJECT}"      | tee -a logs/_ids.txt
+          # Alle Compose-Logs (falls compose-Files greifbar sind)
+          docker compose logs --no-color > logs/compose-all.log 2>&1 || true
+          # Einzel-Logs + Inspect + wichtige Dateien
           if [ -n "$FTP_ID" ]; then
-            docker logs --timestamps "$FTP_ID" > logs/ftp.log 2>&1 || true
+            docker logs --timestamps "$FTP_ID" > logs/ftp-server.log 2>&1 || true
+            docker inspect "$FTP_ID" > logs/ftp-server.inspect.json 2>&1 || true
+            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > logs/ftp-server.vsftpd.conf 2>&1 || true
           fi
           if [ -n "$APP_ID" ]; then
             docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
+            docker inspect "$APP_ID" > logs/changeletters.inspect.json 2>&1 || true
           fi
+
+    # Compose-Dateien mit sichern (falls vorhanden)
+    [ -f docker-compose.yml ] && cp docker-compose.yml logs/ || true
+    [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml logs/ || true
 
       - name: Upload container logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: docker-logs
-          path: logs
+          path: logs/**
      
       - name: Compose down (cleanup)
         if: always()
