@@ -32,7 +32,7 @@ services:
     networks:
       testnet:
         ipv4_address: 172.23.0.10
-    container_name: test-ftp
+    container_name: ftp-server
     entrypoint: ["/bin/sh","-c","set -e; mkdir -p /home/myuser/working && exec /docker-entrypoint.sh /usr/sbin/vsftpd /etc/vsftpd.conf"]
     ports:
       - "2121:21"

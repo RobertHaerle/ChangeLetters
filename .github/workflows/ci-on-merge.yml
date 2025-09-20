@@ -82,7 +82,7 @@ jobs:
           if [ -n "$PROJECT" ]; then
             PROJ_FILTER="--filter label=com.docker.compose.project=$PROJECT"
           fi
-          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=test-ftp" || true)
+          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=ftp-server" || true)
           APP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=changeletters" || true)
           printf "FTP_ID=%s\nAPP_ID=%s\nPROJECT=%s\n" "${FTP_ID}" "${APP_ID}" "${PROJECT:-}" | tee -a "${LOGDIR}/_ids.txt"
           # Alle Compose-Logs (falls compose-Files greifbar sind)
