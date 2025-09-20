@@ -6,7 +6,7 @@ public static class HttpClientHelpers
         var handler = new HttpClientHandler();
         handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
         var httpClient = new HttpClient(handler);
-        httpClient.BaseAddress = new Uri("https://localhost:18081");
+        httpClient.BaseAddress = new Uri("https://0.0.0.0:18081");
         return httpClient;
     }
 }

@@ -8,7 +8,7 @@ public static class FtpHelpers
     {
         IAsyncFtpClient? ftpClient = null;
         ftpClient = new AsyncFtpClient();
-        ftpClient.Host = "localhost";
+        ftpClient.Host = "0.0.0.0";
         ftpClient.Port = 2121;
         ftpClient.Credentials = new System.Net.NetworkCredential("myuser", "mypass");
         return ftpClient;
