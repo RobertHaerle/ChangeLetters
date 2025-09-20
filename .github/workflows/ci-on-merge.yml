@@ -70,15 +70,12 @@ jobs:
         if: always()
         run: |
           mkdir -p logs
-          docker compose ps > logs/compose-ps.txt
-        
+          docker compose ps > logs/compose-ps.txt  
           FTP_ID=$(docker compose ps -q ftp || true)
           APP_ID=$(docker compose ps -q changeletters || true)
-        
           if [ -n "$FTP_ID" ]; then
             docker logs --timestamps "$FTP_ID" > logs/ftp.log 2>&1 || true
           fi
-        
           if [ -n "$APP_ID" ]; then
             docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
           fi
@@ -90,7 +87,7 @@ jobs:
         name: docker-logs
         path: logs
         
-      - name: Compose down (cleanup)
-        if: always()
-        run: docker compose down -v
+    - name: Compose down (cleanup)
+      if: always()
+      run: docker compose down -v
         
