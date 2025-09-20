@@ -1,10 +1,6 @@
-using System.Net;
-using ChangeLetters.IntegrationTests.Helpers;
-using FluentFTP;
-using Shouldly;
-
 namespace ChangeLetters.IntegrationTests
 {
+    [TestFixture]
     public class Tests
     {
         private IAsyncFtpClient _ftpClient;

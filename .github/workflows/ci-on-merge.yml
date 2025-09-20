@@ -44,11 +44,11 @@ jobs:
           set -e
           NET="${COMPOSE_PROJECT_NAME}_testnet"
           for i in $(seq 1 20); do
-            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv 172.23.0.10 21'; then
+            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv -w 1 172.23.0.10 21'; then
               echo "FTP server running"
               break
             fi
-            echo "Waiting for FTP server ($i/60)"
+            echo "Waiting for FTP server ($i/20)"
             sleep 1
           done
 
