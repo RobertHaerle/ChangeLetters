@@ -68,8 +68,9 @@ jobs:
 
       - name: Collect container logs
         if: always()
-          env:
-            PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
+        shell: bash
+        env:
+          PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
         run: |
           set -e
           mkdir -p logs
