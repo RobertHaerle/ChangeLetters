@@ -1,0 +1,69 @@
+name: CI on Merge (build + integration tests)
+
+on:
+  push:
+    branches: [ "main" ]            
+  workflow_dispatch:
+
+env:
+  COMPOSE_PROJECT_NAME: changeletters_itests  # use changeletters_itests_testnet defined in docker-compose.yml
+
+jobs:
+  # 1) call existing build-and-test.yml auf
+  build_and_unit_tests:
+    uses: ./.github/workflows/build-and-test.yml
+
+  # 2) Integration tests against docker-compose
+  integration_tests:
+    name: Integration Tests (docker-compose)
+    runs-on: ubuntu-latest
+    needs: build_and_unit_tests
+    defaults:
+      run:
+        working-directory: ./source/ChangeLetters.IntegrationTests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Compose up (fresh build)
+        run: |
+          docker compose down -v || true
+          docker compose up -d --build --force-recreate
+
+      - name: Wait for FTP (Port 21) to be ready
+        run: |
+          set -e
+          NET="${COMPOSE_PROJECT_NAME}_testnet"
+          for i in $(seq 1 60); do
+            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv ftp 21'; then
+              echo "FTP server running"
+              break
+            fi
+            echo "Waiting for FTP server ($i/60)"
+            sleep 1
+          done
+
+      - name: Run integration tests
+        run: |
+          dotnet test ./ChangeLetters.IntegrationTests.sln \
+            --configuration Release \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: ./source/ChangeLetters.IntegrationTests/TestResults
+
+      - name: Compose down (cleanup)
+        if: always()
+        run: docker compose down -v
