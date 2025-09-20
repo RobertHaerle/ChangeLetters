@@ -43,8 +43,8 @@ jobs:
         run: |
           set -e
           NET="${COMPOSE_PROJECT_NAME}_testnet"
-          for i in $(seq 1 60); do
-            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv ftp 21'; then
+          for i in $(seq 1 20); do
+            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv 172.23.0.10 21'; then
               echo "FTP server running"
               break
             fi
