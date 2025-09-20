@@ -97,10 +97,9 @@ jobs:
             docker logs --timestamps "$APP_ID" > logs/changeletters.log 2>&1 || true
             docker inspect "$APP_ID" > logs/changeletters.inspect.json 2>&1 || true
           fi
-
-    # Compose-Dateien mit sichern (falls vorhanden)
-    [ -f docker-compose.yml ] && cp docker-compose.yml logs/ || true
-    [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml logs/ || true
+          # Compose-Dateien mit sichern (falls vorhanden)
+          [ -f docker-compose.yml ] && cp docker-compose.yml logs/ || true
+          [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml logs/ || true
 
       - name: Upload container logs
         if: always()
