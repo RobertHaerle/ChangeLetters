@@ -33,7 +33,6 @@
         },
         "Container (Dockerfile)": {
             "commandName": "Docker",
-            "launchBrowser": true,
             "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
             "environmentVariables": {
                 "ASPNETCORE_HTTP_PORTS": "8080",
@@ -42,9 +41,13 @@
                 "DataDirectory": "/data",
                 "ConnectionStrings__Sqlite": "Data Source=/data/ChangeLetters.db;"
             },
-            "publishAllPorts": true,
+
             "Ports": {
-                "21": 21
+                "21": 21,
+                "2121": 2121,
+                "8080": 8080,
+                "8081": 8081,
+                "49903": 49903
             },
             "useSSL": true
         }

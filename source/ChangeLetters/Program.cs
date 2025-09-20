@@ -46,6 +46,7 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddSignalR();
 builder.Services.AddSwagger();
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
@@ -65,6 +66,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.MapHub<SignalRHubRename>(SignalRPath.Rename.Path);
 
 app.MapRazorComponents<App>()

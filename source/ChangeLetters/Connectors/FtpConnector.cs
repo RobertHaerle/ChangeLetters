@@ -54,6 +54,7 @@ public class FtpConnector : IFtpConnector
         try
         {
             await ftpClient.AutoConnect(token);
+            _log.LogTrace("read {folder}", folder);
             var resultSet = await ftpClient.GetListing(folder, FtpListOption.AllFiles, token);
             var folders = resultSet
                 .Where(item => item.Type == FtpObjectType.Directory)

@@ -1,11 +1,14 @@
 services:
   changeletters:
     build:
-      context: ../
-      dockerfile: ChangeLetters/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
       - "8081:8081"
+      - "2121:2121"
+      - "21:21"
+      - "40000-40009:40000-40009/tcp" # For FTP passive mode
+      - "49000-50000:49000-50000" # Visual Studio debugging
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
@@ -14,13 +17,3 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Password: MyPassword
       DataDirectory: /data
       ConnectionStrings__Sqlite: Data Source=/data/ChangeLetters.db;
-    volumes:
-      - ../IntegrationTests/https:/https
-  ftp:
-    image: garethflowers/ftp-server
-    container_name: test-ftp
-    ports:
-      - "2121:21"
-    environment:
-      FTP_USER: "myuser"
-      FTP_PASS: "mypass"

@@ -1,0 +1,11 @@
+services:
+  changeletters:
+    image: ${DOCKER_REGISTRY-}changeletters
+    build:
+      context: .
+      dockerfile: ChangeLetters/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "22121:2121"
+      - "21:21"

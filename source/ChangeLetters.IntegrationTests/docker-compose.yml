@@ -1,0 +1,56 @@
+networks:
+  testnet:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24
+  
+services:
+  changeletters:
+    build:
+      context: ../
+      dockerfile: ChangeLetters/Dockerfile
+    networks:
+      - testnet
+    ports:
+      - "18080:8080"
+      - "18081:8081"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: 8080
+      ASPNETCORE_HTTPS_PORTS: 8081
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetcore.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: MyPassword
+      DataDirectory: /tmp/data
+      ConnectionStrings__Sqlite: Data Source=/tmp/data/ChangeLetters.db;
+      Logging__LogLevel__FluentFTP: Trace
+    volumes:
+      - ../ChangeLetters.IntegrationTests/https:/https
+
+  ftp-server:
+    image: garethflowers/ftp-server
+    networks:
+      testnet:
+        ipv4_address: 172.23.0.10
+    container_name: test-ftp
+    entrypoint: ["/bin/sh","-c","set -e; mkdir -p /home/myuser/working && exec /docker-entrypoint.sh /usr/sbin/vsftpd /etc/vsftpd.conf"]
+    ports:
+      - "2121:21"
+      - "40000-40010:40000-40010" # For passive mode
+    environment:
+      FTP_USER: "myuser"
+      FTP_PASS: "mypass"    
+      PUBLIC_IP: "172.23.0.10" # Use the service name for internal Docker networking
+    
+  filezilla:
+    image: jlesage/filezilla
+    networks:
+      - testnet
+    ports:
+      - "5800:5800"
+    environment:
+      - TZ=Europe/Berlin
+      - USER_ID=1000
+      - GROUP_ID=1000
+    volumes:
+      - C:/temp/ftp-client/filezilla:/config:rw
+      - C:/temp/ftp-client/files:/storage:rw

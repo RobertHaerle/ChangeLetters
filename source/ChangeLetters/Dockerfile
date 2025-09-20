@@ -2,15 +2,8 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-# This stage is used to create the /data folder with the right permissions
-WORKDIR /
-RUN mkdir -p /data && chown $APP_UID /data
-RUN chmod -R 777 /data
-
-# Switch to the app user to avoid running the application as root
 USER $APP_UID
 WORKDIR /app
-EXPOSE 21 
 EXPOSE 8080
 EXPOSE 8081
 
@@ -32,7 +25,6 @@ RUN dotnet build "./ChangeLetters.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./ChangeLetters.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
