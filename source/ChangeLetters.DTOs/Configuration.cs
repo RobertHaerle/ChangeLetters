@@ -13,6 +13,10 @@ public abstract class ConfigurationBase
 
     /// <summary>Gets or sets the name of the user.</summary>
     public string UserName { get; set; } = string.Empty;
+
+    /// <inheritdoc />
+    public override string ToString()
+        => $"HostName: {HostName} Port: {Port} UserName: {UserName}";
 }
 
 /// <summary> 

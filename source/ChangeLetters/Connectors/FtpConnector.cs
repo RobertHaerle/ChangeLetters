@@ -32,6 +32,7 @@ public class FtpConnector : IFtpConnector
     /// <inheritdoc />
     public async Task<bool> ConnectAsync(Configuration config)
     {
+        _log.LogTrace("ConnectAsync: connect to FTP server with {config}", config);
         await using var ftpClient = GetFtpClient(config);
 
         try
@@ -49,6 +50,7 @@ public class FtpConnector : IFtpConnector
     /// <inheritdoc />
     public async Task<FileItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token)
     {
+        _log.LogTrace("ReadFoldersAsync: connect to FTP server with {config}", config);
         await using var ftpClient = GetFtpClient(config);
 
         try
@@ -75,6 +77,8 @@ public class FtpConnector : IFtpConnector
     public async Task CheckQuestionMarksAsync(FileItem fileItem, Configuration config, CancellationToken cancellationToken)
     {
         await using var ftpClient = GetFtpClient(config);
+
+        _log.LogTrace("CheckQuestionMarksAsync: connect to FTP server with {config}", config);
         try
         {
             await ftpClient.Connect(cancellationToken);
@@ -98,6 +102,7 @@ public class FtpConnector : IFtpConnector
     public async Task<List<FileItem>> ReadFilesAsync(Configuration config, string folder, CancellationToken token)
     {
         await using var ftpClient = GetFtpClient(config);
+        _log.LogTrace("ReadFilesAsync: connect to FTP server with {config}", config);
 
         try
         {
