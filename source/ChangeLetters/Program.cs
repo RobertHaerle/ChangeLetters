@@ -4,6 +4,7 @@ using ChangeLetters.Database;
 using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
+using ChangeLetters.SystemMonitoring;
 using DryIoc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
@@ -46,8 +47,10 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddSignalR();
 builder.Services.AddSwagger();
 builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<HealthCheck>("alive");
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<AliveService>();
 
 var app = builder.Build();
 
@@ -66,15 +69,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapControllers();
-app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
-{
-    ResponseWriter = async (context, report) =>
-    {
-        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Health check executed. Status: {Status}", report.Status);
-        await context.Response.WriteAsync(report.Status.ToString());
-    }
-}); 
+app.MapHealthChecks("/health");
 app.MapHub<SignalRHubRename>(SignalRPath.Rename.Path);
 
 app.MapRazorComponents<App>()

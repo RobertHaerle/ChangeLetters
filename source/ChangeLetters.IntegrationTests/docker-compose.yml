@@ -24,6 +24,9 @@ services:
       DataDirectory: /tmp/data
       ConnectionStrings__Sqlite: Data Source=/tmp/data/ChangeLetters.db;
       Logging__LogLevel__FluentFTP: Trace
+      OpenAi__UseOpenAi: "false"
+      Alive__IsActive: "true"
+      Alive__IntervalSeconds: 5
     volumes:
       - ../ChangeLetters.IntegrationTests/https:/https
 
