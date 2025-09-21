@@ -65,6 +65,14 @@ jobs:
             --logger "console;verbosity=detailed" \
             --logger "trx;LogFileName=test-results.trx" \
             --results-directory ./TestResults
+            
+      - name: List TRX files (debug)
+        if: always()
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+          ls -lah "$GITHUB_WORKSPACE/source/ChangeLetters.IntegrationTests/TestResults" || true
+          echo "Find any *.trx near TestResults:"
+          find "$GITHUB_WORKSPACE/source/ChangeLetters.IntegrationTests" -maxdepth 3 -name "*.trx" -print || true
 
       - name: Publish test summary
         if: always()
@@ -78,7 +86,6 @@ jobs:
           list-tests: all
           only-summary: false
           fail-on-empty: true
-          artifact: true 
           
       - name: Upload test results
         if: always()
