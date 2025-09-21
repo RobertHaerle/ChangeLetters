@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.Extensions.Logging;
 
 namespace ChangeLetters.IntegrationTests;
 
@@ -7,7 +7,10 @@ public class ChangeLettersTests
     private Configuration _config;
     private HttpClient _httpClient;
     private CancellationTokenSource _cts;
+    private ILogger<ChangeLettersTests> _log;
+
     private const string WorkingFolder = "/api/Ftp/read-folders/%2F";
+
     [SetUp]
     public async Task Setup()
     {
@@ -20,8 +23,8 @@ public class ChangeLettersTests
         };
 
         _httpClient = HttpClientHelpers.GetHttpClient();
+        _log = LogHelper.GetLogger<ChangeLettersTests>();
         _cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-        await UploadFileAsync();
     }
 
     [TearDown]
@@ -34,6 +37,8 @@ public class ChangeLettersTests
     [Test]
     public async Task HealthCheck()
     {
+        _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test HealthCheck");
+
         var response = await _httpClient.GetAsync("/health");
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -43,7 +48,9 @@ public class ChangeLettersTests
     [Test]
     public async Task Connect()
     {
+        _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test Connect");
 
+        await _httpClient.GetAsync("/health");
         var response = await _httpClient.PostAsJsonAsync("/api/configuration", _config);
 
         response.EnsureSuccessStatusCode();
@@ -53,6 +60,9 @@ public class ChangeLettersTests
     [Test]
     public async Task ReadRootFolder()
     {
+        _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test ReadRootFolders");
+        await UploadFileAsync();
+        await _httpClient.GetAsync("/health");
         var url = "/api/Ftp/read-folders/%2F";
         var response = await _httpClient.GetFromJsonAsync<FileItem[]>(url);
         response!.Length.ShouldBe(1);
@@ -62,6 +72,9 @@ public class ChangeLettersTests
     [Test]
     public async Task ReadWorkingFolder()
     {
+        _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test ReadWorkingFolder");
+        await UploadFileAsync();
+        await _httpClient.GetAsync("/health");
         var response = await _httpClient.GetAsync(WorkingFolder);
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var content = await response.Content.ReadFromJsonAsync<FileItem[]>();
@@ -72,9 +85,11 @@ public class ChangeLettersTests
     private async Task UploadFileAsync()
     {
         await using var ftpClient = FtpHelpers.GetFtpClient();
-        await ftpClient.AutoConnect(_cts.Token);
+        var profile = await ftpClient.AutoConnect(_cts.Token);
+        profile.ShouldNotBeNull();
         var d = await ftpClient.GetListing(_cts.Token);
         var result = await ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token: _cts.Token);
+        result.ShouldBe(FtpStatus.Success);
     }
 
 }
