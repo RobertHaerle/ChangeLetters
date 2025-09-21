@@ -2,6 +2,8 @@
 
 namespace ChangeLetters.IntegrationTests;
 
+[TestFixture]
+[NonParallelizable]
 public class ChangeLettersTests
 {
     private Configuration _config;

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 namespace ChangeLetters.IntegrationTests
 {
     [TestFixture]
+    [NonParallelizable]
     public class FtpContainerTests()
     {
         private IAsyncFtpClient _ftpClient;
