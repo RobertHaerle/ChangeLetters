@@ -53,7 +53,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHostedService<AliveService>();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -78,4 +77,5 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(ChangeLetters.Client._Imports).Assembly);
 
 app.InitializeDatabase();
+app.Services.AddLifetimeLogging();
 app.Run();
