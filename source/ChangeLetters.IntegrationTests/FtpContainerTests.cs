@@ -4,6 +4,7 @@ namespace ChangeLetters.IntegrationTests
 {
     [TestFixture]
     [NonParallelizable]
+    [Ignore("not yet resolved network issues in github actions")]
     public class FtpContainerTests()
     {
         private IAsyncFtpClient _ftpClient;
