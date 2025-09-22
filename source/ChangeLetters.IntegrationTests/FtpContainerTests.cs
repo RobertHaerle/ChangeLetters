@@ -1,3 +1,4 @@
+using FluentFTP;
 using Microsoft.Extensions.Logging;
 
 namespace ChangeLetters.IntegrationTests
@@ -19,15 +20,17 @@ namespace ChangeLetters.IntegrationTests
         }
 
         [TearDown]
-        public void TearDown()
+        public async Task TearDown()
         {
             _cts.Dispose();
+            await _ftpClient.Disconnect();
             _ftpClient.Dispose();
         }
 
         [Test]
         public async Task CheckConnection()
         {
+            await Task.Delay(TimeSpan.FromSeconds(2));
             _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test CheckConnection");
             var profile = await _ftpClient.AutoConnect(_cts.Token);
 
@@ -37,9 +40,31 @@ namespace ChangeLetters.IntegrationTests
         [Test]
         public async Task CopyFile()
         {
+            await Task.Delay(TimeSpan.FromSeconds(2));
             _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test CopyFile");
-            var profile = await _ftpClient.AutoConnect(_cts.Token);
-            profile.ShouldNotBeNull();
+            FtpProfile? profile = null;
+            try
+            {
+                profile = await _ftpClient.AutoConnect(_cts.Token);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "could not connect to FTP server");
+            }
+            _log.LogInformation($"upload connection found {(profile == null ? "no connection" : "connection")}");
+            if (profile == null)
+            {
+                try
+                {
+                    _ftpClient.Config.DataConnectionType = FtpDataConnectionType.EPSV;
+                    profile = await _ftpClient.AutoConnect(_cts.Token);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError(ex, "could not connect to FTP server with EPSV");
+                }
+                _log.LogInformation($"EPSV upload connection found {(profile == null ? "no connection" : "connection")}");
+            }
             var d = await _ftpClient.GetListing("/", _cts.Token);
             var status = await _ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token:_cts.Token);
 

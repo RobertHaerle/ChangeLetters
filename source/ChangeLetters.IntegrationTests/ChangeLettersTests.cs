@@ -81,6 +81,7 @@ public class ChangeLettersTests
     private async Task UploadFileAsync()
     {
         await using var ftpClient = FtpHelpers.GetFtpClient();
+        await Task.Delay(TimeSpan.FromSeconds(2));
         _log.LogInformation("connect to FTP server {host}/{port} as {user}", ftpClient.Host, ftpClient.Port, ftpClient.Credentials.UserName);
         FtpProfile? profile = null;
         try
@@ -107,6 +108,7 @@ public class ChangeLettersTests
         }
         var d = await ftpClient.GetListing("/",_cts.Token);
         var result = await ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token: _cts.Token);
+        await ftpClient.Disconnect();
         _log.LogInformation("upload resulted in {result}", result);
     }
 }

@@ -39,7 +39,7 @@ jobs:
             8.0.x
             9.0.x
 
-      - name: Compose up
+      - name: Compose up (fresh build)
         run: |
           docker compose down -v || true
           docker compose up -d --build --force-recreate
