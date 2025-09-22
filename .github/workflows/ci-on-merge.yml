@@ -56,7 +56,11 @@ jobs:
             echo "Waiting for FTP server ($i/20)"
             sleep 1
           done
-
+      - name: Ensure host.docker.internal resolves on runner
+        run: |
+          echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+          getent hosts host.docker.internal
+    
       - name: Run integration tests
         run: |
           dotnet test ./ChangeLetters.IntegrationTests.sln \
