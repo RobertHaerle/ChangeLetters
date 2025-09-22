@@ -1,8 +1,8 @@
 ﻿using FluentFTP;
-using ChangeLetters.DTOs;
 using FluentFTP.Exceptions;
-using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
+using ChangeLetters.DTOs;
 using ChangeLetters.Extensions;
+using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
 
 namespace ChangeLetters.Connectors;
 
@@ -37,8 +37,9 @@ public class FtpConnector : IFtpConnector
 
         try
         {
-            await ftpClient.AutoDetect();
-            return true;
+            var result = await ftpClient.AutoDetect();
+            _log.LogInformation("AutoDetect result: {Result}", result.Count);
+            return result.Any();
         }
         catch (Exception ex)
         {
@@ -55,7 +56,7 @@ public class FtpConnector : IFtpConnector
 
         try
         {
-            await ftpClient.AutoConnect(token);
+            await ConnectAsync(ftpClient, token);
             _log.LogTrace("read {folder}", folder);
             var resultSet = await ftpClient.GetListing(folder, FtpListOption.AllFiles, token);
             var folders = resultSet
@@ -65,10 +66,14 @@ public class FtpConnector : IFtpConnector
 
             return folders;
         }
+        catch (OperationCanceledException)
+        {
+            _log.LogTrace("read folders task canceled.");
+            return [];
+        }
         catch (Exception ex)
         {
-            if (ex is not OperationCanceledException)
-                _log.LogError(ex, "Error reading folders");
+            _log.LogError(ex, "Error reading folders");
             return [];
         }
     }
@@ -81,15 +86,17 @@ public class FtpConnector : IFtpConnector
         _log.LogTrace("CheckQuestionMarksAsync: connect to FTP server with {config}", config);
         try
         {
-            await ftpClient.Connect(cancellationToken);
-            _log.LogInformation("read {folder}", fileItem.FullName);
+            await ConnectAsync(ftpClient, cancellationToken);
+            _log.LogTrace("read {folder}", fileItem.FullName);
             var hasQuestionMarks = await HasQuestionMarksAsync(fileItem.FullName, ftpClient, cancellationToken);
             fileItem.FolderStatus = hasQuestionMarks
                 ? FolderStatus.HasQuestionMarks
                 : FolderStatus.Ok;
+            _log.LogTrace("CheckQuestionMarksAsync: folder {folder} has question marks: {hasQuestionMarks}", fileItem.FullName, hasQuestionMarks);
         }
         catch (OperationCanceledException)
         {
+            _log.LogTrace("check question marks task canceled.");
         }
         catch (Exception ex)
         {
@@ -106,15 +113,20 @@ public class FtpConnector : IFtpConnector
 
         try
         {
-            await ftpClient.AutoConnect(token);
+            await ConnectAsync(ftpClient, token);
             var allEntries = new List<FileItem>();
             await AddItemsToListAsync(folder, allEntries, ftpClient, token);
+            _log.LogTrace("read {count} files and folders", allEntries.Count);
             return allEntries;
+        }
+        catch (OperationCanceledException)
+        {
+            _log.LogTrace("read files task canceled.");
+            return [];
         }
         catch (Exception ex)
         {
-            if (ex is not OperationCanceledException)
-                _log.LogError(ex, "Error reading files");
+            _log.LogError(ex, "Error reading files");
             return [];
         }
     }
@@ -122,15 +134,21 @@ public class FtpConnector : IFtpConnector
     /// <inheritdoc />
     public async Task<bool> RenameFileAsync(FileItem fileItem, string newName, Configuration config, CancellationToken cancellationToken)
     {
+        _log.LogTrace("rename folder from {oldFile} to {newName}", fileItem.FullName, newName);
         await using var ftpClient = GetFtpClient(config);
 
         try
         {
-            await ftpClient.AutoConnect(cancellationToken);
-            return await ftpClient.MoveFile(fileItem.FullName, newName, FtpRemoteExists.Overwrite, cancellationToken);
+            await ConnectAsync(ftpClient, cancellationToken);
+            var result = await ftpClient.MoveFile(fileItem.FullName, newName, FtpRemoteExists.Overwrite, cancellationToken);
+            _log.LogTrace(result
+                ? "rename file finished successfully."
+                : "rename file failed.");
+            return result;
         }
         catch (OperationCanceledException)
         {
+            _log.LogTrace("rename file task canceled.");
             return false;
         }
         catch (FtpCommandException ex)
@@ -154,15 +172,21 @@ public class FtpConnector : IFtpConnector
     /// <inheritdoc />
     public async Task<bool> RenameFolderAsync(FileItem folderItem, string newName, Configuration config, CancellationToken cancellationToken)
     {
+        _log.LogTrace("rename folder from {oldFolder} to {newName}", folderItem.FullName, newName);
         await using var ftpClient = GetFtpClient(config);
 
         try
         {
-            await ftpClient.AutoConnect(cancellationToken);
-            return await ftpClient.MoveDirectory(folderItem.FullName, newName);
+            await ConnectAsync(ftpClient, cancellationToken);
+            var result = await ftpClient.MoveDirectory(folderItem.FullName, newName);
+            _log.LogTrace(result
+                ? "rename folder finished successfully."
+                : "rename folder failed.");
+            return result;
         }
         catch (OperationCanceledException)
         {
+            _log.LogTrace("rename folder task canceled.");
             return false;
         }
         catch (Exception ex)
@@ -230,6 +254,23 @@ public class FtpConnector : IFtpConnector
             _log.LogError(ex, "Error creating FTP client");
             if (ftpClient != null)
                 ftpClient.Dispose();
+            throw;
+        }
+    }
+
+    private async Task ConnectAsync(IAsyncFtpClient ftpClient, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await ftpClient.AutoConnect(cancellationToken);
+            _log.LogTrace("ftp server connected successfully.");
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Error connecting to FTP server.");
             throw;
         }
     }
