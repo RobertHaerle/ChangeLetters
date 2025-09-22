@@ -6,7 +6,7 @@ public static class FtpHelpers
     {
         var config = GetConfig();
         var ftpClient = new AsyncFtpClient();
-        ftpClient.Host = "0.0.0.0";
+        ftpClient.Host = "127.0.0.1";
         ftpClient.Port = config.Port;
         ftpClient.Credentials = new NetworkCredential(config.UserName, config.Password);
 
