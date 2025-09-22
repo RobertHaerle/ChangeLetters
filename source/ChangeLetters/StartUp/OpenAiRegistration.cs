@@ -17,6 +17,9 @@ public static class OpenAiRegistration
     public static IServiceCollection AddOpenAI(this IServiceCollection services, IConfiguration configuration)
     {
         var settings = configuration.Deserialize<OpenAiSettings>();
+        //var chatClient = settings.UseOpenAI
+        //    ? new ChatClient(settings.Model, settings.ApiKey)
+        //    : new ChatClient("empty", "no key");
         var chatClient = new ChatClient(settings.Model, settings.ApiKey);
         services.AddSingleton(chatClient);
         services.AddSingleton(settings);

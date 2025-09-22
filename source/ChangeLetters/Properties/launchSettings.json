@@ -1,44 +1,65 @@
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-    "iisSettings": {
-      "windowsAuthentication": false,
-      "anonymousAuthentication": true,
-      "iisExpress": {
-        "applicationUrl": "http://localhost:49903",
-        "sslPort": 44343
-      }
-    },
     "profiles": {
-      "http": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-        "applicationUrl": "http://localhost:5022",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
+        "http": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "dotnetRunMessages": true,
+            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+            "applicationUrl": "http://localhost:5022"
+        },
+        "https": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "OpenAI__UseOpenAI": "true",
+                "Alive__DelaySeconds": "5",
+                "ConnectionStrings__Sqlite": "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;",
+                "DataDirectory": "c:/Data/ChangeLetters/"
+            },
+            "dotnetRunMessages": true,
+            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+            "applicationUrl": "https://localhost:7251"
+        },
+        "IIS Express": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
+        },
+        "Container (Dockerfile)": {
+            "commandName": "Docker",
+            "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+            "environmentVariables": {
+                "ASPNETCORE_HTTP_PORTS": "8080",
+                "ASPNETCORE_HTTPS_PORTS": "8081",
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DataDirectory": "/data",
+                "ConnectionStrings__Sqlite": "Data Source=/data/ChangeLetters.db;"
+            },
+
+            "Ports": {
+                "21": 21,
+                "2121": 2121,
+                "8080": 8080,
+                "8081": 8081,
+                "49903": 49903
+            },
+            "useSSL": true
         }
-      },
-      "https": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-        "applicationUrl": "https://localhost:7251",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development",
-            "OpenAI__UseOpenAI": "true",
-            "ConnectionStrings__Sqlite": "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;",
-            "DataDirectory": "c:/Data/ChangeLetters/"
+    },
+    "$schema": "http://json.schemastore.org/launchsettings.json",
+    "iisSettings": {
+        "windowsAuthentication": false,
+        "anonymousAuthentication": true,
+        "iisExpress": {
+            "applicationUrl": "http://localhost:49903",
+            "sslPort": 44343
         }
-      },
-      "IIS Express": {
-        "commandName": "IISExpress",
-        "launchBrowser": true,
-        "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
-        }
-      }
     }
-  }
+}

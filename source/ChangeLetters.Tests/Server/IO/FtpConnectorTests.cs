@@ -1,6 +1,7 @@
 using ChangeLetters.Connectors;
 using ChangeLetters.DTOs;
-using ChangeLetters.Wrappers;
+using FluentFTP;
+using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
 
 namespace ChangeLetters.Tests.Server.IO;
 
@@ -33,7 +34,7 @@ public class FtpConnectorTests
     [Test]
     public async Task ConnectAsync_ReturnsTrue_OnSuccess()
     {
-        _ftpClient.AutoDetect().Returns(Task.FromResult(new List<FluentFTP.FtpProfile>()));
+        _ftpClient.AutoDetect().Returns(Task.FromResult(new List<FtpProfile> { new () }));
         var result = await _sut.ConnectAsync(_config);
         result.ShouldBeTrue();
     }

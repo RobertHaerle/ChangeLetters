@@ -4,7 +4,9 @@ using ChangeLetters.Database;
 using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
+using ChangeLetters.SystemMonitoring;
 using DryIoc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.FluentUI.AspNetCore.Components;
 using OpenAI.Chat;
@@ -45,10 +47,12 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddSignalR();
 builder.Services.AddSwagger();
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks()
+    .AddCheck<HealthCheck>("alive");
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHostedService<AliveService>();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -56,6 +60,7 @@ if (app.Environment.IsDevelopment())
     app.StartSwagger();
 }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseExceptionHandler("/Error", createScopeForErrors: true);
 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 app.UseHsts();
@@ -64,14 +69,13 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.MapHub<SignalRHubRename>(SignalRPath.Rename.Path);
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(ChangeLetters.Client._Imports).Assembly);
 
-var context = app.Services.GetRequiredService<DatabaseContext>();
-context.Database.EnsureCreated();
-var o = app.Services.GetRequiredService<IOpenAiConnector>();
-
+app.InitializeDatabase();
+app.Services.AddLifetimeLogging();
 app.Run();

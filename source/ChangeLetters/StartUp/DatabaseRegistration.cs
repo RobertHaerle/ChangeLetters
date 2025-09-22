@@ -4,11 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.StartUp;
 
+/// <summary> 
+/// Class DatabaseRegistration. 
+/// </summary>
 internal static class DatabaseRegistration
 {
+    /// <summary>Adds the database.</summary>
+    /// <param name="services">The services.</param>
+    /// <param name="config">The configuration.</param>
+    /// <returns><see cref="IServiceCollection"/>.</returns>
+    /// <exception cref="System.InvalidOperationException">No valid database configuration found.</exception>
     internal static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
     {
-        if (AddSqliteContext(services, config) || AddSqlServerContext(services, config))
+        if (AddSqliteContext(services, config) 
+            || AddSqlServerContext(services, config))
             services.AddDbContext<DatabaseContext>();
         else
             throw new InvalidOperationException("No valid database configuration found.");
@@ -48,12 +57,27 @@ internal static class DatabaseRegistration
             Directory.CreateDirectory(directory);
         var dbConfig = new DatabaseConfiguration
         {
+            DatabaseType = DatabaseType.Sqlite,
+            ConnectionString = connectionString,
             Options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseSqlite(connectionString)
                 .Options,
-            ConfigurationAssembly = typeof(DatabaseContext).Assembly
+            ConfigurationAssembly = typeof(DatabaseContext).Assembly,
         };
         services.AddSingleton(dbConfig);
         return true;
+    }
+
+    /// <summary>Initializes the database.</summary>
+    /// <param name="app">The application.</param>
+    /// <returns><see cref="WebApplication"/>.</returns>
+    internal static WebApplication InitializeDatabase(this WebApplication app)
+    {
+        var config = app.Services.GetRequiredService<DatabaseConfiguration>();
+        var context = app.Services.GetRequiredService<DatabaseContext>();
+        context.Database.EnsureCreated();
+        if (config.DatabaseType != DatabaseType.Sqlite)
+            context.Database.Migrate();
+        return app; 
     }
 }
