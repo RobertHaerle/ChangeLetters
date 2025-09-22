@@ -3,8 +3,7 @@ name: CI on Merge (build + integration tests)
 on:
   push:
     branches:
-      - main
-      - feature/**      
+      - main     
   workflow_dispatch:
 
 permissions:
