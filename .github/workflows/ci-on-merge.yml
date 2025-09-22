@@ -44,6 +44,13 @@ jobs:
           docker compose down -v || true
           docker compose up -d --build --force-recreate
 
+      - name: Snapshot startup logs
+        if: always()
+        run: |
+          LOGDIR="${GITHUB_WORKSPACE}/logs"; mkdir -p "$LOGDIR"
+          docker compose ps > "$LOGDIR/compose-ps-start.txt" || true
+          docker compose logs --no-color > "$LOGDIR/compose-all-start.log" 2>&1 || true
+
       - name: Wait for FTP (Port 21) to be ready
         run: |
           set -e
@@ -71,7 +78,12 @@ jobs:
         run: |
           apk add --no-progress curl >/dev/null 2>&1 || true
           curl -v --user myuser:mypass "ftp://127.0.0.1:2121/" || exit 1
-          
+
+      - name: Assert FTP is listening right before tests
+        run: |
+          echo "Who is listening on 2121?"
+          ss -lntp | (grep ':2121' || true)
+
       - name: Run integration tests
         run: |
           dotnet test ./ChangeLetters.IntegrationTests.sln \
@@ -112,38 +124,38 @@ jobs:
       - name: Collect container logs
         if: always()
         shell: bash
-        env:
-          PROJECT: "${{ env.COMPOSE_PROJECT_NAME }}"
         run: |
           set -Eeuo pipefail
-          LOGDIR="${GITHUB_WORKSPACE}/logs"
-          mkdir -p "${LOGDIR}"
-          docker ps -a > ${LOGDIR}/compose-ps.txt || true
-          docker compose ls > ${LOGDIR}/compose-ls.txt || true
-          BASE_FILTER="label=com.docker.compose.service"
-          PROJ_FILTER=""
-          if [ -n "$PROJECT" ]; then
-            PROJ_FILTER="--filter label=com.docker.compose.project=$PROJECT"
+          LOGDIR="${GITHUB_WORKSPACE}/logs"; mkdir -p "$LOGDIR"
+      
+          # Übersicht
+          docker ps -a > "$LOGDIR/docker-ps-end.txt" || true
+          docker compose ps > "$LOGDIR/compose-ps-end.txt" || true
+          docker compose logs --no-color > "$LOGDIR/compose-all-end.log" 2>&1 || true
+      
+          # IDs per Label (Servicenamen aus deiner docker-compose.yml)
+          FTP_ID=$(docker ps -aq --filter "label=com.docker.compose.service=ftp-server" | head -n1 || true)
+          APP_ID=$(docker ps -aq --filter "label=com.docker.compose.service=changeletters" | head -n1 || true)
+      
+          echo "FTP_ID=${FTP_ID}" | tee -a "$LOGDIR/_ids.txt"
+          echo "APP_ID=${APP_ID}" | tee -a "$LOGDIR/_ids.txt"
+      
+          if [[ -n "${FTP_ID:-}" ]]; then
+            docker logs --timestamps "$FTP_ID" > "$LOGDIR/ftp-server.log" 2>&1 || true
+            docker inspect "$FTP_ID" > "$LOGDIR/ftp-server.inspect.json" 2>&1 || true
+            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > "$LOGDIR/ftp-server.vsftpd.conf" 2>&1 || true
+          else
+            # Fallback: etwas ins Artifact legen, selbst wenn kein Container da ist
+            grep -a -E 'ftp|vsftpd' "$LOGDIR/compose-all-end.log" > "$LOGDIR/ftp-server.log" || true
           fi
-          FTP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=ftp-server" || true)
-          APP_ID=$(docker ps -q $PROJ_FILTER --filter "$BASE_FILTER=changeletters" || true)
-          printf "FTP_ID=%s\nAPP_ID=%s\nPROJECT=%s\n" "${FTP_ID}" "${APP_ID}" "${PROJECT:-}" | tee -a "${LOGDIR}/_ids.txt"
-          # Alle Compose-Logs (falls compose-Files greifbar sind)
-          docker compose logs --no-color > ${LOGDIR}/compose-all.log 2>&1 || true
-          # Einzel-Logs + Inspect + wichtige Dateien
-          if [ -n "$FTP_ID" ]; then
-            docker logs --timestamps "$FTP_ID" > ${LOGDIR}/ftp-server.log 2>&1 || true
-            docker inspect "$FTP_ID" > ${LOGDIR}/ftp-server.inspect.json 2>&1 || true
-            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > ${LOGDIR}/ftp-server.vsftpd.conf 2>&1 || true
+      
+          if [[ -n "${APP_ID:-}" ]]; then
+            docker logs --timestamps "$APP_ID" > "$LOGDIR/changeletters.log" 2>&1 || true
+            docker inspect "$APP_ID" > "$LOGDIR/changeletters.inspect.json" 2>&1 || true
           fi
-          if [ -n "$APP_ID" ]; then
-            docker logs --timestamps "$APP_ID" > ${LOGDIR}/changeletters.log 2>&1 || true
-            docker inspect "$APP_ID" > ${LOGDIR}/changeletters.inspect.json 2>&1 || true
-          fi
-          [ -s ${LOGDIR}/compose-all.log ] || echo "no logs" > ${LOGDIR}/EMPTY.txt
-          # Compose-Dateien mit sichern (falls vorhanden)
-          [ -f docker-compose.yml ] && cp docker-compose.yml ${LOGDIR}/ || true
-          [ -f docker-compose.ci.yml ] && cp docker-compose.ci.yml ${LOGDIR}/ || true
+      
+          ls -l "$LOGDIR" || true
+          [ -s "$LOGDIR/ftp-server.log" ] || echo "no ftp logs captured" > "$LOGDIR/EMPTY.txt"
 
       - name: Upload container logs
         if: always()
