@@ -24,6 +24,7 @@ namespace ChangeLetters.IntegrationTests
         [Test]
         public async Task CheckConnection()
         {
+            await Task.Delay(TimeSpan.FromSeconds(2));
             await using var ftpClient = FtpHelpers.GetFtpClient();
             _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test CheckConnection");
             var profile = await ftpClient.AutoConnect(_cts.Token);

@@ -81,6 +81,7 @@ public class ChangeLettersTests
     private async Task UploadFileAsync()
     {
         await using var ftpClient = FtpHelpers.GetFtpClient();
+        await Task.Delay(TimeSpan.FromSeconds(2));
         var currentTestName = TestContext.CurrentContext.Test.Name;
         _log.LogInformation("UploadFileAsync called from test: {TestName}", currentTestName);
         _log.LogInformation("[{now:yyyy-MM-dd HH:mm:ss}] connect to FTP server {host}/{port} as {user}", DateTime.UtcNow, ftpClient.Host, ftpClient.Port, ftpClient.Credentials.UserName);
