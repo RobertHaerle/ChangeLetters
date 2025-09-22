@@ -9,6 +9,11 @@ public static class FtpHelpers
         ftpClient.Host = config.HostName;
         ftpClient.Port = config.Port;
         ftpClient.Credentials = new NetworkCredential(config.UserName, config.Password);
+
+        ftpClient.Config.DataConnectionType = FtpDataConnectionType.EPSV;
+        ftpClient.Config.ConnectTimeout = 5000;
+        ftpClient.Config.ReadTimeout = 5000;
+
         return ftpClient;
     }
 

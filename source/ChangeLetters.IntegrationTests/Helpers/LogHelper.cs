@@ -10,7 +10,7 @@ public static class LogHelper
         {
             builder
                 .AddConsole()
-                .SetMinimumLevel(LogLevel.Debug);
+                .SetMinimumLevel(LogLevel.Trace);
         });
         return loggerFactory.CreateLogger<T>();
     }
