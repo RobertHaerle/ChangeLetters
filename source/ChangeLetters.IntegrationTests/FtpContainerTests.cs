@@ -18,7 +18,6 @@ namespace ChangeLetters.IntegrationTests
             _cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         }
 
-
         [TearDown]
         public void TearDown()
         {

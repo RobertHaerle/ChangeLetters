@@ -92,6 +92,19 @@ public class ChangeLettersTests
             _log.LogError(ex, "could not connect to FTP server");
         }
         _log.LogInformation($"upload connection found {(profile == null ? "no connection": "connection")}");
+        if (profile == null)
+        {
+            try
+            {
+                ftpClient.Config.DataConnectionType = FtpDataConnectionType.EPSV;
+                profile = await ftpClient.AutoConnect(_cts.Token);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "could not connect to FTP server with EPSV");
+            }
+            _log.LogInformation($"EPSV upload connection found {(profile == null ? "no connection" : "connection")}");
+        }
         var d = await ftpClient.GetListing("/",_cts.Token);
         var result = await ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token: _cts.Token);
         _log.LogInformation("upload resulted in {result}", result);
