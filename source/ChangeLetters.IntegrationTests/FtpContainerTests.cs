@@ -33,7 +33,7 @@ namespace ChangeLetters.IntegrationTests
         }
 
         [Test]
-        //gnore("double test. This step is done in each other test")]
+        [Ignore("double test. This step is done in each other test in ChangeLetters")]
         public async Task CopyFile()
         {
             await using var ftpClient = FtpHelpers.GetFtpClient();
