@@ -28,12 +28,12 @@ namespace ChangeLetters.IntegrationTests
             await using var ftpClient = FtpHelpers.GetFtpClient();
             _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test CheckConnection");
             var profile = await ftpClient.AutoConnect(_cts.Token);
-
+            await ftpClient.Disconnect();
             Assert.That(profile, Is.Not.Null);
         }
 
         [Test]
-        //[Ignore("double test. This step is done in each other test")]
+        //gnore("double test. This step is done in each other test")]
         public async Task CopyFile()
         {
             await using var ftpClient = FtpHelpers.GetFtpClient();
