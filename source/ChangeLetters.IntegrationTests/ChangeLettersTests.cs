@@ -11,7 +11,7 @@ public class ChangeLettersTests
     private CancellationTokenSource _cts;
     private ILogger<ChangeLettersTests> _log;
 
-    private const string WorkingFolder = "/api/Ftp/read-folders/%2F";
+    private const string WorkingFolder = "/api/Ftp/read-folders/%2Fworking";
 
     [SetUp]
     public async Task Setup()
