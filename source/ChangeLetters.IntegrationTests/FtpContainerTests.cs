@@ -41,7 +41,7 @@ namespace ChangeLetters.IntegrationTests
             _log.LogInformation($"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}] Start test CopyFile");
             var profile = await _ftpClient.AutoConnect(_cts.Token);
             profile.ShouldNotBeNull();
-            var d = await _ftpClient.GetListing(_cts.Token);
+            var d = await _ftpClient.GetListing("/", _cts.Token);
             var status = await _ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token:_cts.Token);
 
             status.ShouldBe(FtpStatus.Success);
