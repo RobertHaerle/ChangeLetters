@@ -47,7 +47,9 @@ services:
     environment:
       FTP_USER: "myuser"
       FTP_PASS: "mypass"    
-      PUBLIC_IP: "172.23.0.10" # Use the service name for internal Docker networking
+      PUBLIC_IP: "host.docker.internal" # Use the service name for internal Docker networking
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     
   # filezilla:
   #   image: jlesage/filezilla

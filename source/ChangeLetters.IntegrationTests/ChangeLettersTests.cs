@@ -18,8 +18,8 @@ public class ChangeLettersTests
     {
         _config = new Configuration
         {
-            HostName = "172.23.0.10",
-            Port = 21,
+            HostName = "host.docker.internal",
+            Port = 2121,
             UserName = "myuser",
             Password = "mypass",
         };
@@ -93,5 +93,4 @@ public class ChangeLettersTests
         var result = await ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token: _cts.Token);
         result.ShouldBe(FtpStatus.Success);
     }
-
 }
