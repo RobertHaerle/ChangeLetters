@@ -56,11 +56,22 @@ jobs:
             echo "Waiting for FTP server ($i/20)"
             sleep 1
           done
+          
       - name: Ensure host.docker.internal resolves on runner
         run: |
           echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
           getent hosts host.docker.internal
-    
+          
+      - name: Set FTP env for tests
+        run: |
+          echo "FTP_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "FTP_PORT=2121" >> $GITHUB_ENV
+          
+      - name: Smoke test FTP (login + list)
+        run: |
+          apk add --no-progress curl >/dev/null 2>&1 || true
+          curl -v --user myuser:mypass "ftp://127.0.0.1:2121/" || exit 1
+          
       - name: Run integration tests
         run: |
           dotnet test ./ChangeLetters.IntegrationTests.sln \
