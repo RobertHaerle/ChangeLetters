@@ -87,7 +87,16 @@ public class ChangeLettersTests
     private async Task UploadFileAsync()
     {
         await using var ftpClient = FtpHelpers.GetFtpClient();
-        var profile = await ftpClient.AutoConnect(_cts.Token);
+        _log.LogInformation("connect to FTP server {host}/{port} as {user}", ftpClient.Host, ftpClient.Port, ftpClient.Credentials.UserName);
+        FtpProfile? profile = null;
+        try
+        {
+            profile = await ftpClient.AutoConnect(_cts.Token);
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "could not connect to FTP server");
+        }
         profile.ShouldNotBeNull();
         var d = await ftpClient.GetListing(_cts.Token);
         var result = await ftpClient.UploadFile("Files/01 - Der Ölprinz.mp3", "working/01 - Der ?lprinz.mp3", FtpRemoteExists.Overwrite, token: _cts.Token);
