@@ -4,10 +4,20 @@ public static class FtpHelpers
 {
     public static IAsyncFtpClient GetFtpClient()
     {
+        var config = GetConfig();
         var ftpClient = new AsyncFtpClient();
-        ftpClient.Host = "127.0.0.1";
-        ftpClient.Port = 2121;
-        ftpClient.Credentials = new NetworkCredential("myuser", "mypass");
+        ftpClient.Host = config.HostName;
+        ftpClient.Port = config.Port;
+        ftpClient.Credentials = new NetworkCredential(config.UserName, config.Password);
         return ftpClient;
     }
+
+    public static Configuration GetConfig()
+    => new ()
+    {
+        HostName = "host.docker.internal",
+        Port = 2121,
+        UserName = "myuser",
+        Password = "mypass",
+    };
 }

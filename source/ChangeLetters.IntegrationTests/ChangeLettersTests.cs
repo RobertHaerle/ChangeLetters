@@ -16,14 +16,7 @@ public class ChangeLettersTests
     [SetUp]
     public async Task Setup()
     {
-        _config = new Configuration
-        {
-            HostName = "host.docker.internal",
-            Port = 2121,
-            UserName = "myuser",
-            Password = "mypass",
-        };
-
+        _config = FtpHelpers.GetConfig();
         _httpClient = HttpClientHelpers.GetHttpClient();
         _log = LogHelper.GetLogger<ChangeLettersTests>();
         _cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
@@ -82,7 +75,6 @@ public class ChangeLettersTests
         var content = await response.Content.ReadFromJsonAsync<FileItem[]>();
         content!.Length.ShouldBe(0);
     }
-
 
     private async Task UploadFileAsync()
     {
