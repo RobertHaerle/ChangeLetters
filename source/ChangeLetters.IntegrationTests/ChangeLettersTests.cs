@@ -73,6 +73,7 @@ public class ChangeLettersTests
         var response = await _httpClient.GetAsync(WorkingFolder);
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var content = await response.Content.ReadFromJsonAsync<FileItem[]>();
+        _log.LogInformation($"result: {string.Join(",", content!.Select(c => c.Name))}");
         content!.Length.ShouldBe(0);
     }
 
