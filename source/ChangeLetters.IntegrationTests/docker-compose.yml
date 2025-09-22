@@ -30,9 +30,10 @@ services:
       Logging__LogLevel__FluentFTP: Trace
       Logging__LogLevel__Microsoft__AspNetCore: Trace
       Logging__LogLevel__Microsoft__EntityFrameworkCore: Trace
-
     volumes:
       - ../ChangeLetters.IntegrationTests/https:/https
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   ftp-server:
     image: garethflowers/ftp-server
