@@ -21,4 +21,17 @@ public class EnableForeignKeysInterceptor : DbConnectionInterceptor
         }
         base.ConnectionOpened(connection, eventData);
     }
+
+    /// <inheritdoc />
+    public override async Task ConnectionOpenedAsync(DbConnection connection, ConnectionEndEventData eventData, CancellationToken cancellationToken = new CancellationToken())
+    {
+        if (connection is SqliteConnection sqliteConnection)
+        {
+            await using var command = sqliteConnection.CreateCommand();
+            command.CommandText = SqliteSpecificSql.EnableForeignKeys;
+            await command.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        await base.ConnectionOpenedAsync(connection, eventData, cancellationToken);
+    }
 }
