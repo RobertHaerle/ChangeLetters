@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace ChangeLetters.Infrastructure;
+namespace ChangeLetters.Database;
 
 /// <summary> 
 /// Class DatabaseConfiguration. 
@@ -27,6 +27,15 @@ public class DatabaseConfiguration
     public required string ConnectionString { get; init; }
 
     public IInterceptor[]? Interceptors { get; init; }
+
+    public override string ToString()
+    {
+        return $"\r\nConfigurationAssembly: {ConfigurationAssembly.FullName}\r\n"
+            + $"DatabaseType: {DatabaseType}\r\n"
+                + $"ConnectionString: {ConnectionString}\r\n"
+                + $"Options: {Options}\r\n"
+                + $"Interceptors: {(Interceptors != null ? string.Join(", ", Interceptors.Select(i => i.GetType().Name)) : "None")}";
+    }
 }
 
 

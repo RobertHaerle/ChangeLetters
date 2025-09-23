@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.Infrastructure;
+﻿namespace ChangeLetters.Database;
 
 /// <summary>Enum DatabaseType</summary>
 public enum DatabaseType

@@ -1,4 +1,4 @@
-﻿using ChangeLetters.Infrastructure;
+﻿using ChangeLetters.Database;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

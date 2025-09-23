@@ -1,6 +1,6 @@
 ﻿
 
-namespace ChangeLetters.Infrastructure.Sqlite;
+namespace ChangeLetters.Database.Sqlite;
 
 public static  class SqliteRegistration
 {
@@ -30,7 +30,11 @@ public static  class SqliteRegistration
             DatabaseType = DatabaseType.Sqlite,
             ConnectionString = connectionString,
             Options = new DbContextOptionsBuilder<DatabaseContext>()
-                .UseSqlite(connectionString)
+                .UseSqlite(connectionString, options=>
+                {
+                    Console.WriteLine($"MigrationAssembly: {typeof(SqliteRegistration).Assembly.GetName().Name}");
+                    options.MigrationsAssembly(typeof(SqliteRegistration).Assembly.GetName().Name);
+                })
                 .Options,
             ConfigurationAssembly = typeof(SqliteRegistration).Assembly,
             Interceptors = [new EnableForeignKeysInterceptor()]

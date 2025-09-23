@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace ChangeLetters.Infrastructure.Sqlite;
+namespace ChangeLetters.Database.Sqlite;
 
 /// <summary>
 /// Interceptor that ensures SQLite foreign key constraints are enabled for every database connection.

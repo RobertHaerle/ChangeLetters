@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.Infrastructure.Sqlite;
+﻿namespace ChangeLetters.Database.Sqlite;
 
 internal static class SqliteSpecificSql
 {

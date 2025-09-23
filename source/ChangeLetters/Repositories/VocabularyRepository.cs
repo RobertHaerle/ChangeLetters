@@ -1,5 +1,5 @@
-﻿using ChangeLetters.Domain.Models;
-using ChangeLetters.Infrastructure;
+﻿using ChangeLetters.Database;
+using ChangeLetters.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.Repositories;

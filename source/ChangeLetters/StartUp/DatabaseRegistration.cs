@@ -1,5 +1,5 @@
-﻿using ChangeLetters.Infrastructure;
-using ChangeLetters.Infrastructure.Sqlite;
+﻿using ChangeLetters.Database;
+using ChangeLetters.Database.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.StartUp;

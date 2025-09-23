@@ -1,5 +1,4 @@
-﻿using ChangeLetters.Infrastructure;
-using ChangeLetters.Infrastructure.Sqlite;
+﻿using ChangeLetters.Database.Sqlite;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace ChangeLetters.Database.Manager;
@@ -8,23 +7,49 @@ namespace ChangeLetters.Database.Manager;
 /// Class DbContextFactory.
 /// Implements <see cref="IDesignTimeDbContextFactory{DatabaseContext}" />
 /// </summary>
+/// <remarks>
+/// Usage:
+/// dotnet ef migrations add Initial --project ../ChangeLetters.Database.Sqlite --startup-project . -- --databaseType sqlite --connectionString "Data Source=c:/Data/ChangeLetters/ChangeLetters.db;"
+/// </remarks>
 public class DbContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
 {
     /// <inheritdoc />
     public DatabaseContext CreateDbContext(string[] args)
     {
-        if (args.Length != 2)
-            throw new ArgumentException("Expected exactly two arguments:\r\n 1. database type \r\n 2. connection string.");
-        var databaseType = args[0];
-        var connectionString = args[1];
+        var parsedArgs = ParseArgs(args);
 
-        DatabaseConfiguration? options = null;
+        var databaseType = parsedArgs["databasetype"];
+        var connectionString = parsedArgs["connectionstring"];
 
+        Console.WriteLine($"found {connectionString} for {databaseType}");
+        DatabaseConfiguration? databaseConfiguration = null;
         if (databaseType.ToLower() == "sqlite")
-            SqliteRegistration.TryGetSqliteConfiguration(connectionString, out var configuration);
+        {
+            SqliteRegistration.TryGetSqliteConfiguration(connectionString, out databaseConfiguration);
+        }
         else
             throw new ArgumentException("only sqlite is supported at the moment.");
 
-        return new DatabaseContext(options!);
+        Console.WriteLine($"created database configuration\r\n{(databaseConfiguration == null ? "NULL" : databaseConfiguration.ToString())}");
+        var context = new DatabaseContext(databaseConfiguration!);
+        return context;
+    }
+
+    private static Dictionary<string, string> ParseArgs(string[] args)
+    {
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        for (int i = 0; i < args.Length - 1; i++)
+        {
+            if (args[i].StartsWith("--"))
+            {
+                var key = args[i].Substring(2).ToLower();
+                var value = args[i + 1];
+                dict[key] = value;
+                i++; // Skip the next argument since it's the value
+            }
+        }
+
+        return dict;
     }
 }
