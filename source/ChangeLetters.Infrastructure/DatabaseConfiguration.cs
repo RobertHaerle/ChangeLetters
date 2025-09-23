@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
-namespace ChangeLetters.Database;
+namespace ChangeLetters.Infrastructure;
 
 /// <summary> 
 /// Class DatabaseConfiguration. 

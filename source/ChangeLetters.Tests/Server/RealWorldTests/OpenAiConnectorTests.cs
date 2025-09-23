@@ -1,6 +1,6 @@
-﻿using ChangeLetters.Models;
-using ChangeLetters.Wrappers;
+﻿using ChangeLetters.Wrappers;
 using ChangeLetters.Connectors;
+using ChangeLetters.Domain.Models;
 using ChangeLetters.Extensions;
 using Microsoft.Extensions.Configuration;
 using ChangeLetters.Tests.Server.TestHelpers;

@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
-using ChangeLetters.Database;
+﻿using ChangeLetters.Infrastructure;
+using ChangeLetters.Infrastructure.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.StartUp;
@@ -13,20 +13,24 @@ internal static class DatabaseRegistration
     /// <param name="services">The services.</param>
     /// <param name="config">The configuration.</param>
     /// <returns><see cref="IServiceCollection"/>.</returns>
-    /// <exception cref="System.InvalidOperationException">No valid database configuration found.</exception>
+    /// <exception cref="InvalidOperationException">No valid database configuration found.</exception>
     internal static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
     {
-        if (AddSqliteContext(services, config) 
-            || AddSqlServerContext(services, config))
+        if (SqliteRegistration.TryGetSqliteConfiguration(config, out var dbConfig)
+            || TryGetSqlServerConfiguration(config, out  dbConfig))
+        {
+            services.AddSingleton(dbConfig!);
             services.AddDbContext<DatabaseContext>();
+        }
         else
             throw new InvalidOperationException("No valid database configuration found.");
         return services;
     }
 
-    private static bool AddSqlServerContext(IServiceCollection services, IConfiguration config)
+    private static bool TryGetSqlServerConfiguration(IConfiguration config, out DatabaseConfiguration? databaseConfiguration)
     {
         var connectionString = config.GetConnectionString("SqlServer");
+        databaseConfiguration = null;
         if (string.IsNullOrEmpty(connectionString))
             return false;
 
@@ -42,30 +46,6 @@ internal static class DatabaseRegistration
         //};
         //services.AddSingleton(dbConfig);
         return false;
-    }
-
-    private static bool AddSqliteContext(IServiceCollection services, IConfiguration config)
-    {
-        var connectionString = config.GetConnectionString("Sqlite");
-        if (string.IsNullOrEmpty(connectionString))
-            return false;
-        var builder = new SqliteConnectionStringBuilder(connectionString);
-        var dataSource = builder.DataSource;
-        var directory = Path.GetDirectoryName(dataSource);
-
-        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            Directory.CreateDirectory(directory);
-        var dbConfig = new DatabaseConfiguration
-        {
-            DatabaseType = DatabaseType.Sqlite,
-            ConnectionString = connectionString,
-            Options = new DbContextOptionsBuilder<DatabaseContext>()
-                .UseSqlite(connectionString)
-                .Options,
-            ConfigurationAssembly = typeof(DatabaseContext).Assembly,
-        };
-        services.AddSingleton(dbConfig);
-        return true;
     }
 
     /// <summary>Initializes the database.</summary>

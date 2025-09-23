@@ -13,6 +13,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Infrastructure.Sqlite\ChangeLetters.Infrastructure.Sqlite.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Infrastructure\ChangeLetters.Infrastructure.csproj" />
     <ProjectReference Include="..\ChangeLetters.SignalR\ChangeLetters.SignalR.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.19">
       <PrivateAssets>all</PrivateAssets>
@@ -30,6 +32,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.19" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

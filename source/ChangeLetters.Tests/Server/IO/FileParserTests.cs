@@ -1,5 +1,5 @@
-﻿using ChangeLetters.DTOs;
-using ChangeLetters.Models;
+﻿using ChangeLetters.Domain.Models;
+using ChangeLetters.DTOs;
 using ChangeLetters.ParseLogic;
 
 namespace ChangeLetters.Tests.Server.IO;
