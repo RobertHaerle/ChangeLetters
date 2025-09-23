@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿
 
 namespace ChangeLetters.Infrastructure.Sqlite;
 
@@ -14,12 +12,17 @@ public static  class SqliteRegistration
     {
         databaseConfiguration = null;
         var connectionString = config.GetConnectionString("Sqlite");
+        return TryGetSqliteConfiguration(connectionString!, out databaseConfiguration);
+    }
+
+    public static bool TryGetSqliteConfiguration(string connectionString, out DatabaseConfiguration? databaseConfiguration)
+    {
+        databaseConfiguration = null;
         if (string.IsNullOrEmpty(connectionString))
             return false;
         var builder = new SqliteConnectionStringBuilder(connectionString);
         var dataSource = builder.DataSource;
         var directory = Path.GetDirectoryName(dataSource);
-
         if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             Directory.CreateDirectory(directory);
         databaseConfiguration = new DatabaseConfiguration
@@ -30,6 +33,7 @@ public static  class SqliteRegistration
                 .UseSqlite(connectionString)
                 .Options,
             ConfigurationAssembly = typeof(SqliteRegistration).Assembly,
+            Interceptors = [new EnableForeignKeysInterceptor()]
         };
         return true;
     }

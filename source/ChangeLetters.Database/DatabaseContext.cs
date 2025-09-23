@@ -17,4 +17,12 @@ public class DatabaseContext(DatabaseConfiguration config) : DbContext(config.Op
     {
         modelBuilder.ApplyConfigurationsFromAssembly(config.ConfigurationAssembly);
     }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if(config.Interceptors != null && config.Interceptors.Any())
+            optionsBuilder.AddInterceptors(config.Interceptors!);
+        base.OnConfiguring(optionsBuilder);
+    }
 }

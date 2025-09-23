@@ -1,5 +1,4 @@
 ﻿using ChangeLetters.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChangeLetters.Infrastructure.Sqlite.Configuration;
@@ -15,8 +14,8 @@ public class VocabularyConfiguration : IEntityTypeConfiguration<VocabularyItem>
     {
         builder.HasKey(x => x.VocabularyItemId);
         builder.Property(x=> x.VocabularyItemId)
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+            .IsRequired()
+            .HasDefaultValueSql(SqliteSpecificSql.GetNewId());
 
         builder.Property(x => x.UnknownWord)
             .IsRequired()

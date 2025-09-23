@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ChangeLetters.Infrastructure;
 
@@ -24,6 +25,8 @@ public class DatabaseConfiguration
 
     /// <summary>Gets or sets the connection string.</summary>
     public required string ConnectionString { get; init; }
+
+    public IInterceptor[]? Interceptors { get; init; }
 }
 
 
