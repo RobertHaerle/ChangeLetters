@@ -10,5 +10,5 @@ public class RenameFileItemsRequest
     public required FileItemType FileItemType{ get; set; }
 
     /// <summary>Gets or sets the signalR connection identifier.</summary>
-    public string SignalRConnectionId { get; set; }
+    public string? SignalRConnectionId { get; set; }
 }

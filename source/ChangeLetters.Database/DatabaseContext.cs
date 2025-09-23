@@ -1,4 +1,4 @@
-﻿using ChangeLetters.Models;
+﻿using ChangeLetters.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChangeLetters.Database;
@@ -16,5 +16,13 @@ public class DatabaseContext(DatabaseConfiguration config) : DbContext(config.Op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(config.ConfigurationAssembly);
+    }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if(config.Interceptors != null && config.Interceptors.Any())
+            optionsBuilder.AddInterceptors(config.Interceptors!);
+        base.OnConfiguring(optionsBuilder);
     }
 }

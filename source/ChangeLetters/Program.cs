@@ -1,6 +1,5 @@
 using ChangeLetters.Components;
 using ChangeLetters.Connectors;
-using ChangeLetters.Database;
 using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;

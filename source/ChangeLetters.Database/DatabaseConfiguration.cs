@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace ChangeLetters.Database;
 
@@ -24,6 +25,17 @@ public class DatabaseConfiguration
 
     /// <summary>Gets or sets the connection string.</summary>
     public required string ConnectionString { get; init; }
+
+    public IInterceptor[]? Interceptors { get; init; }
+
+    public override string ToString()
+    {
+        return $"\r\nConfigurationAssembly: {ConfigurationAssembly.FullName}\r\n"
+            + $"DatabaseType: {DatabaseType}\r\n"
+                + $"ConnectionString: {ConnectionString}\r\n"
+                + $"Options: {Options}\r\n"
+                + $"Interceptors: {(Interceptors != null ? string.Join(", ", Interceptors.Select(i => i.GetType().Name)) : "None")}";
+    }
 }
 
 

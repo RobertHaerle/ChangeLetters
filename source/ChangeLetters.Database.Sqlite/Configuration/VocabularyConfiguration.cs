@@ -1,8 +1,7 @@
-﻿using ChangeLetters.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using ChangeLetters.Domain.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ChangeLetters.Database.Configuration;
+namespace ChangeLetters.Database.Sqlite.Configuration;
 
 /// <summary> 
 /// Class VocabularyConfiguration.

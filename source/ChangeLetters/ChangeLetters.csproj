@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
     <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
     <ProjectReference Include="..\ChangeLetters.SignalR\ChangeLetters.SignalR.csproj" />
@@ -27,9 +28,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
     <PackageReference Include="DryIoc.MefAttributedModel.dll" Version="7.0.2" />
     <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.19" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.20" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.19" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

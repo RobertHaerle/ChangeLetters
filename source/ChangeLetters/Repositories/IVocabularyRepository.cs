@@ -1,4 +1,4 @@
-﻿using ChangeLetters.Models;
+﻿using ChangeLetters.Domain.Models;
 
 namespace ChangeLetters.Repositories;
 

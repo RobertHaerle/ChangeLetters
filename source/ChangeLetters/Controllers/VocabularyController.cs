@@ -1,5 +1,5 @@
-﻿using ChangeLetters.DTOs;
-using ChangeLetters.Models;
+﻿using ChangeLetters.Domain.Converters;
+using ChangeLetters.DTOs;
 using ChangeLetters.Handlers;
 using ChangeLetters.Repositories;
 using Microsoft.AspNetCore.Mvc;
