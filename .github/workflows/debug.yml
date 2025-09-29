@@ -1,6 +1,5 @@
 name: debug
 on:
-  push:
   workflow_run:
     workflows: ["CI on Merge (build + integration tests)"]
     types:
@@ -15,3 +14,8 @@ jobs:
           echo "Event name: ${{ github.event_name }}"
           echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
           echo "Workflow run head branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Workflow name: ${{ github.event.workflow_run.name }}"
+          echo "Workflow id: ${{ github.event.workflow_run.workflow_id }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Default branch: ${{ github.event.repository.default_branch }}"
