@@ -1,11 +1,11 @@
 name: debug
 on:
   push:
-    workflow_run:
-      workflows: ["CI on Merge (build + integration tests)"]
-      types:
-        - completed
-    workflow_dispatch:
+  workflow_run:
+    workflows: ["CI on Merge (build + integration tests)"]
+    types:
+      - completed
+  workflow_dispatch:
 jobs:
   debug-job:
     runs-on: ubuntu-latest
