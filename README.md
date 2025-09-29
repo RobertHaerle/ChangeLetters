@@ -8,7 +8,7 @@ The goal: apply **clean architecture** and **clean code** while keeping the solu
 ## 🎯 Problem
 
 - An application writing to a NAS only supports ASCII.  
-- Unknown characters are replaced by `?`, making filenames unreadable in File Explorer in Linux and Windows.  
+- Unknown characters are replaced by `?`, making filenames unreadable in File Explorer.  
 - The user cannot configure the charset/codepage in the application.  
 
 ---
