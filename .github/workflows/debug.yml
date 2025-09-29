@@ -1,8 +1,12 @@
-name: debug-job
-  runs-on: ubuntu-latest
-  steps:
-    - name: Debug event
-      run: |
-        echo "Event name: ${{ github.event_name }}"
-        echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
-        echo "Workflow run head branch: ${{ github.event.workflow_run.head_branch }}"
+name: debug
+on:
+  push:
+jobs:
+  debug-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug event
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "Workflow run head branch: ${{ github.event.workflow_run.head_branch }}"
