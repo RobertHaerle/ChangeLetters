@@ -1,7 +1,4 @@
-﻿using ChangeLetters.Models.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace ChangeLetters.Database;
+﻿namespace ChangeLetters.Database;
 
 /// <summary> 
 /// Class DatabaseContext.

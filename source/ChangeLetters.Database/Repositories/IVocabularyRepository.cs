@@ -1,6 +1,4 @@
-﻿using ChangeLetters.Models.Models;
-
-namespace ChangeLetters.Repositories;
+﻿namespace ChangeLetters.Database.Repositories;
 
 /// <summary>Interface IVocabularyRepository.</summary>
 public interface IVocabularyRepository

@@ -1,7 +1,7 @@
 using ChangeLetters.Shared;
 using ChangeLetters.Handlers;
 using ChangeLetters.Controllers;
-using ChangeLetters.Repositories;
+using ChangeLetters.Database.Repositories;
 using ChangeLetters.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,7 +3,7 @@ using ChangeLetters.Shared;
 using ChangeLetters.Handlers;
 using ChangeLetters.ParseLogic;
 using ChangeLetters.Connectors;
-using ChangeLetters.Repositories;
+using ChangeLetters.Database.Repositories;
 using ChangeLetters.Models.Models;
 
 namespace ChangeLetters.Tests.Server.Handlers

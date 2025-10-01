@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using ChangeLetters.Database.Repositories;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using ChangeLetters.Repositories;
 using ChangeLetters.Models.Models;
 using ChangeLetters.Tests.Server.TestHelpers;
 

@@ -1,8 +1,4 @@
-﻿using ChangeLetters.Database;
-using ChangeLetters.Models.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace ChangeLetters.Repositories;
+﻿namespace ChangeLetters.Database.Repositories;
 
 /// <summary> 
 /// Class VocabularyRepository.
