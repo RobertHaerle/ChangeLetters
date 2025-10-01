@@ -9,6 +9,7 @@ jobs:
     secrets: inherit  
     
   create-tag:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
