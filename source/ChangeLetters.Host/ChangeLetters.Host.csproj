@@ -12,7 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj" />
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
     <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
     <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
