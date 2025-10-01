@@ -16,6 +16,7 @@ COPY ["ChangeLetters.Host/ChangeLetters.Host.csproj", "ChangeLetters.Host/"]
 COPY ["ChangeLetters.Shared/ChangeLetters.Shared.csproj", "ChangeLetters.Shared/"]
 COPY ["ChangeLetters.Client/ChangeLetters.Client.csproj", "ChangeLetters.Client/"]
 COPY ["ChangeLetters.SignalR/ChangeLetters.SignalR.csproj", "ChangeLetters.SignalR/"]
+COPY ["ChangeLetters.SignalR/ChangeLetters.SignalR.csproj", "ChangeLetters.SignalR/"]
 RUN dotnet restore "./ChangeLetters.Host/ChangeLetters.Host.csproj"
 COPY . .
 WORKDIR "/src/ChangeLetters.Host"

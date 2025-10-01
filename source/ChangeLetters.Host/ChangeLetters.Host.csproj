@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj" />
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
     <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
     <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
