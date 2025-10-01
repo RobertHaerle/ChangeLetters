@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters", "ChangeLetters\ChangeLetters.csproj", "{0AC7BF90-73BF-44B3-B865-C6F1E4D49E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Host", "ChangeLetters.Host\ChangeLetters.Host.csproj", "{0AC7BF90-73BF-44B3-B865-C6F1E4D49E5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Client", "ChangeLetters.Client\ChangeLetters.Client.csproj", "{EB5D8BCE-4CCB-43FF-AA0A-2EBFDCD2CBFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Shared", "ChangeLetters.DTOs\ChangeLetters.Shared.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Shared", "ChangeLetters.Shared\ChangeLetters.Shared.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Tests", "ChangeLetters.Tests\ChangeLetters.Tests.csproj", "{06ADEF29-F7F7-4A75-981A-2444FCBB54D7}"
 EndProject
@@ -85,7 +85,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0AC7BF90-73BF-44B3-B865-C6F1E4D49E5A} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{EB5D8BCE-4CCB-43FF-AA0A-2EBFDCD2CBFA} = {5D05E41B-5BF9-4325-8A1E-6935BBD5682F}
 		{D3057A25-295D-472F-AF1F-2E398B534397} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{09FB4290-4034-48D1-9BDD-838A423F6665} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}

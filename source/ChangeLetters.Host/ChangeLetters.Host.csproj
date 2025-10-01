@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
-    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.Shared.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
     <ProjectReference Include="..\ChangeLetters.SignalR\ChangeLetters.SignalR.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.19">

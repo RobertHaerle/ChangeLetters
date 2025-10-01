@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.Shared.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
   </ItemGroup>
 
 </Project>
