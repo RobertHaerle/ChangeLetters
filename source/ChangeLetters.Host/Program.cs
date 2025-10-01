@@ -1,4 +1,5 @@
 using ChangeLetters.Components;
+using ChangeLetters.Controllers;
 using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
@@ -44,7 +45,8 @@ if (builder.Environment.IsDevelopment())
 
 builder.Services.AddSignalR();
 builder.Services.AddSwagger();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(FtpController).Assembly);
 builder.Services.AddHealthChecks()
     .AddCheck<HealthCheck>("alive");
 builder.Services.AddEndpointsApiExplorer();
