@@ -1,6 +1,6 @@
 ﻿using ChangeLetters.Domain.IO;
 
-namespace ChangeLetters.Controllers;
+namespace ChangeLetters.Application.Http.Controllers;
 
 /// <summary> 
 /// Access point for the FTP configuration

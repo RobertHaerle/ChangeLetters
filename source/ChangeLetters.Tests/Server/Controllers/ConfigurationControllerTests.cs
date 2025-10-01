@@ -1,4 +1,4 @@
-using ChangeLetters.Controllers;
+using ChangeLetters.Application.Http.Controllers;
 using ChangeLetters.Domain.IO;
 using ChangeLetters.Shared;
 using Microsoft.AspNetCore.Mvc;

@@ -3,8 +3,8 @@ using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
 using ChangeLetters.Components;
-using ChangeLetters.Controllers;
 using ChangeLetters.SystemMonitoring;
+using ChangeLetters.Application.Http.Controllers;
 using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);

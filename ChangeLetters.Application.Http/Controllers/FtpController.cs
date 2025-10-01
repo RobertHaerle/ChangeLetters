@@ -2,10 +2,8 @@ using System.Net;
 using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Domain.IO;
-using ChangeLetters.Shared;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeLetters.Controllers;
+namespace ChangeLetters.Application.Http.Controllers;
 
 /// <summary> 
 /// Executes FTP commands.

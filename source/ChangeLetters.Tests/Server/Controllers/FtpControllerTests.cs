@@ -1,4 +1,4 @@
-using ChangeLetters.Controllers;
+using ChangeLetters.Application.Http.Controllers;
 using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Domain.IO;

@@ -1,10 +1,8 @@
 ﻿using ChangeLetters.Database.Repositories;
 using ChangeLetters.Domain.Handlers;
-using ChangeLetters.Shared;
 using ChangeLetters.Models.Converters;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeLetters.Controllers;
+namespace ChangeLetters.Application.Http.Controllers;
 
 /// <summary> 
 /// Controls vocabulary access.
