@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

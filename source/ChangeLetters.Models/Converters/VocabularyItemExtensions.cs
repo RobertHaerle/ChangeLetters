@@ -1,7 +1,7 @@
-﻿using ChangeLetters.Domain.Models;
+﻿using ChangeLetters.Models.Models;
 using ChangeLetters.Shared;
 
-namespace ChangeLetters.Domain.Converters;
+namespace ChangeLetters.Models.Converters;
 
 /// <summary> 
 /// Class VocabularyItemExtensions. 

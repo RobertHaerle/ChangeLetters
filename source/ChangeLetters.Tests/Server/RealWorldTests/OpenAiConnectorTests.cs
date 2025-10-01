@@ -1,7 +1,7 @@
 ﻿using ChangeLetters.Wrappers;
-using ChangeLetters.Connectors;
-using ChangeLetters.Domain.Models;
 using ChangeLetters.Extensions;
+using ChangeLetters.Connectors;
+using ChangeLetters.Models.Models;
 using Microsoft.Extensions.Configuration;
 using ChangeLetters.Tests.Server.TestHelpers;
 

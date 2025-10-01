@@ -1,4 +1,4 @@
-﻿using ChangeLetters.Domain.Models;
+﻿using ChangeLetters.Models.Models;
 using ChangeLetters.Shared;
 
 namespace ChangeLetters.ParseLogic;

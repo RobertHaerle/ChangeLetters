@@ -1,8 +1,8 @@
+using ChangeLetters.Shared;
 using ChangeLetters.Handlers;
 using ChangeLetters.Controllers;
-using ChangeLetters.Domain.Models;
 using ChangeLetters.Repositories;
-using ChangeLetters.Shared;
+using ChangeLetters.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Tests.Server.Controllers;

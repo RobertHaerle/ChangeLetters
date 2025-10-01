@@ -1,5 +1,5 @@
-﻿using ChangeLetters.Domain.Models;
-using ChangeLetters.Extensions;
+﻿using ChangeLetters.Extensions;
+using ChangeLetters.Models.Models;
 using ChangeLetters.Shared;
 
 namespace ChangeLetters.ParseLogic;

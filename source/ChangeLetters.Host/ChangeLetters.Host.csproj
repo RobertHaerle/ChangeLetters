@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
     <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
     <ProjectReference Include="..\ChangeLetters.SignalR\ChangeLetters.SignalR.csproj" />

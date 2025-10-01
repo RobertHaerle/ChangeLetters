@@ -1,4 +1,4 @@
-﻿using ChangeLetters.Domain.Models;
+﻿using ChangeLetters.Models.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ChangeLetters.Database.Sqlite.Configuration;

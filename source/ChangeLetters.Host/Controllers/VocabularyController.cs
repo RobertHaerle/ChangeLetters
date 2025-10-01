@@ -1,7 +1,7 @@
-﻿using ChangeLetters.Domain.Converters;
+﻿using ChangeLetters.Shared;
 using ChangeLetters.Handlers;
+using ChangeLetters.Models.Converters;
 using ChangeLetters.Repositories;
-using ChangeLetters.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Controllers;

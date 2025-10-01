@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.Domain.Models;
+﻿namespace ChangeLetters.Models.Models;
 
 /// <summary> 
 /// Class VocabularyItem. 

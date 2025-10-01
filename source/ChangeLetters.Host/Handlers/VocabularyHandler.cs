@@ -1,7 +1,7 @@
 ﻿using ChangeLetters.Connectors;
 using ChangeLetters.Repositories;
 using ChangeLetters.Configurations;
-using ChangeLetters.Domain.Converters;
+using ChangeLetters.Models.Converters;
 using ChangeLetters.Shared;
 
 namespace ChangeLetters.Handlers;
