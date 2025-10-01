@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using ChangeLetters.DTOs;
 using ChangeLetters.Client.Connectors;
+using ChangeLetters.Shared;
 using ChangeLetters.Tests.Client.ClientHelpers;
 
 namespace ChangeLetters.Tests.Client.Connectors;

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
   </ItemGroup>
 
 </Project>

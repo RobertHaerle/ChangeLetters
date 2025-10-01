@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ChangeLetters.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeLetters.IntegrationTests;
 

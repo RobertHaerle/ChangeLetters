@@ -1,6 +1,6 @@
 ﻿using Flurl;
-using ChangeLetters.DTOs;
 using ChangeLetters.Client.HubConnection;
+using ChangeLetters.Shared;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace ChangeLetters.Client.Connectors;

@@ -1,4 +1,4 @@
-using ChangeLetters.DTOs;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Client.Connectors;
 

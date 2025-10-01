@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters\ChangeLetters.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Host\ChangeLetters.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>

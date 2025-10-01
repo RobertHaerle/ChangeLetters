@@ -1,10 +1,10 @@
-using ChangeLetters.DTOs;
-using ChangeLetters.Handlers;
-using ChangeLetters.IO;
-using ChangeLetters.ParseLogic;
-using ChangeLetters.Repositories;
-using ChangeLetters.Connectors;
-using ChangeLetters.Domain.Models;
+using ChangeLetters.Shared;
+using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.IO;
+using ChangeLetters.Domain.ParseLogic;
+using ChangeLetters.Models.Models;
 
 namespace ChangeLetters.Tests.Server.Handlers
 {

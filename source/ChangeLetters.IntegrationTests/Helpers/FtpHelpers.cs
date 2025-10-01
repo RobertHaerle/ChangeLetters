@@ -1,4 +1,6 @@
-﻿namespace ChangeLetters.IntegrationTests.Helpers;
+﻿using ChangeLetters.Shared;
+
+namespace ChangeLetters.IntegrationTests.Helpers;
 
 public static class FtpHelpers
 {

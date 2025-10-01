@@ -1,7 +1,7 @@
 using Flurl;
-using ChangeLetters.DTOs;
 using ChangeLetters.Client.Connectors;
 using ChangeLetters.Client.HubConnection;
+using ChangeLetters.Shared;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

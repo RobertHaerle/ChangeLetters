@@ -16,10 +16,10 @@ namespace ChangeLetters.IntegrationTests
         }
 
         [TearDown]
-        public async Task TearDown()
+        public void TearDown()
         {
             _cts.Dispose();
-         }
+        }
 
         [Test]
         public async Task CheckConnection()
@@ -38,7 +38,7 @@ namespace ChangeLetters.IntegrationTests
         {
             await using var ftpClient = FtpHelpers.GetFtpClient();
             await Task.Delay(TimeSpan.FromSeconds(2));
-            _log.LogInformation("[{now:yyyy-MM-dd HH:mm:ss}] CopyFile: connect to FTP server {host}/{port} as {user}", DateTime.UtcNow,  ftpClient.Host, ftpClient.Port, ftpClient.Credentials.UserName);
+            _log.LogInformation("[{now:yyyy-MM-dd HH:mm:ss}] CopyFile: connect to FTP server {host}/{port} as {user}", DateTime.UtcNow, ftpClient.Host, ftpClient.Port, ftpClient.Credentials.UserName);
             FtpProfile? profile = null;
             try
             {

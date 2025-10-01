@@ -1,6 +1,6 @@
-﻿using ChangeLetters.Domain.Models;
-using ChangeLetters.DTOs;
-using ChangeLetters.ParseLogic;
+﻿using ChangeLetters.Domain.ParseLogic;
+using ChangeLetters.Shared;
+using ChangeLetters.Models.Models;
 
 namespace ChangeLetters.Tests.Server.IO;
 

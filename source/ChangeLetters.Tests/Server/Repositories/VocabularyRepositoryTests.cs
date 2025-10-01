@@ -1,7 +1,7 @@
-﻿using ChangeLetters.Domain.Models;
+﻿using ChangeLetters.Database.Repositories;
 using Microsoft.Data.Sqlite;
-using ChangeLetters.Repositories;
 using Microsoft.EntityFrameworkCore;
+using ChangeLetters.Models.Models;
 using ChangeLetters.Tests.Server.TestHelpers;
 
 namespace ChangeLetters.Tests.Server.Repositories;

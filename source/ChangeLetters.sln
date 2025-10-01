@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters", "ChangeLetters\ChangeLetters.csproj", "{0AC7BF90-73BF-44B3-B865-C6F1E4D49E5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Host", "ChangeLetters.Host\ChangeLetters.Host.csproj", "{0AC7BF90-73BF-44B3-B865-C6F1E4D49E5A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Client", "ChangeLetters.Client\ChangeLetters.Client.csproj", "{EB5D8BCE-4CCB-43FF-AA0A-2EBFDCD2CBFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.DTOs", "ChangeLetters.DTOs\ChangeLetters.DTOs.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Shared", "ChangeLetters.Shared\ChangeLetters.Shared.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Tests", "ChangeLetters.Tests\ChangeLetters.Tests.csproj", "{06ADEF29-F7F7-4A75-981A-2444FCBB54D7}"
 EndProject
@@ -30,9 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Database", "ChangeLetters.Database\ChangeLetters.Database.csproj", "{C99B8751-7E0B-43E2-B696-50CC0DFB802E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Domain", "ChangeLetters.Domain\ChangeLetters.Domain.csproj", "{E294DE44-FFFB-420D-80F3-79A0C29FF17C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Database.Manager", "ChangeLetters.Database.Manager\ChangeLetters.Database.Manager.csproj", "{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Models", "ChangeLetters.Models\ChangeLetters.Models.csproj", "{86085049-AFE7-DE30-5460-C554B7BD168E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Application.Http", "ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj", "{C7842A08-C287-CC5F-57A0-A2C6A1D946E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Domain", "ChangeLetters.Domain\ChangeLetters.Domain.csproj", "{A7E848AC-D177-6543-B3CF-9FA379CC78B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,14 +76,22 @@ Global
 		{C99B8751-7E0B-43E2-B696-50CC0DFB802E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C99B8751-7E0B-43E2-B696-50CC0DFB802E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C99B8751-7E0B-43E2-B696-50CC0DFB802E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E294DE44-FFFB-420D-80F3-79A0C29FF17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E294DE44-FFFB-420D-80F3-79A0C29FF17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E294DE44-FFFB-420D-80F3-79A0C29FF17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E294DE44-FFFB-420D-80F3-79A0C29FF17C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86085049-AFE7-DE30-5460-C554B7BD168E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86085049-AFE7-DE30-5460-C554B7BD168E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86085049-AFE7-DE30-5460-C554B7BD168E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86085049-AFE7-DE30-5460-C554B7BD168E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7842A08-C287-CC5F-57A0-A2C6A1D946E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7842A08-C287-CC5F-57A0-A2C6A1D946E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7842A08-C287-CC5F-57A0-A2C6A1D946E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7842A08-C287-CC5F-57A0-A2C6A1D946E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E848AC-D177-6543-B3CF-9FA379CC78B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E848AC-D177-6543-B3CF-9FA379CC78B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E848AC-D177-6543-B3CF-9FA379CC78B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E848AC-D177-6543-B3CF-9FA379CC78B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,8 +103,10 @@ Global
 		{09FB4290-4034-48D1-9BDD-838A423F6665} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}
 		{7838A54A-6F9A-4847-996C-4F9FB0A550C7} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{C99B8751-7E0B-43E2-B696-50CC0DFB802E} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}
-		{E294DE44-FFFB-420D-80F3-79A0C29FF17C} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{AA61EB9E-D47B-40CA-BFC2-AA6D7FCB29C5} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}
+		{86085049-AFE7-DE30-5460-C554B7BD168E} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
+		{C7842A08-C287-CC5F-57A0-A2C6A1D946E9} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
+		{A7E848AC-D177-6543-B3CF-9FA379CC78B2} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {744789AE-904F-4A93-AF69-85BB2B8F205E}

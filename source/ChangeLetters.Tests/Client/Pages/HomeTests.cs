@@ -1,7 +1,7 @@
 ﻿using Bunit;
-using ChangeLetters.DTOs;
 using ChangeLetters.Client.Pages;
 using ChangeLetters.Client.Connectors;
+using ChangeLetters.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using TestContext = Bunit.TestContext;
 

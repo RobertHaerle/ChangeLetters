@@ -1,0 +1,28 @@
+﻿using ChangeLetters.Domain.Configurations;
+using ChangeLetters.Domain.Extensions;
+using OpenAI.Chat;
+
+namespace ChangeLetters.StartUp;
+
+/// <summary> 
+/// Class OpenAiRegistration. 
+/// </summary>
+public static class OpenAiRegistration
+{
+    /// <summary>Adds the <see cref="ChatClient" /> to the <see cref="IServiceCollection" />.</summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns><see cref="IServiceCollection" />.</returns>
+    // ReSharper disable once InconsistentNaming
+    public static IServiceCollection AddOpenAI(this IServiceCollection services, IConfiguration configuration)
+    {
+        var settings = configuration.Deserialize<OpenAiSettings>();
+        //var chatClient = settings.UseOpenAI
+        //    ? new ChatClient(settings.Model, settings.ApiKey)
+        //    : new ChatClient("empty", "no key");
+        var chatClient = new ChatClient(settings.Model, settings.ApiKey);
+        services.AddSingleton(chatClient);
+        services.AddSingleton(settings);
+        return services;
+    }
+}

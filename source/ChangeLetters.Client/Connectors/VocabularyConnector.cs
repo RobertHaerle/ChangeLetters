@@ -1,5 +1,5 @@
-﻿using ChangeLetters.DTOs;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Client.Connectors;
 
