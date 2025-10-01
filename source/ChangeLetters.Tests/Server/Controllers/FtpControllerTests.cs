@@ -1,9 +1,9 @@
-using ChangeLetters.DTOs;
 using ChangeLetters.Handlers;
 using ChangeLetters.Controllers;
 using ChangeLetters.IO;
 using Microsoft.AspNetCore.Mvc;
 using ChangeLetters.Connectors;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Tests.Server.Controllers;
 

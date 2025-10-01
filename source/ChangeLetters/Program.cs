@@ -1,6 +1,6 @@
 using ChangeLetters.Components;
 using ChangeLetters.Connectors;
-using ChangeLetters.DTOs;
+using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
 using ChangeLetters.SystemMonitoring;

@@ -1,5 +1,5 @@
 using ChangeLetters.Connectors;
-using ChangeLetters.DTOs;
+using ChangeLetters.Shared;
 using FluentFTP;
 using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
 

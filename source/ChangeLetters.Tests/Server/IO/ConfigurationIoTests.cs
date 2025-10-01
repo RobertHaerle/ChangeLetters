@@ -1,5 +1,5 @@
 using ChangeLetters.IO;
-using ChangeLetters.DTOs;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Tests.Server.IO;
 

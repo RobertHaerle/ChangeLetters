@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.DTOs;
+﻿namespace ChangeLetters.Shared;
 
 /// <summary>  Class SignalRPath.  </summary>
 public static class SignalRPath

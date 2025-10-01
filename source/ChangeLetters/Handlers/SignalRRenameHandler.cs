@@ -1,4 +1,4 @@
-﻿using ChangeLetters.DTOs;
+﻿using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using Microsoft.AspNetCore.SignalR;
 

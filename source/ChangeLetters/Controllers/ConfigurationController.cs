@@ -1,5 +1,5 @@
-﻿using ChangeLetters.DTOs;
-using ChangeLetters.IO;
+﻿using ChangeLetters.IO;
+using ChangeLetters.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Controllers;

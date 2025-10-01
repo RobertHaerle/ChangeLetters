@@ -1,6 +1,6 @@
 ﻿using ChangeLetters.Domain.Models;
-using ChangeLetters.DTOs;
 using ChangeLetters.Extensions;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.ParseLogic;
 

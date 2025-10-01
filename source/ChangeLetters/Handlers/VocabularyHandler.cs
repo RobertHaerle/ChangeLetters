@@ -1,8 +1,8 @@
-﻿using ChangeLetters.DTOs;
-using ChangeLetters.Connectors;
+﻿using ChangeLetters.Connectors;
 using ChangeLetters.Repositories;
 using ChangeLetters.Configurations;
 using ChangeLetters.Domain.Converters;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Handlers;
 

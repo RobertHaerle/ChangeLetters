@@ -1,12 +1,12 @@
 ﻿using Flurl;
 using System.Reflection;
 using System.Diagnostics;
-using ChangeLetters.DTOs;
 using ChangeLetters.SignalR;
 using ChangeLetters.Swagger;
 using SignalRSwaggerGen.Enums;
 using Microsoft.OpenApi.Models;
 using System.Runtime.InteropServices;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.StartUp;
 

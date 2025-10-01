@@ -1,5 +1,5 @@
 ﻿using ChangeLetters.Domain.Models;
-using ChangeLetters.DTOs;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Domain.Converters;
 

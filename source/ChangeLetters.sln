@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters", "ChangeLett
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Client", "ChangeLetters.Client\ChangeLetters.Client.csproj", "{EB5D8BCE-4CCB-43FF-AA0A-2EBFDCD2CBFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.DTOs", "ChangeLetters.DTOs\ChangeLetters.DTOs.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Shared", "ChangeLetters.DTOs\ChangeLetters.Shared.csproj", "{0868DC22-4DF5-468D-AD9F-5B9AA24B1AAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Tests", "ChangeLetters.Tests\ChangeLetters.Tests.csproj", "{06ADEF29-F7F7-4A75-981A-2444FCBB54D7}"
 EndProject

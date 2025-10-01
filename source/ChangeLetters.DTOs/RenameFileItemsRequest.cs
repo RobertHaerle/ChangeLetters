@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.DTOs;
+﻿namespace ChangeLetters.Shared;
 
 /// <summary>  Request container for renaming file items. </summary>
 public class RenameFileItemsRequest

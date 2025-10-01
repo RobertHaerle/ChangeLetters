@@ -1,7 +1,7 @@
 ﻿using FluentFTP;
 using FluentFTP.Exceptions;
-using ChangeLetters.DTOs;
 using ChangeLetters.Extensions;
+using ChangeLetters.Shared;
 using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
 
 namespace ChangeLetters.Connectors;

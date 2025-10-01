@@ -1,4 +1,4 @@
-﻿namespace ChangeLetters.DTOs;
+﻿namespace ChangeLetters.Shared;
 
 /// <summary>Enum FileItemType</summary>
 public enum FileItemType

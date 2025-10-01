@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.DTOs.csproj" />
+    <ProjectReference Include="..\ChangeLetters.DTOs\ChangeLetters.Shared.csproj" />
   </ItemGroup>
 
 </Project>
