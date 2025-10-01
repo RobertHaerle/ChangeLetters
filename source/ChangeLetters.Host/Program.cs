@@ -1,14 +1,11 @@
-using ChangeLetters.Components;
-using ChangeLetters.Controllers;
+using DryIoc;
 using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;
+using ChangeLetters.Components;
+using ChangeLetters.Controllers;
 using ChangeLetters.SystemMonitoring;
-using DryIoc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Console;
-using Microsoft.FluentUI.AspNetCore.Components;
-using OpenAI.Chat;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host
