@@ -5,7 +5,7 @@ on:
   
 jobs:
   integration_tests:
-    uses: ./.github/workflows/ci-on-merge.yml@main
+    uses: ./.github/workflows/ci-on-merge.yml
     secrets: inherit  
     
   create-tag:
