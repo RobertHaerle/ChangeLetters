@@ -8,6 +8,7 @@
     <UserSecretsId>BHL.ChangeLetters</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <RootNamespace>ChangeLetters</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
