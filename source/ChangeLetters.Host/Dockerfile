@@ -12,11 +12,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ChangeLetters/ChangeLetters.csproj", "ChangeLetters/"]
-COPY ["ChangeLetters.DTOs/ChangeLetters.DTOs.csproj", "ChangeLetters.DTOs/"]
+COPY ["ChangeLetters.Host/ChangeLetters.Host.csproj", "ChangeLetters.Host/"]
+COPY ["ChangeLetters.Shared/ChangeLetters.Shared.csproj", "ChangeLetters.Shared/"]
 COPY ["ChangeLetters.Client/ChangeLetters.Client.csproj", "ChangeLetters.Client/"]
 COPY ["ChangeLetters.SignalR/ChangeLetters.SignalR.csproj", "ChangeLetters.SignalR/"]
-RUN dotnet restore "./ChangeLetters/ChangeLetters.csproj"
+RUN dotnet restore "./ChangeLetters.Host/ChangeLetters.Host.csproj"
 COPY . .
 WORKDIR "/src/ChangeLetters"
 RUN dotnet build "./ChangeLetters.csproj" -c $BUILD_CONFIGURATION -o /app/build
