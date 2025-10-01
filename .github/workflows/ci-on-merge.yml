@@ -11,6 +11,7 @@ on:
       - opened
       - synchronize
       - reopened
+  workflow_call:
 
 permissions:
   contents: read
@@ -24,7 +25,7 @@ jobs:
   # 1) call existing build-and-test.yml auf
   build_and_unit_tests:
     uses: ./.github/workflows/build-and-test.yml
-
+    
   # 2) Integration tests against docker-compose
   integration_tests:
     name: Integration Tests (docker-compose)
