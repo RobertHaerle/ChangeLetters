@@ -18,7 +18,7 @@ COPY ["ChangeLetters.Client/ChangeLetters.Client.csproj", "ChangeLetters.Client/
 COPY ["ChangeLetters.SignalR/ChangeLetters.SignalR.csproj", "ChangeLetters.SignalR/"]
 RUN dotnet restore "./ChangeLetters.Host/ChangeLetters.Host.csproj"
 COPY . .
-WORKDIR "/src/ChangeLetters"
+WORKDIR "/src/ChangeLetters.Host"
 RUN dotnet build "./ChangeLetters.Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
