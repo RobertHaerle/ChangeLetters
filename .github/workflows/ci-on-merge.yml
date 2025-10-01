@@ -11,7 +11,7 @@ on:
       - opened
       - synchronize
       - reopened
-    workflow_call:
+  workflow_call:
 
 permissions:
   contents: read
