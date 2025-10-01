@@ -1,4 +1,4 @@
-using ChangeLetters.IO;
+using ChangeLetters.Domain.IO;
 using ChangeLetters.Shared;
 
 namespace ChangeLetters.Tests.Server.IO;

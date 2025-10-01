@@ -1,6 +1,6 @@
-﻿using OpenAI.Chat;
-using ChangeLetters.Extensions;
-using ChangeLetters.Configurations;
+﻿using ChangeLetters.Domain.Configurations;
+using ChangeLetters.Domain.Extensions;
+using OpenAI.Chat;
 
 namespace ChangeLetters.StartUp;
 

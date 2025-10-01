@@ -1,8 +1,8 @@
-using ChangeLetters.Handlers;
 using ChangeLetters.Controllers;
-using ChangeLetters.IO;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.IO;
 using Microsoft.AspNetCore.Mvc;
-using ChangeLetters.Connectors;
 using ChangeLetters.Shared;
 
 namespace ChangeLetters.Tests.Server.Controllers;

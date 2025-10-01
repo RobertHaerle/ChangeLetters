@@ -1,9 +1,9 @@
 using OpenAI.Chat;
-using ChangeLetters.Wrappers;
-using ChangeLetters.Connectors;
-using ChangeLetters.Configurations;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using ChangeLetters.Domain.Configurations;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Wrappers;
 using ChangeLetters.Tests.Server.TestHelpers;
 
 namespace ChangeLetters.Tests.Server.Connectors;

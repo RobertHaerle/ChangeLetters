@@ -12,6 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\**" />
+    <Compile Remove="Models\**" />
+    <Content Remove="Database\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Database\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Database\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj" />
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
     <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
@@ -35,11 +46,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.20" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.19" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 using ChangeLetters.Components;
-using ChangeLetters.Connectors;
 using ChangeLetters.Shared;
 using ChangeLetters.SignalR;
 using ChangeLetters.StartUp;

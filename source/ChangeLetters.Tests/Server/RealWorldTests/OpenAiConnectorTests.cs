@@ -1,6 +1,7 @@
-﻿using ChangeLetters.Wrappers;
-using ChangeLetters.Extensions;
-using ChangeLetters.Connectors;
+﻿using ChangeLetters.Domain.Configurations;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Extensions;
+using ChangeLetters.Domain.Wrappers;
 using ChangeLetters.Models.Models;
 using Microsoft.Extensions.Configuration;
 using ChangeLetters.Tests.Server.TestHelpers;
@@ -20,7 +21,7 @@ public class OpenAiConnectorTests
             .AddUserSecrets<OpenAiConnector>()
             .Build();
 
-        var settings = cfb.Deserialize<Configurations.OpenAiSettings>();
+        var settings = cfb.Deserialize<OpenAiSettings>();
         settings.MaxTokens = 1000;
         settings.TopP = 1;
         settings.Model = "gpt-5-nano";

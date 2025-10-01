@@ -1,7 +1,7 @@
-using ChangeLetters.Connectors;
+using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Shared;
 using FluentFTP;
-using IAsyncFtpClient = ChangeLetters.Wrappers.IAsyncFtpClient;
+using IAsyncFtpClient = ChangeLetters.Domain.Wrappers.IAsyncFtpClient;
 
 namespace ChangeLetters.Tests.Server.IO;
 

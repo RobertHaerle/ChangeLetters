@@ -1,7 +1,7 @@
 using System.Net;
-using ChangeLetters.Connectors;
-using ChangeLetters.Handlers;
-using ChangeLetters.IO;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.IO;
 using ChangeLetters.Shared;
 using Microsoft.AspNetCore.Mvc;
 

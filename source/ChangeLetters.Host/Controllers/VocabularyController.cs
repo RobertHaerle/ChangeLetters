@@ -1,6 +1,6 @@
 ﻿using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Shared;
-using ChangeLetters.Handlers;
 using ChangeLetters.Models.Converters;
 using Microsoft.AspNetCore.Mvc;
 

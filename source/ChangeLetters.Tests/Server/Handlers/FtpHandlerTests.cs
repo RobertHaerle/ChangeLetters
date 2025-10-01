@@ -1,9 +1,9 @@
-using ChangeLetters.IO;
 using ChangeLetters.Shared;
-using ChangeLetters.Handlers;
-using ChangeLetters.ParseLogic;
-using ChangeLetters.Connectors;
 using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.IO;
+using ChangeLetters.Domain.ParseLogic;
 using ChangeLetters.Models.Models;
 
 namespace ChangeLetters.Tests.Server.Handlers
