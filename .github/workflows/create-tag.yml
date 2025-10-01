@@ -1,18 +1,14 @@
-name: Release
+name: Create Version
 
-on:
-  workflow_run:
-    workflows: ["Integration tests"]
-    types:
-      - completed
-    branches:
-      - main          
+on: 
   workflow_dispatch:
   
 jobs:
+  integration_tests:
+    uses: ./.github/workflows/ci-on-merge.yml
+    secrets: inherit  
+    
   create-tag:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
