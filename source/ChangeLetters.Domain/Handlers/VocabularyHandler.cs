@@ -1,8 +1,9 @@
-﻿using ChangeLetters.Database.Repositories;
-using ChangeLetters.Domain.Configurations;
+﻿using ChangeLetters.Shared;
+using ChangeLetters.Models.Models;
 using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Models.Converters;
-using ChangeLetters.Shared;
+using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.Configurations;
 
 namespace ChangeLetters.Domain.Handlers;
 
@@ -16,6 +17,18 @@ public class VocabularyHandler(
     IOpenAiConnector _openAiConnector,
     IVocabularyRepository _repository) : IVocabularyHandler
 {
+    /// <inheritdoc />
+    public Task UpsertEntriesAsync(IList<VocabularyItem> items, CancellationToken token)
+        => _repository.UpsertEntriesAsync(items, token);
+
+    /// <inheritdoc />
+    public Task RecreateAllItemsAsync(IList<VocabularyItem> items, CancellationToken token)
+        => _repository.RecreateAllItemsAsync(items, token);
+
+    /// <inheritdoc />
+    public Task<VocabularyItem[]> GetAllItemsAsync(CancellationToken token)
+        => _repository.GetAllItemsAsync(token);
+
     /// <inheritdoc />
     public async Task<List<VocabularyEntry>> GetRequiredVocabularyAsync(IList<string> unknownWords, CancellationToken token)
     {

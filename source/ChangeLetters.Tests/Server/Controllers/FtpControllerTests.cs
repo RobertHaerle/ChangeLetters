@@ -1,9 +1,10 @@
-using ChangeLetters.Application.Http.Controllers;
-using ChangeLetters.Domain.Connectors;
-using ChangeLetters.Domain.Handlers;
-using ChangeLetters.Domain.IO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using ChangeLetters.Shared;
+using ChangeLetters.Domain.IO;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Application.Http.Controllers;
 
 namespace ChangeLetters.Tests.Server.Controllers;
 
@@ -20,13 +21,19 @@ public class FtpControllerTests
     [SetUp]
     public void SetUp()
     {
-        _ftpHandler = Substitute.For<IFtpHandler>();
-        _ftpConnector = Substitute.For<IFtpConnector>();
-        _configIo = Substitute.For<IConfigurationIo>();
-        _logger = Substitute.For<ILogger<FtpController>>();
         _config = new Configuration();
+        _ftpHandler = Substitute.For<IFtpHandler>();
+        _configIo = Substitute.For<IConfigurationIo>();
+        _ftpConnector = Substitute.For<IFtpConnector>();
+        _logger = Substitute.For<ILogger<FtpController>>();
+        var httpContext = new DefaultHttpContext() { RequestAborted = CancellationToken.None };
+
         _configIo.GetConfiguration().Returns(_config);
-        _sut = new FtpController(_ftpHandler, _configIo, _ftpConnector, _logger);
+
+        _sut = new FtpController(_ftpHandler, _configIo, _ftpConnector, _logger)
+        {
+            ControllerContext = new ControllerContext { HttpContext = httpContext }
+        };
     }
 
     [Test]

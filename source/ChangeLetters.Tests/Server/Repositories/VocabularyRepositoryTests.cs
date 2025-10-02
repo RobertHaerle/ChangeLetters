@@ -1,7 +1,7 @@
-﻿using ChangeLetters.Database.Repositories;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using ChangeLetters.Models.Models;
+using ChangeLetters.Database.Repositories;
 using ChangeLetters.Tests.Server.TestHelpers;
 
 namespace ChangeLetters.Tests.Server.Repositories;
@@ -37,7 +37,7 @@ public class VocabularyRepositoryTests : IDisposable
             new() { UnknownWord = "M?hre", CorrectedWord = "Möhre" },
         };
 
-        await _sut.RecreateAllItemsAsync(items);
+        await _sut.RecreateAllItemsAsync(items, CancellationToken.None);
 
         await using var context = SqliteHelper.GetInMemoryContext(_connection);
         var allItems = await context.VocabularyItems.ToArrayAsync();
@@ -79,7 +79,7 @@ public class VocabularyRepositoryTests : IDisposable
             new() { UnknownWord = "Pr?sidenten", CorrectedWord = "Präsidenten" },
         };
 
-        await _sut.UpsertEntriesAsync(items2Bchanged);
+        await _sut.UpsertEntriesAsync(items2Bchanged, CancellationToken.None);
 
         await using var context = SqliteHelper.GetInMemoryContext(_connection);
         var allItems = await context.VocabularyItems.ToArrayAsync();

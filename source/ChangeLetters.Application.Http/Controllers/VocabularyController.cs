@@ -1,5 +1,4 @@
-﻿using ChangeLetters.Database.Repositories;
-using ChangeLetters.Domain.Handlers;
+﻿using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Models.Converters;
 
 namespace ChangeLetters.Application.Http.Controllers;
@@ -11,7 +10,6 @@ namespace ChangeLetters.Application.Http.Controllers;
 [Route("api/[controller]")]
 public class VocabularyController(
     IVocabularyHandler _handler,
-    IVocabularyRepository _repository,
     ILogger<VocabularyController> _log) : Controller
 {
     /// <summary>Rebuild all items as an asynchronous operation.</summary>
@@ -23,7 +21,14 @@ public class VocabularyController(
         _log.LogInformation("RebuildAllItemsAsync called with {count} entries", entries.Count);
         var allEntities = entries
             .Select(x => x.ToModel()).ToArray();
-        await _repository.RecreateAllItemsAsync(allEntities).ConfigureAwait(false);
+        try
+        {
+            await _handler.RecreateAllItemsAsync(allEntities, HttpContext.RequestAborted).ConfigureAwait(false);
+        }
+        catch (TaskCanceledException)
+        {
+            _log.LogError("RebuildAllItemsAsync cancelled by caller.");
+        }
 
         return Ok();
     }
@@ -37,7 +42,14 @@ public class VocabularyController(
         _log.LogInformation("UpsertEntriesAsync called with {count} entries", entries.Count);
         var entities = entries
             .Select(x => x.ToModel()).ToArray();
-        await _repository.UpsertEntriesAsync(entities).ConfigureAwait(false);
+        try
+        {
+            await _handler.UpsertEntriesAsync(entities, HttpContext.RequestAborted).ConfigureAwait(false);
+        }
+        catch (TaskCanceledException)
+        {
+            _log.LogError("UpsertEntriesAsync cancelled by caller.");
+        }
         return Ok();
     }
 
@@ -49,7 +61,7 @@ public class VocabularyController(
         _log.LogInformation("GetAllItemsAsync called");
         try
         {
-            var items = await _repository.GetAllItemsAsync(HttpContext?.RequestAborted ?? CancellationToken.None)
+            var items = await _handler.GetAllItemsAsync(HttpContext.RequestAborted)
                 .ConfigureAwait(false);
             var dtos = items.Select(x => x.ToDto())
                 .ToArray();
@@ -68,9 +80,17 @@ public class VocabularyController(
     public async Task<ActionResult<VocabularyEntry[]>> GetRequiredWords([FromQuery] string[] unknownWords)
     {
         _log.LogInformation("GetRequiredWords called with {count} unknown words", unknownWords.Length);
-        var resultSet = await _handler.GetRequiredVocabularyAsync(unknownWords, HttpContext?.RequestAborted ?? CancellationToken.None)
-            .ConfigureAwait(false);
-        return Ok(resultSet);
+        try
+        {
+            var resultSet = await _handler.GetRequiredVocabularyAsync(unknownWords, HttpContext.RequestAborted)
+                .ConfigureAwait(false);
+            return Ok(resultSet);
+        }
+        catch (TaskCanceledException)
+        {
+            _log.LogError("UpsertEntriesAsync cancelled by caller.");
+            return Ok(Array.Empty<VocabularyEntry>());
+        }
     }
 
     /// <summary>Gets the required words by a bodied mass data access.</summary>
@@ -80,9 +100,16 @@ public class VocabularyController(
     public async Task<ActionResult<VocabularyEntry[]>> GetRequiredWordsMassData([FromBody] string[] unknownWords)
     {
         _log.LogInformation("GetRequiredWordsMassData called with {count} unknown words", unknownWords.Length);
-        var resultSet = await _handler.GetRequiredVocabularyAsync(unknownWords, HttpContext?.RequestAborted ?? CancellationToken.None)
-            .ConfigureAwait(false);
-        return Ok(resultSet);
+        try
+        {
+            var resultSet = await _handler.GetRequiredVocabularyAsync(unknownWords, HttpContext.RequestAborted)
+                .ConfigureAwait(false);
+            return Ok(resultSet);
+        }
+        catch (TaskCanceledException)
+        {
+            _log.LogError("GetRequiredWordsMassData cancelled by caller.");
+            return Ok(Array.Empty<VocabularyEntry>());
+        }
     }
-
 }

@@ -5,13 +5,12 @@ public interface IVocabularyRepository
 {
     /// <summary>Inserts or update entries as an asynchronous operation.</summary>
     /// <param name="items">The items.</param>
-    /// <returns>See description.</returns>
-     Task UpsertEntriesAsync(IList<VocabularyItem> items);
+    /// <param name="token"></param>
+    Task UpsertEntriesAsync(IList<VocabularyItem> items, CancellationToken token);
 
     /// <summary>Recreate all items as an asynchronous operation.</summary>
     /// <param name="items">The items.</param>
-    /// <returns>See description.</returns>
-     Task RecreateAllItemsAsync(IList<VocabularyItem> items);
+     Task RecreateAllItemsAsync(IList<VocabularyItem> items, CancellationToken token);
 
     /// <summary>Get all items as an asynchronous operation.</summary>
     /// <param name="token"></param>
