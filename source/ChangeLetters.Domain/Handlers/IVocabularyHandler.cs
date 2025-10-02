@@ -1,4 +1,5 @@
 ﻿using ChangeLetters.Shared;
+using ChangeLetters.Models.Models;
 
 namespace ChangeLetters.Domain.Handlers;
 
@@ -10,4 +11,16 @@ public interface IVocabularyHandler
     /// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>List of DTOs. unknown words are filled up.</returns>
     Task<List<VocabularyEntry>> GetRequiredVocabularyAsync(IList<string> unknownWords, CancellationToken token);
+
+    /// <summary>Recreate all items as an asynchronous operation.</summary>
+    /// <param name="items">The items.</param>
+    /// <param name="token"></param>
+    Task RecreateAllItemsAsync(IList<VocabularyItem> items, CancellationToken token);
+
+    /// <summary>Inserts or update entries as an asynchronous operation.</summary>
+    /// <param name="items">The items.</param>
+    /// <param name="token"></param>
+    Task UpsertEntriesAsync(IList<VocabularyItem> items, CancellationToken token);
+
+    Task<VocabularyItem[]> GetAllItemsAsync(CancellationToken token);
 }

@@ -61,7 +61,7 @@ public class FtpController : ControllerBase
         FileItem[] result;
         try
         {
-            result = await _ftpConnector.ReadFoldersAsync(_configuration, folder, HttpContext?.RequestAborted ?? CancellationToken.None);
+            result = await _ftpConnector.ReadFoldersAsync(_configuration, folder, HttpContext.RequestAborted);
         }
         catch (TaskCanceledException)
         {
@@ -79,7 +79,7 @@ public class FtpController : ControllerBase
     public async Task<ActionResult<RenameFileItemsResult>> RenameItemsAsync([FromBody] RenameFileItemsRequest request)
     {
         _log.LogInformation("RenameItems called for {Folder} ", request.Folder);
-        var result = await _ftpHandler.RenameItemsAsync(request.Folder, request.FileItemType, request.SignalRConnectionId, HttpContext?.RequestAborted ?? CancellationToken.None);
+        var result = await _ftpHandler.RenameItemsAsync(request.Folder, request.FileItemType, request.SignalRConnectionId, HttpContext.RequestAborted);
         _log.LogInformation("RenameItems for {Folder} resulted in {Success}", request.Folder, result.Succeeded ? "succeeded" : "failed");
         return Ok(result);
     }
@@ -92,7 +92,7 @@ public class FtpController : ControllerBase
     public async Task<ActionResult<FolderStatus>> CheckQuestionMarksAsync([FromBody] FileItem fileItem)
     {
         _log.LogInformation("CheckQuestionMarks called for {FullName}", fileItem.FullName);
-        await _ftpConnector.CheckQuestionMarksAsync(fileItem, _configuration, HttpContext?.RequestAborted ?? CancellationToken.None);
+        await _ftpConnector.CheckQuestionMarksAsync(fileItem, _configuration, HttpContext.RequestAborted);
         _log.LogInformation("CheckQuestionMarks completed for {FullName}. Found question marks in file names: {HasQuestionMarks}",
             fileItem.FullName, 
             fileItem.FolderStatus == FolderStatus.HasQuestionMarks);
@@ -108,7 +108,7 @@ public class FtpController : ControllerBase
     {
         folder = WebUtility.UrlDecode(folder);
         _log.LogInformation("ReadUnknownWords called for {folder}", folder);
-        var unknownEntries = await _ftpHandler.ReadUnknownWordsAsync(folder, HttpContext?.RequestAborted ?? CancellationToken.None);
+        var unknownEntries = await _ftpHandler.ReadUnknownWordsAsync(folder, HttpContext.RequestAborted);
         _log.LogInformation("ReadUnknownWords returned {Total} words", unknownEntries.Count);
         return Ok(unknownEntries);
     }

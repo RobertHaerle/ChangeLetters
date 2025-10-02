@@ -10,37 +10,47 @@ public class VocabularyRepository(
     ILogger<VocabularyRepository> _log) : IVocabularyRepository
 {
     /// <inheritdoc />
-    public async Task UpsertEntriesAsync(IList<VocabularyItem> items)
+    public async Task UpsertEntriesAsync(IList<VocabularyItem> items, CancellationToken token)
     {
         var unknownWords = items.Select(x => x.UnknownWord);
         await using var context = _getContext();
-        var dbItems = await context.VocabularyItems
-            .Where(x => unknownWords.Contains(x.UnknownWord))
-            .ToArrayAsync()
-            .ConfigureAwait(false);
-        context.ChangeTracker.AutoDetectChangesEnabled = false;
-        UpsertEntries(context, items, dbItems);
-        context.ChangeTracker.DetectChanges();
-        await context.SaveChangesAsync().ConfigureAwait(false);
+        try
+        {
+            var dbItems = await context.VocabularyItems
+                .Where(x => unknownWords.Contains(x.UnknownWord))
+                .ToArrayAsync(token)
+                .ConfigureAwait(false);
+            context.ChangeTracker.AutoDetectChangesEnabled = false;
+            UpsertEntries(context, items, dbItems);
+            context.ChangeTracker.DetectChanges();
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
+        }
+        catch (TaskCanceledException)
+        {
+        }
     }
 
     /// <inheritdoc />
-    public async Task RecreateAllItemsAsync(IList<VocabularyItem> items)
+    public async Task RecreateAllItemsAsync(IList<VocabularyItem> items, CancellationToken token)
     {
         await using var context = _getContext();
-        await context.Database.BeginTransactionAsync();
         try
         {
-            await context.VocabularyItems.ExecuteDeleteAsync();
+            await context.Database.BeginTransactionAsync(token);
+            await context.VocabularyItems.ExecuteDeleteAsync(token);
             context.ChangeTracker.AutoDetectChangesEnabled = false;
             context.VocabularyItems.AddRange(items);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            await context.Database.CommitTransactionAsync();
+            await context.SaveChangesAsync(token).ConfigureAwait(false);
+            await context.Database.CommitTransactionAsync(token);
+        }
+        catch (TaskCanceledException)
+        {
+            await context.Database.RollbackTransactionAsync(CancellationToken.None);
         }
         catch (Exception ex)
         {
             _log.LogError(ex, "");
-            await context.Database.RollbackTransactionAsync();
+            await context.Database.RollbackTransactionAsync(token);
         }
     }
 
