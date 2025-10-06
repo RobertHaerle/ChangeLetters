@@ -1,38 +1,89 @@
-name: Create Version
+name: Create Version (GitVersion)
 
-on: 
+on:
   workflow_dispatch:
 
 permissions:
-  checks: write
-  issues: write
-  contents: write
-  pull-requests: write
+  contents: write      # nötig zum Push des Tags und Erstellen eines Releases
+  pull-requests: read
+  issues: read
 
 jobs:
 
   build_and_unit_tests:
     uses: ./.github/workflows/build-and-test-runner.yml
-    
+
   integration_tests:
-    needs: build_and_unit_tests 
+    needs: build_and_unit_tests
     uses: ./.github/workflows/integration-runner.yml
 
-  create_tag:
-    name: Semantic Versioning
-    needs: [build_and_unit_tests, integration_tests] 
+  create_version_tag:
+    name: Calculate & Tag Version
+    needs: [build_and_unit_tests, integration_tests]
     runs-on: ubuntu-latest
+    outputs:
+      semver: ${{ steps.gitversion.outputs.semVer }}
+      fullsemver: ${{ steps.gitversion.outputs.fullSemVer }}
+      major: ${{ steps.gitversion.outputs.major }}
+      minor: ${{ steps.gitversion.outputs.minor }}
+      patch: ${{ steps.gitversion.outputs.patch }}
+      informational: ${{ steps.gitversion.outputs.informationalVersion }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+            fetch-depth: 0   
+
+      - name: Setup GitVersion
+        uses: gittools/actions/gitversion/setup@v1
         with:
-          node-version: 18
-      - name: Install semantic-release and plugins
-        run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
-      - name: Run semantic-release
+          versionSpec: '6.x'
+
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v1
+        with:
+          useConfigFile: false   
+
+      - name: Show calculated version
+        run: |
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+          echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
+          echo "Informational: ${{ steps.gitversion.outputs.informationalVersion }}"
+          echo "PreReleaseTag: ${{ steps.gitversion.outputs.preReleaseTag }}"
+          echo "Commit Date: ${{ steps.gitversion.outputs.commitDate }}"
+
+      - name: Create and push tag (if not exists)
+        id: create_tag
+        env:
+          SEMVER: ${{ steps.gitversion.outputs.semVer }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="v${SEMVER}"
+
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "Tag ${TAG} existiert bereits – kein neuer Tag wird erstellt."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Erstelle neuen Tag ${TAG}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${TAG}" -m "Release ${TAG}"
+          git push origin "${TAG}"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        if: steps.create_tag.outputs.created == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.gitversion.outputs.semVer }}
+          name: v${{ steps.gitversion.outputs.semVer }}
+          body: |
+            Automated release via GitVersion.
+            Version: ${{ steps.gitversion.outputs.fullSemVer }}
+            Informational: ${{ steps.gitversion.outputs.informationalVersion }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release
