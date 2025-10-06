@@ -2,6 +2,9 @@ name: Integration runner
 on: 
   workflow_call:
   
+env:
+  COMPOSE_PROJECT_NAME: changeletters_itests  
+  
 jobs:
   integration-test-run:
     name: Integration Tests
