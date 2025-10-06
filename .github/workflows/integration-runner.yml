@@ -2,7 +2,7 @@ name: Integration runner
 on: 
   workflow_call:
   
- env:
+env:
   COMPOSE_PROJECT_NAME: changeletters_itests  
   
 jobs:
