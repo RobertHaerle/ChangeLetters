@@ -17,7 +17,6 @@
     <CleanupOutputPath>true</CleanupOutputPath>
     <HelpFileName>ChangeLetters</HelpFileName>
     <HelpFileNamingMethod>MemberName</HelpFileNamingMethod>
-    <HelpFileLoadIndexPanelOnDemand>false</HelpFileLoadIndexPanelOnDemand>
     <ImageFolderPath />
     <Theme />
     <HtmlFormats>

@@ -1,8 +1,9 @@
 ﻿using Bunit;
+using ChangeLetters.Shared;
 using ChangeLetters.Client.Pages;
 using ChangeLetters.Client.Connectors;
-using ChangeLetters.Shared;
 using Microsoft.Extensions.DependencyInjection;
+
 using TestContext = Bunit.TestContext;
 
 namespace ChangeLetters.Tests.Client.Pages;
