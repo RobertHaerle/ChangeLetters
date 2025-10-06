@@ -9,4 +9,4 @@ on:
   
 jobs:
   build-and-test:
-    uses: ./.github/build-and-test-runner.yml
+    uses: ./.github/build-and-test-runner.yml@main
