@@ -1,0 +1,148 @@
+name: Integration runner
+on: 
+  workflow_call:
+  
+jobs:
+  integration-test-run:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./source/ChangeLetters.IntegrationTests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Compose up (fresh build)
+        run: |
+          docker compose down -v || true
+          docker compose up -d --build --force-recreate
+
+      - name: Snapshot startup logs
+        if: always()
+        run: |
+          LOGDIR="${GITHUB_WORKSPACE}/logs"; mkdir -p "$LOGDIR"
+          docker compose ps > "$LOGDIR/compose-ps-start.txt" || true
+          docker compose logs --no-color > "$LOGDIR/compose-all-start.log" 2>&1 || true
+
+      - name: Wait for FTP (Port 21) to be ready
+        run: |
+          set -e
+          NET="${COMPOSE_PROJECT_NAME}_testnet"
+          for i in $(seq 1 20); do
+            if docker run --rm --network "$NET" alpine sh -c 'apk add -q --no-progress busybox-extras >/dev/null 2>&1 || true; nc -zv -w 1 172.23.0.10 21'; then
+              echo "FTP server running"
+              break
+            fi
+            echo "Waiting for FTP server ($i/20)"
+            sleep 1
+          done
+          
+      - name: Ensure host.docker.internal resolves on runner
+        run: |
+          echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+          getent hosts host.docker.internal
+          
+      - name: Set FTP env for tests
+        run: |
+          echo "FTP_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "FTP_PORT=2121" >> $GITHUB_ENV
+          
+      - name: Smoke test FTP (login + list)
+        run: |
+          apk add --no-progress curl >/dev/null 2>&1 || true
+          curl -v --user myuser:mypass "ftp://127.0.0.1:2121/" || exit 1
+
+      - name: Assert FTP is listening right before tests
+        run: |
+          echo "Who is listening on 2121?"
+          ss -lntp | (grep ':2121' || true)
+
+      - name: Run integration tests
+        run: |
+          dotnet test ./ChangeLetters.IntegrationTests.sln \
+            --settings ./.runsettings \
+            --configuration Release \
+            --logger "console;verbosity=detailed" \
+            --logger "trx;LogFileName=test-results.trx" \
+            --results-directory ./TestResults
+            
+      - name: List TRX files (debug)
+        if: always()
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+          ls -lah "$GITHUB_WORKSPACE/source/ChangeLetters.IntegrationTests/TestResults" || true
+          echo "Find any *.trx near TestResults:"
+          find "$GITHUB_WORKSPACE/source/ChangeLetters.IntegrationTests" -maxdepth 3 -name "*.trx" -print || true
+
+      - name: Publish test summary
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Integration Tests
+          path: ./source/ChangeLetters.IntegrationTests/TestResults/*.trx
+          reporter: dotnet-trx
+          fail-on-error: false
+          list-suites: all
+          list-tests: all
+          only-summary: false
+          fail-on-empty: true
+          
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: ./source/ChangeLetters.IntegrationTests/TestResults
+
+      - name: Collect container logs
+        if: always()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          LOGDIR="${GITHUB_WORKSPACE}/logs"; mkdir -p "$LOGDIR"
+      
+          docker ps -a > "$LOGDIR/docker-ps-end.txt" || true
+          docker compose ps > "$LOGDIR/compose-ps-end.txt" || true
+          docker compose logs --no-color > "$LOGDIR/compose-all-end.log" 2>&1 || true
+
+          FTP_ID=$(docker ps -aq --filter "label=com.docker.compose.service=ftp-server" | head -n1 || true)
+          APP_ID=$(docker ps -aq --filter "label=com.docker.compose.service=changeletters" | head -n1 || true)
+      
+          echo "FTP_ID=${FTP_ID}" | tee -a "$LOGDIR/_ids.txt"
+          echo "APP_ID=${APP_ID}" | tee -a "$LOGDIR/_ids.txt"
+      
+          if [[ -n "${FTP_ID:-}" ]]; then
+            docker logs --timestamps "$FTP_ID" > "$LOGDIR/ftp-server.log" 2>&1 || true
+            docker inspect "$FTP_ID" > "$LOGDIR/ftp-server.inspect.json" 2>&1 || true
+            docker exec "$FTP_ID" sh -c 'cat /etc/vsftpd.conf 2>/dev/null || true' > "$LOGDIR/ftp-server.vsftpd.conf" 2>&1 || true
+          else
+            # Fallback: add something into the artifact even no container is present.
+            grep -a -E 'ftp|vsftpd' "$LOGDIR/compose-all-end.log" > "$LOGDIR/ftp-server.log" || true
+          fi
+      
+          if [[ -n "${APP_ID:-}" ]]; then
+            docker logs --timestamps "$APP_ID" > "$LOGDIR/changeletters.log" 2>&1 || true
+            docker inspect "$APP_ID" > "$LOGDIR/changeletters.inspect.json" 2>&1 || true
+          fi
+      
+          ls -l "$LOGDIR" || true
+          [ -s "$LOGDIR/ftp-server.log" ] || echo "no ftp logs captured" > "$LOGDIR/EMPTY.txt"
+
+      - name: Upload container logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: logs/**
+     
+      - name: Compose down (cleanup)
+        if: always()
+        run: docker compose down -v
