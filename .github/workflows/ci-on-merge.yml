@@ -23,5 +23,6 @@ jobs:
     uses: ./.github/workflows/build-and-test-runner.yml
     
   integration_tests:
+    needs: build_and_unit_tests 
     uses: ./.github/workflows/integration-runner.yml
 
