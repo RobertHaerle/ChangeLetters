@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write      # nötig zum Push des Tags und Erstellen eines Releases
-  pull-requests: read
-  issues: read
+  checks: write
+  issues: write
+  contents: write
+  pull-requests: write
 
 jobs:
 
