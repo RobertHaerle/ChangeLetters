@@ -2,8 +2,8 @@ name: Start integration tests
 
 on:
   push:
-    branches:
-      - main     
+#    branches:
+#      - main     
   pull_request:
     branches:
       - main
