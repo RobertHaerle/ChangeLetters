@@ -17,9 +17,6 @@ permissions:
   contents: read
   checks: write
   pull-requests: write
-  
-env:
-  COMPOSE_PROJECT_NAME: changeletters_itests  
 
 jobs:
   build_and_unit_tests:

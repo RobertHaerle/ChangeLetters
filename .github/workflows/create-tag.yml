@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
   
 jobs:
-  integration_tests:
-    uses: ./.github/workflows/ci-on-merge.yml
-    secrets: inherit  
+
+  build_and_unit_tests:
+    uses: ./.github/workflows/build-and-test-runner.yml
     
+  integration_tests:
+    uses: ./.github/workflows/integration-runner.yml
+
   create-tag:
     runs-on: ubuntu-latest
     steps:
