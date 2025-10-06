@@ -2,7 +2,12 @@ name: Create Version
 
 on: 
   workflow_dispatch:
-  
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
 jobs:
 
   build_and_unit_tests:
