@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-            fetch-depth: 0   # Vollständige History + Tags für GitVersion
+            fetch-depth: 0   
 
       - name: Setup GitVersion
         uses: gittools/actions/gitversion/setup@v1
@@ -43,7 +43,7 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v1
         with:
-          useConfigFile: false   # Auf true setzen, falls du eine GitVersion.yml hinzufügst
+          useConfigFile: false   
 
       - name: Show calculated version
         run: |
@@ -87,13 +87,3 @@ jobs:
             Informational: ${{ steps.gitversion.outputs.informationalVersion }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Beispiel: Weitere Nutzung der Version in einem nachgelagerten Job
-  publish_artifacts:
-    name: Use Version for Publishing
-    needs: create_version_tag
-    if: needs.create_version_tag.outputs.semver != ''
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Verwende Version ${{ needs.create_version_tag.outputs.semver }} für Artefakt-Benennung."
