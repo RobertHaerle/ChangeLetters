@@ -3,7 +3,7 @@ on:
   workflow_call:
   
 jobs:
-  integration-tests:
+  integration-test-run:
     name: Integration Tests
     runs-on: ubuntu-latest
     defaults:
