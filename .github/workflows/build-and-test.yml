@@ -7,4 +7,4 @@ on:
   
 jobs:
   build-and-test:
-    uses: ./.github/workflows/build-and-test-runner.yml
+    uses: ./.github/workflows/resuable-build-and-test.yml

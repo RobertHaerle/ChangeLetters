@@ -1,4 +1,4 @@
-name: Build and Test Runner
+name: Reusable • Build and Test
 
 on:
   workflow_call: 

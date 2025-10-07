@@ -1,4 +1,4 @@
-name: Integration runner
+name: Reusable • Integration Tests
 on: 
   workflow_call:
   
