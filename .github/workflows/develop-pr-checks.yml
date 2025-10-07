@@ -1,9 +1,6 @@
 name: PR Develop Integration Tests
 
-on:
-  push:
-    branches:
-      - develop      
+on:   
   pull_request:
     branches:
       - develop
