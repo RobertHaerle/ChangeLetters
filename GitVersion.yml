@@ -1,8 +1,7 @@
 # GitVersion.yml
 mode: Mainline
-
-tag-prefix: 'v'
-commit-message-incrementing: Enabled
+tagPrefix: 'v'
+commitMessageIncrementing: Enabled
 
 branches:
   main:
