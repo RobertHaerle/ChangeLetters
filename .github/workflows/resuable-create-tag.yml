@@ -1,12 +1,18 @@
-name: "Reusable • Create Prerelease Tag"
+name: "Reusable • Create Tag"
 
 on:
   workflow_call:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   create_version_tag:
     name: Calculate & Tag Version
     runs-on: ubuntu-latest
+
     outputs:
       semver: ${{ steps.gitversion.outputs.semVer }}
       fullsemver: ${{ steps.gitversion.outputs.fullSemVer }}
@@ -14,11 +20,12 @@ jobs:
       minor: ${{ steps.gitversion.outputs.minor }}
       patch: ${{ steps.gitversion.outputs.patch }}
       informational: ${{ steps.gitversion.outputs.informationalVersion }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   
+          fetch-depth: 0
 
       - name: Setup GitVersion
         uses: gittools/actions/gitversion/setup@v4.1.0
@@ -28,54 +35,66 @@ jobs:
       - name: Execute GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v4.1.0
-        continue-on-error: true          
-        
+        continue-on-error: true      
+
+      # Just diagnosis in case of error
       - name: GitVersion /diag
         if: ${{ steps.gitversion.outcome == 'failure' }}
+        run: dotnet-gitversion /diag /config GitVersion.yml || true
+
+      # Protect: If there is no gitversion output: break
+      - name: Guard GitVersion outputs
         run: |
-          echo "Running GitVersion /diag…"
-          dotnet-gitversion /diag /config GitVersion.yml || true
-      
-      - name: Fail job after diag
-        if: ${{ steps.gitversion.outcome == 'failure' }}
-        run: exit 1
-  
+          if [ -z "${{ steps.gitversion.outputs.semVer }}" ]; then
+            echo "GitVersion outputs are empty – abort."
+            exit 1
+          fi
+
+      # main always majorMinorPatch (no Suffix), otherwise semVer
+      - name: Compute tag name (branch-aware)
+        id: tagname
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "TAG=v${{ steps.gitversion.outputs.majorMinorPatch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "TAG=v${{ steps.gitversion.outputs.semVer }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Show calculated version
         run: |
           echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
           echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
           echo "Informational: ${{ steps.gitversion.outputs.informationalVersion }}"
-          echo "PreReleaseTag: ${{ steps.gitversion.outputs.preReleaseTag }}"
-          echo "Commit Date: ${{ steps.gitversion.outputs.commitDate }}"
+          echo "Using Tag: ${{ steps.tagname.outputs.TAG }}"
 
-      - name: Create and push tag (if not exists)
+      - name: Create and push tag if missing
         id: create_tag
         env:
-          SEMVER: ${{ steps.gitversion.outputs.semVer }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tagname.outputs.TAG }}
         run: |
           set -euo pipefail
-          TAG="v${SEMVER}"
-
-          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
-            echo "Tag ${TAG} existiert bereits – kein neuer Tag wird erstellt."
-            echo "created=false" >> "$GITHUB_OUTPUT"
-            exit 0
+          if [ -z "${TAG}" ] || [ "${TAG}" = "v" ]; then
+            echo "Invalid TAG '${TAG}'. Aborting."
+            exit 1
           fi
 
-          echo "Erstelle neuen Tag ${TAG}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${TAG}" -m "Release ${TAG}"
-          git push origin "${TAG}"
-          echo "created=true" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            echo "Tag ${TAG} exists; skipping."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "${TAG}" -m "Release ${TAG}"
+            git push origin "${TAG}"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub Release
         if: steps.create_tag.outputs.created == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.gitversion.outputs.semVer }}
-          name: v${{ steps.gitversion.outputs.semVer }}
+          tag_name: ${{ steps.tagname.outputs.TAG }}
+          name: ${{ steps.tagname.outputs.TAG }}
           body: |
             Automated release via GitVersion.
             Version: ${{ steps.gitversion.outputs.fullSemVer }}
