@@ -1,5 +1,8 @@
 # GitVersion.yml (v6 Schema)
-mode: Mainline
+workflow: GitHubFlow/v1
+strategies:
+  - ConfiguredNextVersion
+  - Mainline
 tag-prefix: 'v'
 commit-message-incrementing: Enabled
 
