@@ -21,9 +21,9 @@ jobs:
           fetch-depth: 0   
 
       - name: Setup GitVersion
-        uses: gittools/actions/gitversion/setup@v3
+        uses: gittools/actions/gitversion/setup@v4.1.0
         with:
-          versionSpec: '6.0.*'
+          versionSpec: '6.3.x'
 
       - name: Execute GitVersion
         id: gitversion
