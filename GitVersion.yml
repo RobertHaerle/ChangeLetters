@@ -1,7 +1,7 @@
-# GitVersion.yml
+# GitVersion.yml (v6 Schema)
 mode: Mainline
-tagPrefix: 'v'
-commitMessageIncrementing: Enabled
+tag-prefix: 'v'
+commit-message-incrementing: Enabled
 
 branches:
   main:
@@ -12,7 +12,7 @@ branches:
   develop:
     regex: ^develop$
     label: alpha         
-    increment: Patch
+    increment: None
 
   feature:
     regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
