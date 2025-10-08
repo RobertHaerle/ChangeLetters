@@ -33,13 +33,13 @@ jobs:
         continue-on-error: true          
         
       - name: GitVersion /diag
-        if: failure()
+        if: ${{ steps.gitversion.conclusion == 'failure' }}
         run: |
           echo "Running GitVersion /diag…"
           dotnet-gitversion /diag /config GitVersion.yml || true
       
       - name: Fail job after diag
-        if: failure()
+        if: ${{ steps.gitversion.conclusion == 'failure' }}
         run: exit 1
   
       - name: Show calculated version
