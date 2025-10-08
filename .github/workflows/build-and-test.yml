@@ -2,8 +2,10 @@ name: Build and Test (.NET)
 
 on:
   push:
+    branches-ignore:
+    - main
+    - develop
   workflow_dispatch:
-  workflow_call: {} 
   
 jobs:
   build-and-test:

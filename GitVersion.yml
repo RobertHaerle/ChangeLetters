@@ -6,37 +6,37 @@ commitMessageIncrementing: Enabled
 branches:
   main:
     regex: ^main$
-    tag: ""           
+    label: ""           
     increment: None   
 
   develop:
     regex: ^develop$
-    tag: alpha         
+    label: alpha         
     increment: Patch
 
   develop:
     regex: ^develop$
-    tag: alpha
+    label: alpha
     increment: Patch
 
   feature:
     regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
-    tag: useBranchName
+    label: useBranchName
     increment: Minor    
 
   bugfix: # matches: bugfix/, bugfixes/, fix/, repair/ 
     regex: (?i)^(?:bugfix(?:es)?|fix|repair)[/-](?<BranchName>.+)$
-    tag: useBranchName
+    label: useBranchName
     increment: Patch
     
   release:
     regex: ^releases?[/-]
-    tag: rc            
+    label: rc            
     increment: Patch
 
   hotfix:
     regex: ^hotfix(es)?[/-]
-    tag: "hotfix"            
+    label: "hotfix"            
     increment: Patch
 
 ignore:
