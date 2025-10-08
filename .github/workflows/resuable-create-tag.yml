@@ -29,16 +29,17 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v3
         with:
-          useConfigFile: true         
+          useConfigFile: true 
+        continue-on-error: true          
         
       - name: GitVersion /diag
-        if: ${{ failure() }}
+        if: ${{ steps.gitversion.outcome == 'failure' }}
         run: |
           echo "Running GitVersion /diag…"
           dotnet-gitversion /diag /config GitVersion.yml || true
       
       - name: Fail job after diag
-        if: ${{ steps.gitversion.conclusion == 'failure' }}
+        if: ${{ steps.gitversion.outcome == 'failure' }}
         run: exit 1
   
       - name: Show calculated version
