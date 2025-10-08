@@ -21,16 +21,25 @@ jobs:
           fetch-depth: 0   
 
       - name: Setup GitVersion
-        uses: gittools/actions/gitversion/setup@v3
+        uses: gittools/actions/gitversion/setup@v4.1.0
         with:
-          versionSpec: '6.*'
+          versionSpec: '6.3.x'
 
       - name: Execute GitVersion
         id: gitversion
-        uses: gittools/actions/gitversion/execute@v3
-        with:
-          useConfigFile: true   
-
+        uses: gittools/actions/gitversion/execute@v4.1.0
+        continue-on-error: true          
+        
+      - name: GitVersion /diag
+        if: ${{ steps.gitversion.outcome == 'failure' }}
+        run: |
+          echo "Running GitVersion /diag…"
+          dotnet-gitversion /diag /config GitVersion.yml || true
+      
+      - name: Fail job after diag
+        if: ${{ steps.gitversion.outcome == 'failure' }}
+        run: exit 1
+  
       - name: Show calculated version
         run: |
           echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"

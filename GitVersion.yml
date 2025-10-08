@@ -1,7 +1,10 @@
-# GitVersion.yml
-mode: Mainline
-tagPrefix: 'v'
-commitMessageIncrementing: Enabled
+# GitVersion.yml (v6 Schema)
+workflow: GitHubFlow/v1
+strategies:
+  - ConfiguredNextVersion
+  - Mainline
+tag-prefix: 'v'
+commit-message-incrementing: Enabled
 
 branches:
   main:
@@ -12,21 +15,16 @@ branches:
   develop:
     regex: ^develop$
     label: alpha         
-    increment: Patch
-
-  develop:
-    regex: ^develop$
-    label: alpha
-    increment: Patch
+    increment: None
 
   feature:
     regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
-    label: useBranchName
+    label: '{BranchName}'
     increment: Minor    
 
   bugfix: # matches: bugfix/, bugfixes/, fix/, repair/ 
     regex: (?i)^(?:bugfix(?:es)?|fix|repair)[/-](?<BranchName>.+)$
-    label: useBranchName
+    label: '{BranchName}'
     increment: Patch
     
   release:
