@@ -1,0 +1,44 @@
+# GitVersion.yml
+mode: Mainline
+
+tag-prefix: 'v'
+commit-message-incrementing: Enabled
+
+branches:
+  main:
+    regex: ^main$
+    tag: ""           
+    increment: None   
+
+  develop:
+    regex: ^develop$
+    tag: alpha         
+    increment: Patch
+
+  develop:
+    regex: ^develop$
+    tag: alpha
+    increment: Patch
+
+  feature:
+    regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
+    tag: useBranchName
+    increment: Minor    
+
+  bugfix: # matches: bugfix/, bugfixes/, fix/, repair/ 
+    regex: (?i)^(?:bugfix(?:es)?|fix|repair)[/-](?<BranchName>.+)$
+    tag: useBranchName
+    increment: Patch
+    
+  release:
+    regex: ^releases?[/-]
+    tag: rc            
+    increment: Patch
+
+  hotfix:
+    regex: ^hotfix(es)?[/-]
+    tag: "hotfix"            
+    increment: Patch
+
+ignore:
+  sha: []
