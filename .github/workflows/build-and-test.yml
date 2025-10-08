@@ -2,9 +2,11 @@ name: Build and Test (.NET)
 
 on:
   push:
+    branches-ignore:
+    - main
+    - develop
   workflow_dispatch:
-  workflow_call: {} 
   
 jobs:
   build-and-test:
-    uses: ./.github/workflows/build-and-test-runner.yml
+    uses: ./.github/workflows/resuable-build-and-test.yml

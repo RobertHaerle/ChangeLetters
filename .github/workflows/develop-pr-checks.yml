@@ -1,12 +1,9 @@
-name: Start integration tests
+name: PR Develop Integration Tests
 
-on:
-  push:
-    branches:
-      - main     
+on:   
   pull_request:
     branches:
-      - main
+      - develop
     types:
       - opened
       - synchronize
@@ -20,9 +17,9 @@ permissions:
 
 jobs:
   build_and_unit_tests:
-    uses: ./.github/workflows/build-and-test-runner.yml
+    uses: ./.github/workflows/resuable-build-and-test.yml
     
   integration_tests:
     needs: build_and_unit_tests 
-    uses: ./.github/workflows/integration-runner.yml
+    uses: ./.github/workflows/resuable-integration-tests.yml
 
