@@ -1,7 +1,10 @@
-name: Create Prerelease Tag
+name: "Merged to develop/main"
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
 
 permissions:
   checks: write
@@ -21,4 +24,4 @@ jobs:
   create_prerelease_version_tag:
     name: Calculate & Tag Prerelease Version
     needs: [build_and_unit_tests, integration_tests]
-    uses: ./.github/workflows/resuable-create-prerelease-tag.yml
+    uses: ./.github/workflows/resuable-create-tag.yml
