@@ -33,7 +33,7 @@ jobs:
         continue-on-error: true          
         
       - name: GitVersion /diag
-        if: ${{ steps.gitversion.conclusion == 'failure' }}
+        if: ${{ failure() }}
         run: |
           echo "Running GitVersion /diag…"
           dotnet-gitversion /diag /config GitVersion.yml || true
