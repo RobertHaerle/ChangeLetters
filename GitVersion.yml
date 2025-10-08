@@ -19,12 +19,12 @@ branches:
 
   feature:
     regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
-    label: "{BranchName:l}"
+    label: '{BranchName:l}'
     increment: Minor    
 
   bugfix: # matches: bugfix/, bugfixes/, fix/, repair/ 
     regex: (?i)^(?:bugfix(?:es)?|fix|repair)[/-](?<BranchName>.+)$
-    label: "{BranchName:l}"
+    label: '{BranchName:l}'
     increment: Patch
     
   release:
