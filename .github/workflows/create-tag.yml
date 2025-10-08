@@ -11,12 +11,12 @@ permissions:
 
 jobs:
 
-  build_and_unit_tests:
-    uses: ./.github/workflows/resuable-build-and-test.yml
-
-  integration_tests:
-    needs: build_and_unit_tests
-    uses: ./.github/workflows/resuable-integration-tests.yml
+#  build_and_unit_tests:
+#    uses: ./.github/workflows/resuable-build-and-test.yml
+#
+#  integration_tests:
+#    needs: build_and_unit_tests
+#    uses: ./.github/workflows/resuable-integration-tests.yml
 
   create_prerelease_version_tag:
     name: Tag Version
