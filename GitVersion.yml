@@ -1,24 +1,35 @@
 # GitVersion.yml
 mode: Mainline
-# Falls ihr Release-Tags mit "v" prefix erstellt (z. B. v1.2.3), dann:
+
 tag-prefix: 'v'
+commit-message-incrementing: Enabled
 
 branches:
   main:
     regex: ^main$
     tag: ""           
-    increment: Patch   
+    increment: None   
 
   develop:
     regex: ^develop$
     tag: alpha         
     increment: Patch
 
-  feature:
-    regex: ^features?[/-]
-    tag: useBranchName 
-    increment: Inherit
+  develop:
+    regex: ^develop$
+    tag: alpha
+    increment: Patch
 
+  feature:
+    regex: ^(?:feature|features|feat)[/-](?<BranchName>.+)$
+    tag: useBranchName
+    increment: Minor    
+
+  bugfix: # matches: bugfix/, bugfixes/, fix/, repair/ 
+    regex: (?i)^(?:bugfix(?:es)?|fix|repair)[/-](?<BranchName>.+)$
+    tag: useBranchName
+    increment: Patch
+    
   release:
     regex: ^releases?[/-]
     tag: rc            
