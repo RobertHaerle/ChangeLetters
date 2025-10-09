@@ -1,0 +1,69 @@
+name: Get next tag information
+
+on:
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  issues: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  get_next_tag_info:
+    name: Calculate only tag version
+    runs-on: ubuntu-latest
+
+    outputs:
+      semver: ${{ steps.gitversion.outputs.semVer }}
+      fullsemver: ${{ steps.gitversion.outputs.fullSemVer }}
+      major: ${{ steps.gitversion.outputs.major }}
+      minor: ${{ steps.gitversion.outputs.minor }}
+      patch: ${{ steps.gitversion.outputs.patch }}
+      informational: ${{ steps.gitversion.outputs.informationalVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitVersion
+        uses: gittools/actions/gitversion/setup@v4.1.0
+        with:
+          versionSpec: '6.3.x'
+
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v4.1.0
+        continue-on-error: true      
+
+      # Just diagnosis in case of error
+      - name: GitVersion /diag
+        if: ${{ steps.gitversion.outcome == 'failure' }}
+        run: dotnet-gitversion /diag /config GitVersion.yml || true
+
+      # Protect: If there is no gitversion output: break
+      - name: Guard GitVersion outputs
+        run: |
+          if [ -z "${{ steps.gitversion.outputs.semVer }}" ]; then
+            echo "GitVersion outputs are empty – abort."
+            exit 1
+          fi
+
+      # main always majorMinorPatch (no Suffix), otherwise semVer
+      - name: Compute tag name (branch-aware)
+        id: tagname
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "TAG=v${{ steps.gitversion.outputs.majorMinorPatch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "TAG=v${{ steps.gitversion.outputs.semVer }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show calculated version
+        run: |
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+          echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
+          echo "Informational: ${{ steps.gitversion.outputs.informationalVersion }}"
+          echo "Using Tag: ${{ steps.tagname.outputs.TAG }}"
