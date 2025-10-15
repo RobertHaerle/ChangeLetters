@@ -21,6 +21,9 @@ internal class DryIocRegistration
     }
 
     internal static DryIocServiceProviderFactory GetDryIocFactory()
-        => new(new Container(Rules.Default.WithDefaultReuse(Reuse.Transient))
-            .WithDependencyInjectionAdapter());
+        => new(GetContainer());
+
+    internal static IContainer GetContainer()
+        => new Container(Rules.Default.WithDefaultReuse(Reuse.Transient))
+            .WithDependencyInjectionAdapter();
 }
