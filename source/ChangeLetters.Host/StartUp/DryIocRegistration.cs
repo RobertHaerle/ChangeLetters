@@ -12,9 +12,8 @@ internal class DryIocRegistration
 {
     internal static void Initialize(HostBuilderContext hostContext, IContainer container)
     {
-        var assemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies()
-            .Where(a => a.Name?.StartsWith("ChangeLetters") ?? false)
-            .Select(Assembly.Load)
+        var assemblies = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "ChangeLetters*.dll")
+            .Select(Assembly.LoadFrom)
             .Concat([Assembly.GetExecutingAssembly()])
             .ToList();
         container.RegisterExports(assemblies);
@@ -24,6 +23,8 @@ internal class DryIocRegistration
         => new(GetContainer());
 
     internal static IContainer GetContainer()
-        => new Container(Rules.Default.WithDefaultReuse(Reuse.Transient))
-            .WithDependencyInjectionAdapter();
+        => new Container(Rules.Default.WithDefaultReuse(Reuse.Transient)
+            .With(FactoryMethod.ConstructorWithResolvableArgumentsIncludingNonPublic))
+            .WithDependencyInjectionAdapter()
+            ;
 }

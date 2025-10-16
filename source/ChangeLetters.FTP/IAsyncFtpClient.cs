@@ -1,6 +1,4 @@
-using FluentFTP;
-
-namespace ChangeLetters.Domain.Wrappers;
+namespace ChangeLetters.FTP;
 
 /// <summary>Interface IAsyncFtpClient.
 /// Extends <see cref="IAsyncDisposable" />

@@ -1,17 +1,18 @@
 ﻿using ChangeLetters.Database.Repositories;
-using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Domain.IO;
 using ChangeLetters.Domain.ParseLogic;
+using ChangeLetters.Domain.Pocos;
 using ChangeLetters.Shared;
 
-namespace ChangeLetters.Domain.Handlers;
+namespace ChangeLetters.Domain.Ftp;
 
 /// <summary> 
 /// Class FtpHandler.
 /// Implements <see cref="IFtpHandler" />
 /// </summary>
 [Export(typeof(IFtpHandler))]
-public class FtpHandler : IFtpHandler
+internal class FtpHandler : IFtpHandler
 {
     private readonly IFileParser _fileParser;
     private readonly ILogger<FtpHandler> _log;
@@ -50,7 +51,7 @@ public class FtpHandler : IFtpHandler
     }
 
     /// <inheritdoc />
-    public async Task<RenameFileItemsResult> RenameItemsAsync(string folder, FileItemType fileItemType, string? connectionId, CancellationToken token)
+    public async Task<HandlerResult<string>> RenameItemsAsync(string folder, FileItemType fileItemType, string? connectionId, CancellationToken token)
     {
         _log.LogInformation("RenameItems called for {Folder} ", folder);
         try
@@ -67,46 +68,36 @@ public class FtpHandler : IFtpHandler
             var vocabularyItems = await _vocabularyRepository.GetAllItemsAsync(token)
                 .ConfigureAwait(false);
             var vocabulary = vocabularyItems.ToDictionary(x => x.UnknownWord);
-            int counter = 0;
+            var counter = 0;
             foreach (var fileItem in itemsToBeChanged)
             {
                 await _signalRRenameHandler.SendCurrentItemNumberAsync(fileItemType, ++counter, connectionId);
-                bool result = false;
+                var result = false;
                 if (_fileParser.TryReplaceUnknownWordsInName(fileItem, vocabulary, out var newFileItem))
-                {
                     result = fileItem.IsFolder
                         ? await _ftpConnector.RenameFolderAsync(fileItem, newFileItem.FullName, _configuration, token)
                         : await _ftpConnector.RenameFileAsync(fileItem, newFileItem.FullName, _configuration, token);
-                }
                 if (!result)
                 {
                     _log.LogWarning("RenameItems failed for {FullName}", fileItem.FullName);
-                    return new()
-                    {
-                        Succeeded = false,
-                        FailedFile = fileItem.FullName,
-                    };
+                    return HandlerResult<string>.Failure(fileItem.FullName);
                 }
             }
             _log.LogInformation("RenameItems completed for all items");
-            return new() { Succeeded = true };
+            return HandlerResult<string>.Success();
         }
         catch (TaskCanceledException)
         {
-            return new()
-            {
-                Succeeded = false,
-                FailedFile = "Operation canceled",
-            };
+            return HandlerResult<string>.Failure("Operation canceled");
         }
     }
 
-    private bool ConsiderFileItemType(FileItem fileItem, FileItemType requiredFileItemType)
+    private bool ConsiderFileItemType(Shared.FileItem fileItem, FileItemType requiredFileItemType)
     => fileItem.IsFolder && requiredFileItemType == FileItemType.Folder
         || !fileItem.IsFolder && requiredFileItemType == FileItemType.File;
 
     /// <inheritdoc />
-    public async Task<List<VocabularyEntry>> ReadUnknownWordsAsync(string folder, CancellationToken token)
+    public async Task<List<RequiredVocabulary>> ReadUnknownWordsAsync(string folder, CancellationToken token)
     {
         try
         {
@@ -114,10 +105,8 @@ public class FtpHandler : IFtpHandler
                 .ConfigureAwait(false);
             var unknownWordsInFolder = _fileParser.GetWordsWithUnknownLetters(allFileItems);
             if (unknownWordsInFolder.Any())
-            {
                 return await _vocabularyHandler.GetRequiredVocabularyAsync(unknownWordsInFolder, token)
                     .ConfigureAwait(false);
-            }
         }
         catch (TaskCanceledException)
         {

@@ -4,17 +4,9 @@
 /// Class DatabaseContext.
 /// Inherits from <see cref="DbContext" />
 /// </summary>
-public class DatabaseContext : DbContext
+public class DatabaseContext : DbContext, IDatabaseContext
 {
     private readonly DatabaseConfiguration _config;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DatabaseContext"/> class.
-    /// </summary>
-    /// <remarks>For test purposes only. Better way would be an interface!!!.</remarks>
-    internal DatabaseContext() : base()
-    {
-    }
 
     /// <summary> 
     /// Class DatabaseContext.
@@ -41,4 +33,10 @@ public class DatabaseContext : DbContext
             optionsBuilder.AddInterceptors(_config.Interceptors!);
         base.OnConfiguring(optionsBuilder);
     }
+
+    public void EnsureCreated()
+        => Database.EnsureCreated();
+
+    public void Migrate()
+        => Database.Migrate();
 }

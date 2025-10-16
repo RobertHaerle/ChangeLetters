@@ -19,8 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.Application.Http\ChangeLetters.Application.Http.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Application\ChangeLetters.Application.csproj" />
     <ProjectReference Include="..\ChangeLetters.Database.Sqlite\ChangeLetters.Database.Sqlite.csproj" />
     <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
+    <ProjectReference Include="..\ChangeLetters.FTP\ChangeLetters.FTP.csproj" />
     <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
     <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
     <ProjectReference Include="..\ChangeLetters.Client\ChangeLetters.Client.csproj" />
@@ -32,8 +34,6 @@
     <PackageReference Include="Flurl" Version="4.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="OpenAI" Version="2.4.0" />
-    <PackageReference Include="FluentFTP" Version="53.0.1" />
-    <PackageReference Include="FluentFTP.Logging" Version="1.0.0" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
     <PackageReference Include="DryIoc.MefAttributedModel.dll" Version="7.0.2" />

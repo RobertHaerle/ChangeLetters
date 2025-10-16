@@ -17,7 +17,7 @@ public class VocabularyEntry
             && !CorrectedWord.Contains('?')
             && !AiResolved;
 
-    /// <summary>Gets or sets the information whether this entity contains an ai suggestion.</summary>
+    /// <summary>Gets or sets the information whether this entity contains an AI suggestion.</summary>
     public bool AiResolved { get; set; }
 
     /// <inheritdoc />

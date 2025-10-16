@@ -1,17 +1,16 @@
 ﻿using ChangeLetters.Domain.Extensions;
-using ChangeLetters.Shared;
-using FluentFTP;
-using FluentFTP.Exceptions;
-using IAsyncFtpClient = ChangeLetters.Domain.Wrappers.IAsyncFtpClient;
+using ChangeLetters.Domain.Ftp;
+using Microsoft.Extensions.Logging;
+using IAsyncFtpClient = ChangeLetters.FTP.IAsyncFtpClient;
 
-namespace ChangeLetters.Domain.Connectors;
+namespace ChangeLetters.FTP;
 
 /// <summary> 
 /// Class FtpConnector.
 /// Implements <see cref="IFtpConnector" />
 /// </summary>
 [Export(typeof(IFtpConnector))]
-public class FtpConnector : IFtpConnector
+internal class FtpConnector : IFtpConnector
 {
     private readonly ILogger<FtpConnector> _log;
     private readonly Func<IAsyncFtpClient> _getNewFtpClient;
@@ -49,7 +48,7 @@ public class FtpConnector : IFtpConnector
     }
 
     /// <inheritdoc />
-    public async Task<FileItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token)
+    public async Task<FtpItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token)
     {
         _log.LogTrace("ReadFoldersAsync: connect to FTP server with {config}", config);
         await using var ftpClient = GetFtpClient(config);
@@ -61,7 +60,7 @@ public class FtpConnector : IFtpConnector
             var resultSet = await ftpClient.GetListing(folder, FtpListOption.AllFiles, token);
             var folders = resultSet
                 .Where(item => item.Type == FtpObjectType.Directory)
-                .Select(x => new FileItem { Name = x.Name, FullName = x.FullName, IsFolder = true })
+                .Select(x => new FtpItem { Name = x.Name, FullName = x.FullName, IsFolder = true })
                 .ToArray();
 
             return folders;
