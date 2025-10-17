@@ -12,7 +12,8 @@ public static class LifetimeLoggingRegistration
     public static IServiceProvider AddLifetimeLogging(this IServiceProvider services)
     {
         var lifetime = services.GetRequiredService<IHostApplicationLifetime>();
-        var logger = services.GetRequiredService<ILogger<global::Program>>(); // Fully qualify Program
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger(nameof(Program));
 
         lifetime.ApplicationStopped.Register(() => logger.LogInformation("Application has stopped."));
         lifetime.ApplicationStopping.Register(() => logger.LogInformation("Application is stopping."));
