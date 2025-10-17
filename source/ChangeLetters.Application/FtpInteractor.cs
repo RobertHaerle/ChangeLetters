@@ -1,5 +1,5 @@
-﻿using ChangeLetters.Domain.Pocos;
-using ChangeLetters.Domain.Ftp;
+﻿using ChangeLetters.Domain.Ftp;
+using ChangeLetters.Domain.Pocos;
 
 namespace ChangeLetters.Application;
 
