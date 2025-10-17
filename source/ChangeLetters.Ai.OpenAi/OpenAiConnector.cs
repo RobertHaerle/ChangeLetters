@@ -2,9 +2,9 @@
 using System.ClientModel;
 using System.Diagnostics;
 using ChangeLetters.Domain.AiAccess;
-using ChangeLetters.Domain.Configurations;
-using ChangeLetters.Domain.Extensions;
 using ChangeLetters.Domain.Wrappers;
+using ChangeLetters.Domain.Extensions;
+using ChangeLetters.Domain.Configurations;
 
 namespace ChangeLetters.Ai.OpenAi;
 
@@ -13,7 +13,7 @@ namespace ChangeLetters.Ai.OpenAi;
 /// Implements <see cref="IAiConnector" />
 /// </summary>
 [Export(typeof(IAiConnector))]
-public class OpenAiConnector(
+internal class OpenAiConnector(
     IChatClient _chatClient,
     OpenAiSettings _settings,
     ILogger<OpenAiConnector> _log) : IAiConnector
