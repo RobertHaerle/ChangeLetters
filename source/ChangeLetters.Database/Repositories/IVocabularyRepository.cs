@@ -1,7 +1,7 @@
 ﻿namespace ChangeLetters.Database.Repositories;
 
 /// <summary>Interface IVocabularyRepository.</summary>
-public interface IVocabularyRepository
+internal interface IVocabularyRepository
 {
     /// <summary>Inserts or update entries as an asynchronous operation.</summary>
     /// <param name="items">The items.</param>

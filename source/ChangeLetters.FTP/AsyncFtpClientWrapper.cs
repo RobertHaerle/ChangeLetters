@@ -1,7 +1,4 @@
-using FluentFTP;
-using FluentFTP.Logging;
-
-namespace ChangeLetters.Domain.Wrappers;
+namespace ChangeLetters.FTP;
 
 /// <summary> 
 /// Class AsyncFtpClientWrapper.

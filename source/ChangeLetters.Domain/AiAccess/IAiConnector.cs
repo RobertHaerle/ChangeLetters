@@ -1,7 +1,7 @@
-﻿namespace ChangeLetters.Domain.Connectors;
+﻿namespace ChangeLetters.Domain.AiAccess;
 
-/// <summary>Interface IOpenAiConnector.</summary>
-public interface IOpenAiConnector
+/// <summary>Interface IAiConnector.</summary>
+public interface IAiConnector
 {
     /// <summary>Gets the unknown word suggestion.</summary>
     /// <param name="unknownWord">The unknown word.</param>

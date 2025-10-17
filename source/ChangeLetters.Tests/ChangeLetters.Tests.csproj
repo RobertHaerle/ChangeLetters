@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChangeLetters.Ai.OpenAi\ChangeLetters.Ai.OpenAi.csproj" />
+    <ProjectReference Include="..\ChangeLetters.Application\ChangeLetters.Application.csproj" />
+    <ProjectReference Include="..\ChangeLetters.FTP\ChangeLetters.FTP.csproj" />
     <ProjectReference Include="..\ChangeLetters.Host\ChangeLetters.Host.csproj" />
   </ItemGroup>
 
@@ -41,6 +44,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interactors\" />
   </ItemGroup>
 
 </Project>

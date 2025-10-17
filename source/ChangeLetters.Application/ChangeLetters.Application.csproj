@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLetters.Application\ChangeLetters.Application.csproj" />
     <ProjectReference Include="..\ChangeLetters.Domain\ChangeLetters.Domain.csproj" />
   </ItemGroup>
 

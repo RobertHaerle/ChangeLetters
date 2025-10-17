@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using ChangeLetters.Shared;
-using ChangeLetters.Models.Models;
-using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Application.Http.Controllers;
+using ChangeLetters.Domain.Handlers;
+using ChangeLetters.Domain.Pocos;
+using ChangeLetters.Models.Models;
+using ChangeLetters.Shared;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Tests.Server.Controllers;
 
@@ -57,7 +58,7 @@ public class VocabularyControllerTests
     [Test]
     public async Task GetRequiredWords_ReturnsOkWithEntries()
     {
-        var entries = new List<VocabularyEntry> { new() { UnknownWord = "foo" } };
+        var entries = new List<RequiredVocabulary> { new() { UnknownWord = "foo" } };
         _handler.GetRequiredVocabularyAsync(Arg.Any<string[]>(), Arg.Any<CancellationToken>()).Returns(entries);
         var result = await _sut.GetRequiredWords(["foo"]);
         result.Result.ShouldBeOfType<OkObjectResult>();
@@ -67,7 +68,7 @@ public class VocabularyControllerTests
     [Test]
     public async Task GetRequiredWordsMassData_ReturnsOkWithEntries()
     {
-        var entries = new List<VocabularyEntry> { new() { UnknownWord = "foo" } };
+        var entries = new List<RequiredVocabulary> { new() { UnknownWord = "foo" } };
         _handler.GetRequiredVocabularyAsync(Arg.Any<string[]>(), Arg.Any<CancellationToken>()).Returns(entries);
         var result = await _sut.GetRequiredWordsMassData(["foo"]);
         result.Result.ShouldBeOfType<OkObjectResult>();

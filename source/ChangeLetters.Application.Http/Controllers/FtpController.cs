@@ -1,7 +1,6 @@
 using System.Net;
-using ChangeLetters.Domain.Connectors;
-using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Domain.IO;
+using ChangeLetters.Domain.Ftp;
 
 namespace ChangeLetters.Application.Http.Controllers;
 
@@ -12,8 +11,7 @@ namespace ChangeLetters.Application.Http.Controllers;
 [Route("api/[controller]")]
 public class FtpController : ControllerBase
 {
-    private readonly IFtpHandler _ftpHandler;
-    private readonly IFtpConnector _ftpConnector;
+    private readonly IFtpInteractor _ftpInteractor;
     private readonly ILogger<FtpController> _log;
     private readonly Configuration _configuration;
 
@@ -22,17 +20,15 @@ public class FtpController : ControllerBase
     /// </summary>
     /// <param name="ftpHandler">The FTP handler.</param>
     /// <param name="configIo">The configuration io.</param>
-    /// <param name="ftpConnector">The FTP connector.</param>
+    /// <param name="ftpInteractor">The FTP connector.</param>
     /// <param name="log">The log.</param>
     public FtpController(
-        IFtpHandler ftpHandler,
         IConfigurationIo configIo,
-        IFtpConnector ftpConnector,
+        IFtpInteractor ftpInteractor,
         ILogger<FtpController> log)
     {
         _log = log;
-        _ftpHandler = ftpHandler;
-        _ftpConnector = ftpConnector;
+        _ftpInteractor = ftpInteractor;
         _configuration = configIo.GetConfiguration();
     }
 
@@ -44,7 +40,7 @@ public class FtpController : ControllerBase
     public async Task<ActionResult<bool>> ConnectAsync([FromBody] Configuration config)
     {
         _log.LogInformation("Connect called with Host: {Host}, Port: {Port}, User: {User}", config.HostName, config.Port, config.UserName);
-        var result = await _ftpConnector.ConnectAsync(config);
+        var result = await _ftpInteractor.ConnectAsync(config);
         _log.LogInformation("Connect result: {Result}", result);
         return Ok(result);
     }
@@ -61,7 +57,7 @@ public class FtpController : ControllerBase
         FileItem[] result;
         try
         {
-            result = await _ftpConnector.ReadFoldersAsync(_configuration, folder, HttpContext.RequestAborted);
+            result = await _ftpInteractor.ReadFoldersAsync(_configuration, folder, HttpContext.RequestAborted);
         }
         catch (TaskCanceledException)
         {
@@ -79,7 +75,7 @@ public class FtpController : ControllerBase
     public async Task<ActionResult<RenameFileItemsResult>> RenameItemsAsync([FromBody] RenameFileItemsRequest request)
     {
         _log.LogInformation("RenameItems called for {Folder} ", request.Folder);
-        var result = await _ftpHandler.RenameItemsAsync(request.Folder, request.FileItemType, request.SignalRConnectionId, HttpContext.RequestAborted);
+        var result = await _ftpInteractor.RenameItemsAsync(request.Folder, request.FileItemType, request.SignalRConnectionId, HttpContext.RequestAborted);
         _log.LogInformation("RenameItems for {Folder} resulted in {Success}", request.Folder, result.Succeeded ? "succeeded" : "failed");
         return Ok(result);
     }
@@ -92,7 +88,7 @@ public class FtpController : ControllerBase
     public async Task<ActionResult<FolderStatus>> CheckQuestionMarksAsync([FromBody] FileItem fileItem)
     {
         _log.LogInformation("CheckQuestionMarks called for {FullName}", fileItem.FullName);
-        await _ftpConnector.CheckQuestionMarksAsync(fileItem, _configuration, HttpContext.RequestAborted);
+        await _ftpInteractor.CheckQuestionMarksAsync(fileItem, _configuration, HttpContext.RequestAborted);
         _log.LogInformation("CheckQuestionMarks completed for {FullName}. Found question marks in file names: {HasQuestionMarks}",
             fileItem.FullName, 
             fileItem.FolderStatus == FolderStatus.HasQuestionMarks);
@@ -108,8 +104,8 @@ public class FtpController : ControllerBase
     {
         folder = WebUtility.UrlDecode(folder);
         _log.LogInformation("ReadUnknownWords called for {folder}", folder);
-        var unknownEntries = await _ftpHandler.ReadUnknownWordsAsync(folder, HttpContext.RequestAborted);
-        _log.LogInformation("ReadUnknownWords returned {Total} words", unknownEntries.Count);
+        var unknownEntries = (await _ftpInteractor.ReadUnknownWordsAsync(folder, HttpContext.RequestAborted));
+        _log.LogInformation("ReadUnknownWords returned {Total} words", unknownEntries.Count());
         return Ok(unknownEntries);
     }
 }

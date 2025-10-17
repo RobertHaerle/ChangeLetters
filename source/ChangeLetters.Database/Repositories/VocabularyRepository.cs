@@ -5,7 +5,7 @@
 /// Implements <see cref="IVocabularyRepository" />
 /// </summary>
 [Export(typeof(IVocabularyRepository))]
-public class VocabularyRepository(
+internal class VocabularyRepository(
     Func<DatabaseContext> _getContext,
     ILogger<VocabularyRepository> _log) : IVocabularyRepository
 {

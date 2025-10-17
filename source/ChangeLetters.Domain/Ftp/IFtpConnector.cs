@@ -1,9 +1,9 @@
 ﻿using ChangeLetters.Shared;
 
-namespace ChangeLetters.Domain.Connectors;
+namespace ChangeLetters.Domain.Ftp;
 
 /// <summary>Interface IFtpConnector.</summary>
-public interface IFtpConnector
+internal interface IFtpConnector
 {
     /// <summary>Connect as an asynchronous operation.</summary>
     /// <param name="config">The configuration.</param>
@@ -15,14 +15,14 @@ public interface IFtpConnector
     /// <param name="folder">The folder.</param>
     /// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>See description.</returns>
-    Task<FileItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token);
+    Task<FtpItem[]> ReadFoldersAsync(Configuration config, string folder, CancellationToken token);
 
     /// <summary>Read files of a directory as an asynchronous operation.</summary>
     /// <param name="config">The configuration.</param>
     /// <param name="folder">The folder.</param>
     /// <param name="token">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>See description.</returns>
-    Task<List<FileItem>> ReadFilesAsync(Configuration config, string folder, CancellationToken token);
+    Task<List<Shared.FileItem>> ReadFilesAsync(Configuration config, string folder, CancellationToken token);
 
     /// <summary>Rename file as an asynchronous operation.</summary>
     /// <param name="fileItem">The file item.</param>
@@ -30,7 +30,7 @@ public interface IFtpConnector
     /// <param name="config">The configuration.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>See description.</returns>
-    Task<bool> RenameFileAsync(FileItem fileItem, string newName, Configuration config, CancellationToken cancellationToken);
+    Task<bool> RenameFileAsync(Shared.FileItem fileItem, string newName, Configuration config, CancellationToken cancellationToken);
 
     /// <summary>Rename folder as an asynchronous operation.</summary>
     /// <param name="folderItem">The folder item.</param>
@@ -38,7 +38,7 @@ public interface IFtpConnector
     /// <param name="config">The configuration.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>See description.</returns>
-    Task<bool> RenameFolderAsync(FileItem folderItem, string newName, Configuration config,
+    Task<bool> RenameFolderAsync(Shared.FileItem folderItem, string newName, Configuration config,
         CancellationToken cancellationToken);
 
     /// <summary>Check for question marks in any name in the folder structure as an asynchronous operation.</summary>
@@ -46,6 +46,6 @@ public interface IFtpConnector
     /// <param name="config">The configuration.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>See description.</returns>
-    Task CheckQuestionMarksAsync(FileItem fileItem, Configuration config,
+    Task CheckQuestionMarksAsync(Shared.FileItem fileItem, Configuration config,
         CancellationToken cancellationToken = default);
 }

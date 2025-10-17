@@ -1,9 +1,8 @@
-﻿using ChangeLetters.Shared;
-using ChangeLetters.Models.Models;
-using ChangeLetters.Domain.Connectors;
-using ChangeLetters.Models.Converters;
-using ChangeLetters.Database.Repositories;
+﻿using ChangeLetters.Models.Models;
+using ChangeLetters.Domain.Pocos;
 using ChangeLetters.Domain.Configurations;
+using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.AiAccess;
 
 namespace ChangeLetters.Domain.Handlers;
 
@@ -12,9 +11,9 @@ namespace ChangeLetters.Domain.Handlers;
 /// Implements <see cref="IVocabularyHandler" />
 /// </summary>
 [Export(typeof(IVocabularyHandler))]
-public class VocabularyHandler(
+internal class VocabularyHandler(
     OpenAiSettings _openAiSettings,
-    IOpenAiConnector _openAiConnector,
+    IAiConnector aiConnector,
     IVocabularyRepository _repository) : IVocabularyHandler
 {
     /// <inheritdoc />
@@ -30,12 +29,12 @@ public class VocabularyHandler(
         => _repository.GetAllItemsAsync(token);
 
     /// <inheritdoc />
-    public async Task<List<VocabularyEntry>> GetRequiredVocabularyAsync(IList<string> unknownWords, CancellationToken token)
+    public async Task<List<RequiredVocabulary>> GetRequiredVocabularyAsync(IList<string> unknownWords, CancellationToken token)
     {
         try
         {
             var items = await _repository.GetItemsAsync(unknownWords, token).ConfigureAwait(false);
-            var entries = items.Select(i => i.ToDto()).ToList();
+            var entries = items.Select(i => i.ToRequiredVocabulary()).ToList();
             FillUpUnknownWords(entries, unknownWords);
             if (_openAiSettings.UseOpenAI)
                 await TryResolveWithOpenAiAsync(entries);
@@ -48,22 +47,22 @@ public class VocabularyHandler(
         return [];
     }
 
-    private async Task TryResolveWithOpenAiAsync(List<VocabularyEntry> entries)
+    private async Task TryResolveWithOpenAiAsync(List<RequiredVocabulary> entries)
     {
         var unknownVocabulary = entries.Where(e => e.CorrectedWord.Contains('?')).ToArray();
         if (unknownVocabulary.Length == 0)
             return;
         var unresolvedWords = unknownVocabulary.Select(e => e.UnknownWord).ToArray();
-        var suggestions = await _openAiConnector.GetUnknownWordSuggestionsAsync(unresolvedWords, CancellationToken.None);
+        var suggestions = await aiConnector.GetUnknownWordSuggestionsAsync(unresolvedWords, CancellationToken.None);
         AddToEntries(suggestions, entries);
     }
 
-    private void AddToEntries((string UnknownWord, string Suggestion)[] suggestions, List<VocabularyEntry> entries)
+    private void AddToEntries((string UnknownWord, string Suggestion)[] suggestions, List<RequiredVocabulary> items)
     {
         foreach (var suggestion in suggestions
                      .Where(s=> !s.Suggestion.Contains('?')))
         {
-            var entry = entries.FirstOrDefault(e => e.UnknownWord == suggestion.UnknownWord);
+            var entry = items.FirstOrDefault(e => e.UnknownWord == suggestion.UnknownWord);
             if (entry != null && entry.CorrectedWord.Contains('?'))
             {
                 entry.CorrectedWord = suggestion.Suggestion;
@@ -72,7 +71,7 @@ public class VocabularyHandler(
         }
     }
 
-    private void FillUpUnknownWords(List<VocabularyEntry> entries, IList<string> unknownWords)
+    private void FillUpUnknownWords(List<RequiredVocabulary> entries, IList<string> unknownWords)
     {
         var knownWords = new HashSet<string>(entries.Select(e => e.UnknownWord));
         foreach (var unresolvedWord in unknownWords)

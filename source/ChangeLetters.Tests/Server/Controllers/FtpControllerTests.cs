@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using ChangeLetters.Shared;
 using ChangeLetters.Domain.IO;
-using ChangeLetters.Domain.Handlers;
-using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Application;
 using ChangeLetters.Application.Http.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeLetters.Tests.Server.Controllers;
 
@@ -13,24 +12,22 @@ public class FtpControllerTests
 {
     private FtpController _sut = null!;
     private Configuration _config = null!;
-    private IFtpHandler _ftpHandler = null!;
     private IConfigurationIo _configIo = null!;
-    private IFtpConnector _ftpConnector = null!;
+    private IFtpInteractor _ftpConnector = null!;
     private ILogger<FtpController> _logger = null!;
 
     [SetUp]
     public void SetUp()
     {
         _config = new Configuration();
-        _ftpHandler = Substitute.For<IFtpHandler>();
         _configIo = Substitute.For<IConfigurationIo>();
-        _ftpConnector = Substitute.For<IFtpConnector>();
+        _ftpConnector = Substitute.For<IFtpInteractor>();
         _logger = Substitute.For<ILogger<FtpController>>();
         var httpContext = new DefaultHttpContext() { RequestAborted = CancellationToken.None };
 
         _configIo.GetConfiguration().Returns(_config);
 
-        _sut = new FtpController(_ftpHandler, _configIo, _ftpConnector, _logger)
+        _sut = new FtpController(_configIo, _ftpConnector, _logger)
         {
             ControllerContext = new ControllerContext { HttpContext = httpContext }
         };
@@ -59,8 +56,8 @@ public class FtpControllerTests
     public async Task RenameItemsAsync_ReturnsOkWithResult()
     {
         var req = new RenameFileItemsRequest { Folder = "folder", FileItemType = 0 };
-        var renameResult = new RenameFileItemsResult { Succeeded = true };
-        _ftpHandler.RenameItemsAsync(req.Folder, req.FileItemType, Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(renameResult);
+        var renameResult = new RenameFileItemsResult{Succeeded = true};
+        _ftpConnector.RenameItemsAsync(req.Folder, req.FileItemType, Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(renameResult);
         var result = await _sut.RenameItemsAsync(req);
         result.Result.ShouldBeOfType<OkObjectResult>();
         ((OkObjectResult)result.Result!).Value.ShouldBe(renameResult);
@@ -78,8 +75,8 @@ public class FtpControllerTests
     [Test]
     public async Task ReadUnknownWordsAsync_ReturnsOkWithEntries()
     {
-        var entries = new List<VocabularyEntry> { new VocabularyEntry { UnknownWord = "foo" } };
-        _ftpHandler.ReadUnknownWordsAsync("folder", Arg.Any<CancellationToken>()).Returns(entries);
+        var entries = new List<VocabularyEntry> { new () { UnknownWord = "foo" } };
+        _ftpConnector.ReadUnknownWordsAsync("folder", Arg.Any<CancellationToken>()).Returns(entries);
         var result = await _sut.ReadUnknownWordsAsync("folder");
         result.Result.ShouldBeOfType<OkObjectResult>();
         ((OkObjectResult)result.Result!).Value.ShouldBe(entries);

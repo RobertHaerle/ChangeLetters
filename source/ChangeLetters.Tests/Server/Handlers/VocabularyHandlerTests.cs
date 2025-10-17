@@ -1,7 +1,7 @@
 ﻿using ChangeLetters.Models.Models;
 using ChangeLetters.Domain.Handlers;
-using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.AiAccess;
 using ChangeLetters.Domain.Configurations;
 
 namespace ChangeLetters.Tests.Server.Handlers;
@@ -12,15 +12,15 @@ public class VocabularyHandlerTests
     private VocabularyHandler _sut;
     private OpenAiSettings _openAiSettings;
     private IVocabularyRepository _repository;
-    private IOpenAiConnector _openAiConnector;
+    private IAiConnector _aiConnector;
 
     [SetUp]
     public void SetUp()
     {
         _repository = Substitute.For<IVocabularyRepository>();
-        _openAiConnector = Substitute.For<IOpenAiConnector>();
+        _aiConnector = Substitute.For<IAiConnector>();
         _openAiSettings = new OpenAiSettings { UseOpenAI = false };
-        _sut = new VocabularyHandler(_openAiSettings, _openAiConnector, _repository);
+        _sut = new VocabularyHandler(_openAiSettings, _aiConnector, _repository);
     }
 
     [Test]
@@ -74,7 +74,7 @@ public class VocabularyHandlerTests
     public async Task GetRequiredVocabularyAsync_UsesOpenAi_WhenEnabled()
     {
         _openAiSettings.UseOpenAI = true;
-        _sut = new VocabularyHandler(_openAiSettings, _openAiConnector, _repository);
+        _sut = new VocabularyHandler(_openAiSettings, _aiConnector, _repository);
 
         var unknownWords = new List<string> { "foo" };
         var token = CancellationToken.None;
@@ -84,7 +84,7 @@ public class VocabularyHandlerTests
                 new VocabularyItem { UnknownWord = "foo", CorrectedWord = "?" }
             }));
 
-        _openAiConnector.GetUnknownWordSuggestionsAsync(Arg.Any<IList<string>>(), Arg.Any<CancellationToken>())
+        _aiConnector.GetUnknownWordSuggestionsAsync(Arg.Any<IList<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new[] { ("foo", "bar") }));
 
         var result = await _sut.GetRequiredVocabularyAsync(unknownWords, token);

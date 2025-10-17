@@ -1,10 +1,11 @@
-using ChangeLetters.Shared;
 using ChangeLetters.Database.Repositories;
-using ChangeLetters.Domain.Connectors;
+using ChangeLetters.Domain.Ftp;
 using ChangeLetters.Domain.Handlers;
 using ChangeLetters.Domain.IO;
 using ChangeLetters.Domain.ParseLogic;
+using ChangeLetters.Domain.Pocos;
 using ChangeLetters.Models.Models;
+using ChangeLetters.Shared;
 
 namespace ChangeLetters.Tests.Server.Handlers
 {
@@ -75,7 +76,7 @@ namespace ChangeLetters.Tests.Server.Handlers
 
             // Assert
             result.Succeeded.ShouldBeTrue();
-            result.FailedFile.ShouldBeNull();
+            result.ErrorMessage.ShouldBeNull();
         }
 
         [Test]
@@ -108,7 +109,7 @@ namespace ChangeLetters.Tests.Server.Handlers
 
             // Assert
             result.Succeeded.ShouldBeFalse();
-            result.FailedFile.ShouldBe("/folder/file?1.txt");
+            result.ErrorMessage.ShouldBe("/folder/file?1.txt");
         }
 
         [Test]
@@ -116,9 +117,9 @@ namespace ChangeLetters.Tests.Server.Handlers
         {
             // Arrange
             var unknownWords = new List<string> { "?" };
-            var vocabularyEntries = new List<VocabularyEntry>
+            var vocabularyEntries = new List<RequiredVocabulary>
             {
-                new VocabularyEntry { UnknownWord = "?", CorrectedWord = "a" }
+                new () { UnknownWord = "?", CorrectedWord = "a" }
             };
             _ftpConnector.ReadFilesAsync(_configuration, Arg.Any<string>(), Arg.Any<CancellationToken>())
                 .Returns(_fileItems);

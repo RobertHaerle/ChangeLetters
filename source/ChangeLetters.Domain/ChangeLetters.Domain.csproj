@@ -7,16 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenAI" Version="2.4.0" />
-    <PackageReference Include="FluentFTP" Version="53.0.1" />
-    <PackageReference Include="FluentFTP.Logging" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ChangeLetters.Models\ChangeLetters.Models.csproj" />
     <ProjectReference Include="..\ChangeLetters.Shared\ChangeLetters.Shared.csproj" />
     <ProjectReference Include="..\ChangeLetters.SignalR\ChangeLetters.SignalR.csproj" />
     <ProjectReference Include="..\ChangeLetters.Database\ChangeLetters.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ChangeLetters.Application.Http</_Parameter1>
+    </AssemblyAttribute>
+
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ChangeLetters.Application</_Parameter1>
+    </AssemblyAttribute>
+
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ChangeLetters.FTP</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
 </Project>
