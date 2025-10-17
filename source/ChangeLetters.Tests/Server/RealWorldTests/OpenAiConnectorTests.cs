@@ -1,5 +1,5 @@
-﻿using ChangeLetters.Domain.Configurations;
-using ChangeLetters.Domain.Connectors;
+﻿using ChangeLetters.Ai.OpenAi;
+using ChangeLetters.Domain.Configurations;
 using ChangeLetters.Domain.Extensions;
 using ChangeLetters.Domain.Wrappers;
 using ChangeLetters.Models.Models;

@@ -1,8 +1,8 @@
 ﻿using ChangeLetters.Models.Models;
 using ChangeLetters.Domain.Pocos;
-using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Domain.Configurations;
 using ChangeLetters.Database.Repositories;
+using ChangeLetters.Domain.AiAccess;
 
 namespace ChangeLetters.Domain.Handlers;
 
@@ -13,7 +13,7 @@ namespace ChangeLetters.Domain.Handlers;
 [Export(typeof(IVocabularyHandler))]
 internal class VocabularyHandler(
     OpenAiSettings _openAiSettings,
-    IOpenAiConnector _openAiConnector,
+    IAiConnector aiConnector,
     IVocabularyRepository _repository) : IVocabularyHandler
 {
     /// <inheritdoc />
@@ -53,7 +53,7 @@ internal class VocabularyHandler(
         if (unknownVocabulary.Length == 0)
             return;
         var unresolvedWords = unknownVocabulary.Select(e => e.UnknownWord).ToArray();
-        var suggestions = await _openAiConnector.GetUnknownWordSuggestionsAsync(unresolvedWords, CancellationToken.None);
+        var suggestions = await aiConnector.GetUnknownWordSuggestionsAsync(unresolvedWords, CancellationToken.None);
         AddToEntries(suggestions, entries);
     }
 

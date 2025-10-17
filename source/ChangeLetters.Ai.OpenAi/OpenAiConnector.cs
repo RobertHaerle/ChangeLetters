@@ -1,21 +1,22 @@
-﻿using System.ClientModel;
+﻿using OpenAI.Chat;
+using System.ClientModel;
 using System.Diagnostics;
+using ChangeLetters.Domain.AiAccess;
 using ChangeLetters.Domain.Configurations;
 using ChangeLetters.Domain.Extensions;
 using ChangeLetters.Domain.Wrappers;
-using OpenAI.Chat;
 
-namespace ChangeLetters.Domain.Connectors;
+namespace ChangeLetters.Ai.OpenAi;
 
 /// <summary> 
 /// Class OpenAiConnector.
-/// Implements <see cref="IOpenAiConnector" />
+/// Implements <see cref="IAiConnector" />
 /// </summary>
-[Export(typeof(IOpenAiConnector))]
+[Export(typeof(IAiConnector))]
 public class OpenAiConnector(
     IChatClient _chatClient,
     OpenAiSettings _settings,
-    ILogger<OpenAiConnector> _log) : IOpenAiConnector
+    ILogger<OpenAiConnector> _log) : IAiConnector
 {
     /// <inheritdoc />
     public async Task<string?> GetUnknownWordSuggestionAsync(string unknownWord, CancellationToken token)

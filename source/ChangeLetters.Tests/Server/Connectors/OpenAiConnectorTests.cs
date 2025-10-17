@@ -1,8 +1,8 @@
 using OpenAI.Chat;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using ChangeLetters.Ai.OpenAi;
 using ChangeLetters.Domain.Configurations;
-using ChangeLetters.Domain.Connectors;
 using ChangeLetters.Domain.Wrappers;
 using ChangeLetters.Tests.Server.TestHelpers;
 

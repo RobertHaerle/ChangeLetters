@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.FTP", "ChangeLetters.FTP\ChangeLetters.FTP.csproj", "{35F37A2E-E17A-4EF6-BCD3-BFDF3602FA02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeLetters.Ai.OpenAi", "ChangeLetters.Ai.OpenAi\ChangeLetters.Ai.OpenAi.csproj", "{22494549-0BD6-40FF-878B-BDCE68E66F4C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{35F37A2E-E17A-4EF6-BCD3-BFDF3602FA02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35F37A2E-E17A-4EF6-BCD3-BFDF3602FA02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35F37A2E-E17A-4EF6-BCD3-BFDF3602FA02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22494549-0BD6-40FF-878B-BDCE68E66F4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22494549-0BD6-40FF-878B-BDCE68E66F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22494549-0BD6-40FF-878B-BDCE68E66F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22494549-0BD6-40FF-878B-BDCE68E66F4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +127,7 @@ Global
 		{A7E848AC-D177-6543-B3CF-9FA379CC78B2} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{D4DC3D53-688F-48FA-984B-7AD88F49D503} = {75A192D3-6011-42F6-AA0E-5919F6EDDCB5}
 		{35F37A2E-E17A-4EF6-BCD3-BFDF3602FA02} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}
+		{22494549-0BD6-40FF-878B-BDCE68E66F4C} = {7838A54A-6F9A-4847-996C-4F9FB0A550C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {744789AE-904F-4A93-AF69-85BB2B8F205E}
