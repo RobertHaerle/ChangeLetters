@@ -22,7 +22,7 @@ COPY ["ChangeLetters.SignalR/ChangeLetters.SignalR.csproj", "ChangeLetters.Signa
 COPY ["ChangeLetters.Database/ChangeLetters.Database.csproj", "ChangeLetters.Database/"]
 COPY ["ChangeLetters.Ai.OpenAi/ChangeLetters.Ai.OpenAi.csproj", "ChangeLetters.Ai.OpenAi/"]
 COPY ["ChangeLetters.Application/ChangeLetters.Application.csproj", "ChangeLetters.Application/"]
-COPY ["ChangeLetters.Database.SqLite/ChangeLetters.Database.SqLite.csproj", "ChangeLetters.Database.SqLite/"]
+COPY ["ChangeLetters.Database.Sqlite/ChangeLetters.Database.Sqlite.csproj", "ChangeLetters.Database.Sqlite/"]
 COPY ["ChangeLetters.Application.Http/ChangeLetters.Application.Http.csproj", "ChangeLetters.Application.Http/"]
 
 RUN dotnet restore "./ChangeLetters.Host/ChangeLetters.Host.csproj"
